@@ -1,10 +1,6 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -17,7 +13,15 @@ namespace Client
 
         public RabbitMQClient(string host)
         {
-            factory = new ConnectionFactory() { HostName = host };
+            factory = new ConnectionFactory()
+            {
+                UserName = "username",
+                Password = "password",
+                VirtualHost = "/",
+                HostName = host,
+                Port = 5672
+            };
+
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
             channel.ExchangeDeclare(exchange: "news", type: "fanout");
