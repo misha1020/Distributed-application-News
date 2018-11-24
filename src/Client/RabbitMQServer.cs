@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    class RabbitMQServer : IDisposable
+    class RabbitMQClient : IDisposable
     {
         private ConnectionFactory factory;
         private IConnection connection;
         private IModel channel;
         public EventingBasicConsumer consumer { get; }
 
-        public RabbitMQServer(string host)
+        public RabbitMQClient(string host)
         {
             factory = new ConnectionFactory() { HostName = host };
             connection = factory.CreateConnection();
@@ -32,6 +32,5 @@ namespace Client
             channel.Dispose();
             connection.Dispose();
         }
-
     }
 }

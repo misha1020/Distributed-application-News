@@ -8,27 +8,42 @@ namespace Client
 {
     public partial class FormClient : Form
     {
+        RabbitMQClient RMQS;
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            ActiveControl = null;
+        }
+
+        public void sender(object model, BasicDeliverEventArgs ea)
+        {
+            string msg;
+            var body = ea.Body;
+            msg = BinFormatter.FromBytes<string>(body);
+            AppendTextBox(msg);
+        }
+
+        public void AppendTextBox(string value)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
+                return;
+            }
+            tbInfo.Text += value + Environment.NewLine;
+        }
+
         public FormClient()
         {
             InitializeComponent();
+            RMQS = new RabbitMQClient("localhost");
+            RMQS.consumer.Received += sender;
         }
 
-        public static void QueueRecieve(string host)
+        private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
         {
-            RabbitMQServer RMQS = new RabbitMQServer(host);
-            String message;
-            RMQS.consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body;
-                message = BinFormatter.FromBytes<string>(body);
-                MessageBox.Show(message);
-            };
-
-        }
-
-        private void btConnect_Click(object sender, EventArgs e)
-        {
-            QueueRecieve("localhost");
+            RMQS.Dispose();
         }
     }
 }
