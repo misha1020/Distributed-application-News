@@ -28,25 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btConnect = new System.Windows.Forms.Button();
             this.tbInfo = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // btConnect
-            // 
-            this.btConnect.Location = new System.Drawing.Point(311, 12);
-            this.btConnect.Name = "btConnect";
-            this.btConnect.Size = new System.Drawing.Size(129, 51);
-            this.btConnect.TabIndex = 0;
-            this.btConnect.Text = "Connect";
-            this.btConnect.UseVisualStyleBackColor = true;
-            this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
             // 
             // tbInfo
             // 
             this.tbInfo.Location = new System.Drawing.Point(12, 12);
             this.tbInfo.Multiline = true;
             this.tbInfo.Name = "tbInfo";
+            this.tbInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.tbInfo.Size = new System.Drawing.Size(293, 179);
             this.tbInfo.TabIndex = 1;
             // 
@@ -54,19 +44,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(452, 203);
+            this.ClientSize = new System.Drawing.Size(330, 203);
             this.Controls.Add(this.tbInfo);
-            this.Controls.Add(this.btConnect);
             this.Name = "FormClient";
             this.Text = "Client";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClient_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btConnect;
         private System.Windows.Forms.TextBox tbInfo;
     }
 }

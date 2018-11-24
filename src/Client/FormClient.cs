@@ -8,42 +8,42 @@ namespace Client
 {
     public partial class FormClient : Form
     {
-        public static void QueueRecieve()
-        {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    channel.ExchangeDeclare(exchange: "news", type: "fanout");
-                    var queueName = channel.QueueDeclare().QueueName;
-                    channel.QueueBind(queue: queueName,
-                                      exchange: "news",
-                                      routingKey: "");
-                    var consumer = new EventingBasicConsumer(channel);
+        RabbitMQClient RMQS;
 
-                    String message;
-                    consumer.Received += (model, ea) =>
-                    {
-                        var body = ea.Body;
-                        message = BinFormatter.FromBytes<string>(body);
-                        MessageBox.Show("Ожидание...");
-                    };
-                    channel.BasicConsume(queue: queueName,
-                                    autoAck: true,
-                                    consumer: consumer);
-                }
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            ActiveControl = null;
+        }
+
+        public void sender(object model, BasicDeliverEventArgs ea)
+        {
+            string msg;
+            var body = ea.Body;
+            msg = BinFormatter.FromBytes<string>(body);
+            AppendTextBox(msg);
+        }
+
+        public void AppendTextBox(string value)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
+                return;
             }
+            tbInfo.Text += value + Environment.NewLine;
         }
 
         public FormClient()
         {
             InitializeComponent();
+            RMQS = new RabbitMQClient("localhost");
+            RMQS.consumer.Received += sender;
         }
 
-        private void btConnect_Click(object sender, EventArgs e)
+        private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
         {
-            QueueRecieve();            
+            RMQS.Dispose();
         }
     }
 }
