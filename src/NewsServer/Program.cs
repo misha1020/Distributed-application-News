@@ -13,15 +13,23 @@ namespace NewsServer
         static RabbitMQServer mq;
         static void Main(string[] args)
         {
-            using (mq = new RabbitMQServer("localhost"))
-            using (NewsReader reader = new NewsReader())
+            using (mq = new RabbitMQServer("127.0.0.1"))
+            using (WebhoseReader reader = new WebhoseReader())
             {
                 mq.MessageSend += Pr;
                 reader.NewsReceived += NewNewsReceived;
-
+                reader.Start();
+                string input = Console.ReadLine();
+                while(input.ToUpper()!="Q")
+                {
+                    if(input.ToUpper()=="GET")
+                    {
+                        reader.GetNews();
+                    }
+                    input = Console.ReadLine();
+                }
                 Console.ReadKey();
             }
-
         }
 
         private static void NewNewsReceived(string input)
@@ -34,12 +42,12 @@ namespace NewsServer
             {
                 Console.WriteLine(ex.Message);
             }
-            input = Console.ReadLine();
+            
         }
 
         static public void Pr(string message)
         {
-            Console.WriteLine(" [x] Sent {0}", message);
+            ;// Console.WriteLine(" [x] Sent {0}", message);
         }
     }
 }
