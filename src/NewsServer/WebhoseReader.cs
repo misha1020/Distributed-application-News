@@ -50,6 +50,14 @@ namespace NewsServer
             timer.Stop();
         }
 
+        public void GetAllNews()
+        {
+            foreach(var art in Articles)
+            {
+                NewsReceived(art.title);
+            }
+        }
+
         public void GetNews(object sender=null, ElapsedEventArgs e=null)
         {
             List<Article> newNews = new List<Article>();

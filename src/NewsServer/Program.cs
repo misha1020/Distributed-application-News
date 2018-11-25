@@ -26,6 +26,10 @@ namespace NewsServer
                     {
                         reader.GetNews();
                     }
+                    if (input.ToUpper() == "GETALL")
+                    {
+                        reader.GetAllNews();
+                    }
                     input = Console.ReadLine();
                 }
                 Console.ReadKey();
