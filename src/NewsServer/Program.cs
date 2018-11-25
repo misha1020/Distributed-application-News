@@ -13,9 +13,10 @@ namespace NewsServer
         static RabbitMQServer mq;
         static void Main(string[] args)
         {
-            using (mq = new RabbitMQServer("25.46.156.10"))
+            using (mq = new RabbitMQServer("25.46.156.10", "username", "password"))
             using (WebhoseReader reader = new WebhoseReader())
             {
+				SocketServer.SocketSend(msg);
                 mq.MessageSend += Pr;
                 reader.NewsReceived += NewNewsReceived;
                 reader.Start();
@@ -52,7 +53,7 @@ namespace NewsServer
 
         static public void Pr(string message)
         {
-            ;// Console.WriteLine(" [x] Sent {0}", message);
+            //Console.WriteLine(" Sent {0}", message);
         }
     }
 }
