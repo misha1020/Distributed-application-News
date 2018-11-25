@@ -13,12 +13,13 @@ namespace NewsServer
         static RabbitMQServer mq;
         static void Main(string[] args)
         {
-            using (mq = new RabbitMQServer("127.0.0.1"))
+            using (mq = new RabbitMQServer("25.46.156.10"))
             using (WebhoseReader reader = new WebhoseReader())
             {
                 mq.MessageSend += Pr;
                 reader.NewsReceived += NewNewsReceived;
                 reader.Start();
+                Console.WriteLine("Write 'Q' to finish");
                 string input = Console.ReadLine();
                 while(input.ToUpper()!="Q")
                 {
