@@ -15,7 +15,7 @@ namespace NewsServer
         public delegate void MessageSendHandler(string message);
         public event MessageSendHandler MessageSend;
 
-        public void Start(string hostName)
+        public RabbitMQServer(string hostName)
         {
             factory = new ConnectionFactory() { HostName = hostName };
             connection = factory.CreateConnection();

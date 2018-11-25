@@ -33,11 +33,12 @@
             // 
             // tbInfo
             // 
-            this.tbInfo.Location = new System.Drawing.Point(12, 12);
+            this.tbInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbInfo.Location = new System.Drawing.Point(0, 0);
             this.tbInfo.Multiline = true;
             this.tbInfo.Name = "tbInfo";
             this.tbInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbInfo.Size = new System.Drawing.Size(293, 179);
+            this.tbInfo.Size = new System.Drawing.Size(330, 203);
             this.tbInfo.TabIndex = 1;
             // 
             // FormClient
