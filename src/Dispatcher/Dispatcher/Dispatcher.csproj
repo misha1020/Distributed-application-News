@@ -45,6 +45,7 @@
     <Compile Include="BinFormatter.cs" />
     <Compile Include="DispatcherClient.cs" />
     <Compile Include="DispatcherNewsServer.cs" />
+    <Compile Include="MessageSendRecieve.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,20 +8,6 @@ using System.Threading.Tasks;
 
 namespace Dispatcher
 { 
-    struct MessageToSend
-    {
-        public string hostIP;
-        public string login;
-        public string password;
-
-        public MessageToSend(string ip, string log, string pass)
-        {
-            this.hostIP = ip;
-            this.login = log;
-            this.password = pass;
-        }
-    }
-
     class DispatcherClient
     {
 
@@ -32,32 +18,39 @@ namespace Dispatcher
             handler.Send(byteSet);
         }
 
-        public static void SocketSend(MessageToSend msg)
+        public static void SocketSend()
         {
             int port = 11000;
-            try
-            {
-                Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                sender.Bind(new IPEndPoint(IPAddress.Any, port));
-                sender.Listen(10);
-                Socket handler = sender.Accept();
 
-                SendString(handler, msg.hostIP);
-                SendString(handler, msg.login);
-                SendString(handler, msg.password);
-
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
-                Console.WriteLine("Данные отправлены");
-            }
-
-            catch (Exception ex)
+            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender.Bind(new IPEndPoint(IPAddress.Any, port));
+            sender.Listen(10);
+            while (true)
             {
-                Console.WriteLine(ex.ToString());
-            }
-            finally
-            {
-                Console.ReadLine();
+                try
+                {
+                    Socket handler = sender.Accept();
+
+                    Program.msgsWithHosts_Semaphore.WaitOne();
+                    if (Program.msgsWithHosts.Count != 0)
+                    {
+                        MessageSendRecieve msg = Program.msgsWithHosts[0];
+
+                        SendString(handler, msg.hostIP);
+                        SendString(handler, msg.login);
+                        SendString(handler, msg.password);
+                        Console.WriteLine("Данные отправлены");
+                    }
+                    Program.msgsWithHosts_Semaphore.Release();
+
+                    handler.Shutdown(SocketShutdown.Both);
+                    handler.Close();
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }
         }
     }

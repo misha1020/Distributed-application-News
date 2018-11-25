@@ -10,6 +10,9 @@ namespace NewsServer
     {
         static void Main(string[] args)
         {
+            MessageToSend msg = new MessageToSend("25.46.156.10", "username", "password");
+            SocketServer.SocketSend(msg);
+
             using (RabbitMQServer mq = new RabbitMQServer())
             {
                 mq.Start("25.46.156.10");
@@ -35,7 +38,7 @@ namespace NewsServer
 
         static public void Pr(string message)
         {
-            Console.WriteLine(" [x] Sent {0}", message);
+            Console.WriteLine(" Sent {0}", message);
         }
     }
 }
