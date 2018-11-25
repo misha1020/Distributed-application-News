@@ -1,0 +1,7 @@
+C:\Users\Миша\Documents\GitHub\Distributed-application-News\src\Dispatcher\Dispatcher\bin\Debug\Dispatcher.exe.config
+C:\Users\Миша\Documents\GitHub\Distributed-application-News\src\Dispatcher\Dispatcher\bin\Debug\Dispatcher.exe
+C:\Users\Миша\Documents\GitHub\Distributed-application-News\src\Dispatcher\Dispatcher\bin\Debug\Dispatcher.pdb
+C:\Users\Миша\Documents\GitHub\Distributed-application-News\src\Dispatcher\Dispatcher\obj\Debug\Dispatcher.csprojResolveAssemblyReference.cache
+C:\Users\Миша\Documents\GitHub\Distributed-application-News\src\Dispatcher\Dispatcher\obj\Debug\Dispatcher.csproj.CoreCompileInputs.cache
+C:\Users\Миша\Documents\GitHub\Distributed-application-News\src\Dispatcher\Dispatcher\obj\Debug\Dispatcher.exe
+C:\Users\Миша\Documents\GitHub\Distributed-application-News\src\Dispatcher\Dispatcher\obj\Debug\Dispatcher.pdb

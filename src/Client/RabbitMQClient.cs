@@ -11,14 +11,14 @@ namespace Client
         private IModel channel;
         public EventingBasicConsumer consumer { get; }
 
-        public RabbitMQClient(string host)
+        public RabbitMQClient(string hostName, string login, string password)
         {
             factory = new ConnectionFactory()
             {
-                UserName = "username",
-                Password = "password",
+                UserName = login,
+                Password = password,
                 VirtualHost = "/",
-                HostName = host,
+                HostName = hostName,
                 Port = 5672
             };
 

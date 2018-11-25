@@ -17,7 +17,15 @@ namespace NewsServer
 
         public void Start(string hostName)
         {
-            factory = new ConnectionFactory() { HostName = hostName };
+            factory = new ConnectionFactory()
+            {
+                UserName = "username",
+                Password = "password",
+                VirtualHost = "/",
+                HostName = hostName,
+                Port = 5672
+            };
+
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
             channel.ExchangeDeclare(exchange: "news", type: "fanout");

@@ -37,7 +37,8 @@ namespace Client
         public FormClient()
         {
             InitializeComponent();
-            RMQS = new RabbitMQClient("localhost");
+            MessageToRecieve msg = SocketClient.SocketRecieve();
+            RMQS = new RabbitMQClient(msg.hostIP, msg.login, msg.password);
             RMQS.consumer.Received += sender;
         }
 

@@ -12,8 +12,9 @@ namespace NewsServer
         {
             using (RabbitMQServer mq = new RabbitMQServer())
             {
-                mq.Start("localhost");
+                mq.Start("25.46.156.10");
                 mq.MessageSend += Pr;
+                Console.WriteLine("Write 'Q' to finish");
                 string input = Console.ReadLine();
                 while (input.ToUpper() != "Q")
                 {

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1C8C9562-4E4D-4AA4-81DA-81D22088F283}</ProjectGuid>
+    <ProjectGuid>{4F965114-A331-4F2B-95CB-3CF61AA523E2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Dspatcher</RootNamespace>
-    <AssemblyName>Dspatcher</AssemblyName>
+    <RootNamespace>Dispatcher</RootNamespace>
+    <AssemblyName>Dispatcher</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinFormatter.cs" />
+    <Compile Include="DispatcherClient.cs" />
+    <Compile Include="DispatcherNewsServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
