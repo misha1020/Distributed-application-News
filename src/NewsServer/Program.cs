@@ -13,7 +13,8 @@ namespace NewsServer
         static RabbitMQServer mq;
         static void Main(string[] args)
         {
-            using (mq = new RabbitMQServer("25.46.156.10", "username", "password"))
+            MessageToSend msg = new MessageToSend("25.46.156.10", "username", "password");
+            using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
             {
 				SocketServer.SocketSend(msg);

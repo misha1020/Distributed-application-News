@@ -15,12 +15,12 @@ namespace NewsServer
         public delegate void MessageSendHandler(string message);
         public event MessageSendHandler MessageSend;
 
-        public RabbitMQServer(string hostName)
+        public RabbitMQServer(string hostName, string login, string password)
         {
             factory = new ConnectionFactory()
             {
-                UserName = "username",
-                Password = "password",
+                UserName = login,
+                Password = password,
                 VirtualHost = "/",
                 HostName = hostName,
                 Port = 5672
