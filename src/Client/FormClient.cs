@@ -37,14 +37,38 @@ namespace Client
         public FormClient()
         {
             InitializeComponent();
-            MessageToRecieve msg = SocketClient.SocketRecieve();
-            RMQS = new RabbitMQClient(msg.hostIP, msg.login, msg.password);
-            RMQS.consumer.Received += sender;
+            tryConnect();
+        }
+
+        private bool tryConnect()
+        {
+            bt_Reconnect.Visible = false;
+            try
+            {
+                TSMI_Connection.Text = "Connecting...";
+                MessageToRecieve msg = SocketClient.SocketRecieve();
+                RMQS = new RabbitMQClient(msg.hostIP, msg.login, msg.password);
+                RMQS.consumer.Received += sender;
+                TSMI_Connection.Text = "Online";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + " in " + ex.TargetSite);
+                TSMI_Connection.Text = "Offline";
+                bt_Reconnect.Visible = true;
+                return false;
+            }
         }
 
         private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
         {
-            RMQS.Dispose();
+            if(RMQS!=null) RMQS.Dispose();
+        }
+
+        private void bt_Reconnect_Click(object sender, EventArgs e)
+        {
+            tryConnect();
         }
     }
 }
