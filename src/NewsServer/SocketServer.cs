@@ -33,12 +33,12 @@ namespace NewsServer
             handler.Send(byteSet);
         }
 
-        public static void SocketSend(MessageToSend msg)
+        public static void SocketSend(MessageToSend msg, string ip)
         {
             int port = 11001;
             try
             {
-                IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
+                IPAddress ipAddr = IPAddress.Parse(ip);
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
                 Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sender.Connect(ipEndPoint);

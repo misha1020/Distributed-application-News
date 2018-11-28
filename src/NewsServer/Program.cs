@@ -20,12 +20,12 @@ namespace NewsServer
         {
             Thread pingReplier = new Thread(new ThreadStart(SocketServer.pingReply));
             pingReplier.Start();
-            Console.ReadKey();
+            //Console.ReadKey();
             MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
             using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
             {
-				SocketServer.SocketSend(msg);
+				SocketServer.SocketSend(msg, dispatcherIp);
                 mq.MessageSend += Pr;
                 reader.NewsReceived += NewNewsReceived;
                 reader.Start();
