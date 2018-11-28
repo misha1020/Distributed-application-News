@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinFormatter.cs" />
+    <Compile Include="ConfigManager.cs" />
     <Compile Include="DispatcherClient.cs" />
     <Compile Include="DispatcherNewsServer.cs" />
     <Compile Include="MessageSendRecieve.cs" />
