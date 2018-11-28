@@ -39,6 +39,7 @@
       <HintPath>packages\RabbitMQ.Client.5.1.0\lib\net451\RabbitMQ.Client.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinFormatter.cs" />
+    <Compile Include="ConfigManager.cs" />
     <Compile Include="FormClient.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -9,46 +9,23 @@ namespace Client
     public partial class FormClient : Form
     {
         RabbitMQClient RMQS;
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-            ActiveControl = null;
-        }
-
-        public void sender(object model, BasicDeliverEventArgs ea)
-        {
-            string msg;
-            var body = ea.Body;
-            msg = BinFormatter.FromBytes<string>(body);
-            AppendTextBox(msg);
-        }
-
-        public void AppendTextBox(string value)
-        {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
-                return;
-            }
-            tbInfo.Text += value + Environment.NewLine;
-        }
+        static string dispatcherIp = ConfigManager.Get("dispatcherIp");
 
         public FormClient()
         {
             InitializeComponent();
-            tryConnect();
+            TryConnect();
         }
 
-        private bool tryConnect()
+        private bool TryConnect()
         {
             bt_Reconnect.Visible = false;
             try
             {
                 TSMI_Connection.Text = "Connecting...";
-                MessageToRecieve msg = SocketClient.SocketRecieve();
+                MessageToRecieve msg = SocketClient.SocketRecieve(dispatcherIp);
                 RMQS = new RabbitMQClient(msg.hostIP, msg.login, msg.password);
-                RMQS.consumer.Received += sender;
+                RMQS.consumer.Received += Sender;
                 TSMI_Connection.Text = "Online";
                 return true;
             }
@@ -68,7 +45,31 @@ namespace Client
 
         private void bt_Reconnect_Click(object sender, EventArgs e)
         {
-            tryConnect();
+            TryConnect();
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            ActiveControl = null;
+        }
+
+        public void Sender(object model, BasicDeliverEventArgs ea)
+        {
+            string msg;
+            var body = ea.Body;
+            msg = BinFormatter.FromBytes<string>(body);
+            AppendTextBox(msg);
+        }
+
+        public void AppendTextBox(string value)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
+                return;
+            }
+            tbInfo.Text += value + Environment.NewLine;
         }
     }
 }

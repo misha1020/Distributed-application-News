@@ -44,13 +44,13 @@ namespace Client
             return BinFormatter.FromBytes<string>(bytes);
         }
 
-        public static MessageToRecieve SocketRecieve()
+        public static MessageToRecieve SocketRecieve(string ip)
         {
             int port = 11000;
             MessageToRecieve msg = new MessageToRecieve();
             try
             {
-                IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
+                IPAddress ipAddr = IPAddress.Parse(ip);
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
                 Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 receiver.Connect(ipEndPoint);
