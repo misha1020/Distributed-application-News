@@ -50,7 +50,8 @@ namespace Dispatcher
                     receiver.Close();
 
                     Program.msgsWithHosts_Semaphore.WaitOne();
-                    Program.msgsWithHosts.Add(msg);
+                    Program.msgsWithHosts.Add(Guid.NewGuid().ToString(), msg);
+                    Console.WriteLine("New server connected!");
                     Program.msgsWithHosts_Semaphore.Release();
                 }
                 catch (Exception ex)

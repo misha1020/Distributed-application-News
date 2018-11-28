@@ -11,12 +11,52 @@ namespace Dispatcher
     class DispatcherClient
     {
 
-        public static void SendString(Socket handler, string msg)
+        public static void SendMsg<T>(Socket handler, T msg)
         {
-            byte[] byteSet = BinFormatter.ToBytes<string>(msg);
+            byte[] byteSet = BinFormatter.ToBytes<T>(msg);
             handler.Send(BinFormatter.ToBytes<int>(byteSet.Length));
             handler.Send(byteSet);
         }
+
+        public static void ServersListSend()
+        {
+            int port = 11000;
+            
+            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender.Bind(new IPEndPoint(IPAddress.Any, port));
+            sender.Listen(10);
+            while (true)
+            {
+                try
+                {
+                    Socket handler = sender.Accept();
+                    Program.msgsWithHosts_Semaphore.WaitOne();
+                    int serversCount = Program.msgsWithHosts.Count;
+                    string[] guids = new string[serversCount]; 
+                    if (serversCount != 0)
+                    {
+                        int i = 0;
+                        foreach (var elem in Program.msgsWithHosts)
+                        {
+                            string id = elem.Key;
+                            guids[i] = id;
+                            i++;
+                        }
+                        SendMsg(handler, guids);
+                        Console.WriteLine("Список серверов отпрален!");
+                    }
+                    Program.msgsWithHosts_Semaphore.Release();
+
+                    handler.Shutdown(SocketShutdown.Both);
+                    handler.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+
 
         public static void SocketSend()
         {
@@ -34,11 +74,11 @@ namespace Dispatcher
                     Program.msgsWithHosts_Semaphore.WaitOne();
                     if (Program.msgsWithHosts.Count != 0)
                     {
-                        MessageSendRecieve msg = Program.msgsWithHosts[0];
+                        //MessageSendRecieve msg = Program.msgsWithHosts[0];
 
-                        SendString(handler, msg.hostIP);
-                        SendString(handler, msg.login);
-                        SendString(handler, msg.password);
+                       // SendMsg(handler, msg.hostIP);
+                        //SendMsg(handler, msg.login);
+                        //SendMsg(handler, msg.password);
                         Console.WriteLine("Данные отправлены");
                     }
                     Program.msgsWithHosts_Semaphore.Release();
