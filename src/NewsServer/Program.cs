@@ -12,14 +12,16 @@ namespace NewsServer
     class Program
     {
         static RabbitMQServer mq;
-        static void Main(string[] args)
+         static string dispatcherIp = ConfigManager.Get("dispatcherIp");
+         static string rabbitMqIp = ConfigManager.Get("rabbitMqIp");
+         static string username = ConfigManager.Get("username");
+         static string password = ConfigManager.Get("password");
+         static void Main(string[] args)
         {
             Thread pingReplier = new Thread(new ThreadStart(SocketServer.pingReply));
             pingReplier.Start();
             Console.ReadKey();
-
-            /*MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
-
+            MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
             using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
             {
@@ -42,7 +44,7 @@ namespace NewsServer
                     input = Console.ReadLine();
                 }
                 Console.ReadKey();
-            }*/
+            }
         }
 
 
