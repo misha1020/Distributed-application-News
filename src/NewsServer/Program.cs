@@ -5,22 +5,28 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+
 //http://opendata.permkrai.ru/opendata/list.csv
 namespace NewsServer
 {
     class Program
     {
         static RabbitMQServer mq;
+        static string dispatcherIp = ConfigManager.Get("dispatcherIp");
+        static string rabbitMqIp = ConfigManager.Get("rabbitMqIp");
+        static string username = ConfigManager.Get("username");
+        static string password = ConfigManager.Get("password");
         static void Main(string[] args)
         {
-            MessageToSend msg = new MessageToSend("25.46.156.10", "username", "password");
+
+            MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
             using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
             {
-				SocketServer.SocketSend(msg);
+				SocketServer.SocketSend(dispatcherIp, msg);
                 mq.MessageSend += Pr;
                 reader.NewsReceived += NewNewsReceived;
-                reader.Start();
+                //reader.Start();
                 Console.WriteLine("Write 'Q' to finish");
                 string input = Console.ReadLine();
                 while(input.ToUpper()!="Q")
@@ -54,7 +60,7 @@ namespace NewsServer
 
         static public void Pr(string message)
         {
-            //Console.WriteLine(" Sent {0}", message);
+            Console.WriteLine(" Sent {0}", message);
         }
     }
 }
