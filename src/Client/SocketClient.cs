@@ -26,38 +26,69 @@ namespace Client
     class SocketClient
     {
 
-        public static string ReceiveString(Socket receiver)
+        public static T ReceiveMsg<T>(Socket receiver)
         {
             byte[] length = new byte[256];
-            receiver.Receive(length, 0, length.Length, SocketFlags.None);
+
+            int c = 0;
+            int step = 256;
+            while (c < 256)
+            {
+                if (c + step > 256)
+                    step = 256 - c;
+                c += receiver.Receive(length, c, step, SocketFlags.None);
+            }
+
             int bytesRec = BinFormatter.FromBytes<int>(length);
             byte[] bytes = new byte[bytesRec];
 
             int a = 0;
-            int step = bytesRec;
+            step = bytesRec;
             while (a < bytesRec)
             {
                 if (a + step > bytesRec)
                     step = bytesRec - a;
                 a += receiver.Receive(bytes, a, step, SocketFlags.None);
             }
-            return BinFormatter.FromBytes<string>(bytes);
+            return BinFormatter.FromBytes<T>(bytes);
         }
 
-        public static MessageToRecieve SocketRecieve(string ip)
+        public static string[] RecieveServersList()
+        {
+            int port = 11000;
+            string[] guids = null;
+            try
+            {
+                IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+                Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                receiver.Connect(ipEndPoint);
+                
+                guids = ReceiveMsg<string[]>(receiver);
+                receiver.Shutdown(SocketShutdown.Both);
+                receiver.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            return guids;
+        }
+
+        public static MessageToRecieve SocketRecieve()
         {
             int port = 11000;
             MessageToRecieve msg = new MessageToRecieve();
             try
             {
-                IPAddress ipAddr = IPAddress.Parse(ip);
+                IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
                 Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 receiver.Connect(ipEndPoint);
 
-                msg.hostIP = ReceiveString(receiver);
-                msg.login = ReceiveString(receiver);
-                msg.password = ReceiveString(receiver);
+                msg.hostIP = ReceiveMsg<string>(receiver);
+                msg.login = ReceiveMsg<string>(receiver);
+                msg.password = ReceiveMsg<string>(receiver);
 
                 receiver.Shutdown(SocketShutdown.Both);
                 receiver.Close();
