@@ -63,7 +63,7 @@ namespace NewsServer
 
         static public void Pr(string message)
         {
-            //Console.WriteLine(" Sent {0}", message);
+            Console.WriteLine(" Sent {0}", message);
         }
     }
 }

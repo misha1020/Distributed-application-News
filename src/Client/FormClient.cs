@@ -38,21 +38,28 @@ namespace Client
         {
             InitializeComponent();
             GetServersList();
-            //TryToConnect();
+            
         }
 
-        private void GetServersList()
+        private bool GetServersList()
         {
+            bt_Reconnect.Visible = false;
             try
             {
+                TSMI_Connection.Text = "Connecting...";
                 string[] guids = SocketClient.RecieveServersList();
-                tbInfo.Clear();
+                //tbInfo.Clear();
                 for (int i = 0; i < guids.Length; i++)
                     tbInfo.Text += guids[i] + Environment.NewLine;
+                TSMI_Connection.Text = "Online";
+                return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message + " in " + ex.TargetSite);
+                TSMI_Connection.Text = "Offline";
+                bt_Reconnect.Visible = true;
+                return false;
             }
         }
 
@@ -84,6 +91,12 @@ namespace Client
 
         private void bt_Reconnect_Click(object sender, EventArgs e)
         {
+            TryToConnect();
+        }
+
+        private void btGetNews_Click(object sender, EventArgs e)
+        {
+            tbInfo.Text += Environment.NewLine;
             TryToConnect();
         }
     }
