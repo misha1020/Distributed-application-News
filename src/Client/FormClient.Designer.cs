@@ -32,6 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.TSMI_Connection = new System.Windows.Forms.ToolStripMenuItem();
             this.bt_Reconnect = new System.Windows.Forms.Button();
+            this.btGetNews = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,11 +72,22 @@
             this.bt_Reconnect.UseVisualStyleBackColor = true;
             this.bt_Reconnect.Click += new System.EventHandler(this.bt_Reconnect_Click);
             // 
+            // btGetNews
+            // 
+            this.btGetNews.Location = new System.Drawing.Point(524, 29);
+            this.btGetNews.Name = "btGetNews";
+            this.btGetNews.Size = new System.Drawing.Size(75, 23);
+            this.btGetNews.TabIndex = 5;
+            this.btGetNews.Text = "GetNews";
+            this.btGetNews.UseVisualStyleBackColor = true;
+            this.btGetNews.Click += new System.EventHandler(this.btGetNews_Click);
+            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(599, 325);
+            this.Controls.Add(this.btGetNews);
             this.Controls.Add(this.bt_Reconnect);
             this.Controls.Add(this.tbInfo);
             this.Controls.Add(this.menuStrip1);
@@ -95,6 +107,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem TSMI_Connection;
         private System.Windows.Forms.Button bt_Reconnect;
+        private System.Windows.Forms.Button btGetNews;
     }
 }
 

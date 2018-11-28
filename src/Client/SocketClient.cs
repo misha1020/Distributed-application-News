@@ -77,7 +77,7 @@ namespace Client
 
         public static MessageToRecieve SocketRecieve()
         {
-            int port = 11000;
+            int port = 11005;
             MessageToRecieve msg = new MessageToRecieve();
             try
             {

@@ -60,7 +60,7 @@ namespace Dispatcher
 
         public static void SocketSend()
         {
-            int port = 11000;
+            int port = 11005;
 
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Bind(new IPEndPoint(IPAddress.Any, port));
@@ -74,11 +74,11 @@ namespace Dispatcher
                     Program.msgsWithHosts_Semaphore.WaitOne();
                     if (Program.msgsWithHosts.Count != 0)
                     {
-                        //MessageSendRecieve msg = Program.msgsWithHosts[0];
+                        MessageSendRecieve msg = Program.msgsWithHosts.Values.First();
 
-                       // SendMsg(handler, msg.hostIP);
-                        //SendMsg(handler, msg.login);
-                        //SendMsg(handler, msg.password);
+                        SendMsg(handler, msg.hostIP);
+                        SendMsg(handler, msg.login);
+                        SendMsg(handler, msg.password);
                         Console.WriteLine("Данные отправлены");
                     }
                     Program.msgsWithHosts_Semaphore.Release();

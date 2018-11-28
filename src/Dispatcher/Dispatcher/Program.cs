@@ -17,10 +17,12 @@ namespace Dispatcher
         {
             Console.WriteLine("Write 'Q' to finish");
             Thread ThreadFromServer = new Thread(new ThreadStart(DispatcherNewsServer.SocketRecieve));
-            Thread ThreadToClient = new Thread(new ThreadStart(DispatcherClient.ServersListSend));
+            Thread ThreadToClientSendList = new Thread(new ThreadStart(DispatcherClient.ServersListSend));
+            Thread ThreadWorkWithClient = new Thread(new ThreadStart(DispatcherClient.SocketSend));
 
             ThreadFromServer.Start();
-            ThreadToClient.Start();
+            ThreadToClientSendList.Start();
+            ThreadWorkWithClient.Start();
             string input = Console.ReadLine();
         }
     }
