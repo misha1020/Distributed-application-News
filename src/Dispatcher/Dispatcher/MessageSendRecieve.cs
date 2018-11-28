@@ -11,10 +11,12 @@ namespace Dispatcher
         public string hostIP;
         public string login;
         public string password;
+        public string IP;
 
-        public MessageSendRecieve(string ip, string log, string pass)
+        public MessageSendRecieve(string IP, string hostip, string log, string pass)
         {
-            this.hostIP = ip;
+            this.IP = IP;
+            this.hostIP = hostip;
             this.login = log;
             this.password = pass;
         }

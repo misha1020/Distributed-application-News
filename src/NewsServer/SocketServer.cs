@@ -24,7 +24,7 @@ namespace NewsServer
 
     class SocketServer
     {
-        private static int pingReplyPort = 11002;
+        private static int pingReplyPort = 11010;
 
         public static void SendString(Socket handler, string msg)
         {

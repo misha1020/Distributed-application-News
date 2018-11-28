@@ -22,11 +22,11 @@ namespace NewsServer
             pingReplier.Start();
             //Console.ReadKey();
             MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
-            using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
+            /*using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
-            {
+            {*/
 				SocketServer.SocketSend(msg, dispatcherIp);
-                mq.MessageSend += Pr;
+                /*mq.MessageSend += Pr;
                 reader.NewsReceived += NewNewsReceived;
                 reader.Start();
                 Console.WriteLine("Write 'Q' to finish");
@@ -44,7 +44,7 @@ namespace NewsServer
                     input = Console.ReadLine();
                 }
                 Console.ReadKey();
-            }
+            }*/
         }
 
 

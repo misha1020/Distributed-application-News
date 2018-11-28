@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Dispatcher
 {
@@ -18,10 +19,19 @@ namespace Dispatcher
             Console.WriteLine("Write 'Q' to finish");
             Thread ThreadFromServer = new Thread(new ThreadStart(DispatcherNewsServer.SocketRecieve));
             Thread ThreadToClient = new Thread(new ThreadStart(DispatcherClient.ServersListSend));
+            System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
+                pingTimer.Elapsed += Ping;
+                pingTimer.AutoReset = true;
+            pingTimer.Start();
 
             ThreadFromServer.Start();
             ThreadToClient.Start();
             string input = Console.ReadLine();
+        }
+
+        private static void Ping(object sender, ElapsedEventArgs e)
+        {
+            DispatcherNewsServer.PingServs();
         }
     }
 }
