@@ -26,7 +26,7 @@ namespace NewsServer
 				SocketServer.SocketSend(dispatcherIp, msg);
                 mq.MessageSend += Pr;
                 reader.NewsReceived += NewNewsReceived;
-                //reader.Start();
+                reader.Start();
                 Console.WriteLine("Write 'Q' to finish");
                 string input = Console.ReadLine();
                 while(input.ToUpper()!="Q")
