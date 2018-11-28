@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 //http://opendata.permkrai.ru/opendata/list.csv
 namespace NewsServer
 {
@@ -13,7 +14,12 @@ namespace NewsServer
         static RabbitMQServer mq;
         static void Main(string[] args)
         {
-            MessageToSend msg = new MessageToSend("127.0.0.1", "test", "test");
+            Thread pingReplier = new Thread(new ThreadStart(SocketServer.pingReply));
+            pingReplier.Start();
+            Console.ReadKey();
+
+            /*MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
+
             using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
             {
@@ -36,8 +42,9 @@ namespace NewsServer
                     input = Console.ReadLine();
                 }
                 Console.ReadKey();
-            }
+            }*/
         }
+
 
         private static void NewNewsReceived(string input)
         {

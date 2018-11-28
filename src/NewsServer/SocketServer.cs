@@ -24,6 +24,7 @@ namespace NewsServer
 
     class SocketServer
     {
+        private static int pingReplyPort = 11002;
 
         public static void SendString(Socket handler, string msg)
         {
@@ -56,5 +57,31 @@ namespace NewsServer
                 Console.WriteLine(ex.ToString());
             }
         }
+
+
+        public static void pingReply()
+        {
+            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender.Bind(new IPEndPoint(IPAddress.Any, pingReplyPort));
+            sender.Listen(10);
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("Waiting for ping");
+                    Socket receiver = sender.Accept();
+                    Byte[] buf = new Byte[1];
+                    receiver.Receive(buf);
+                    receiver.Send(buf);
+                    Console.WriteLine("Reply");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message + " in " + ex.Source);
+                }
+            }
+
+        }
+
     }
 }
