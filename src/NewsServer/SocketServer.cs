@@ -56,5 +56,23 @@ namespace NewsServer
                 Console.WriteLine(ex.ToString());
             }
         }
+
+
+        public static void pingReply()
+        {
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("good");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message + " in " + ex.Source);
+                }
+            }
+
+        }
+
     }
 }
