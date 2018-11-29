@@ -90,8 +90,12 @@ namespace Dispatcher
                 }
                 catch (Exception ex)
                 {
+
+                    Program.msgsWithHosts_Semaphore.WaitOne();
+                    Program.msgsWithHosts.Remove(host.Key);
+                    Program.msgsWithHosts_Semaphore.Release();
                     Console.WriteLine($"Host {host.Value.hostIP} doesn't answer");
-                    Console.WriteLine(ex.Message + " in " + ex.Source);
+                    //Console.WriteLine(ex.Message + " in " + ex.Source);
                 }
             }
         }
