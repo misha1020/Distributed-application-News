@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dispatcher
+namespace MessageSerdServe
 {
     [Serializable]
-    struct  MessageSendRecieve
+    public struct MessageSendRecieve
     {
-        public string hostIP;
-        public string login;
-        public string password;
-        public string IP;
+        public string hostIP { get; set; }
+        public string login { get; set; }
+        public string password { get; set; }
+        public string IP { get; set; }
 
         public MessageSendRecieve(string IP, string hostip, string log, string pass)
         {
