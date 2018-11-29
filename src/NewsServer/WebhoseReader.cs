@@ -8,8 +8,6 @@ using webhoseio;
 
 namespace NewsServer
 {
-    
-
     class WebhoseReader:IDisposable
     {
         public struct Article
@@ -18,7 +16,6 @@ namespace NewsServer
             public string text;
             public DateTime published;
         }
-
 
         string token = "6524a769-2af5-444c-b0ba-1dae3897f5d1";
         private Timer timer;
@@ -96,8 +93,6 @@ namespace NewsServer
                     }
                     
                 }
-
-
             }
             catch (Exception ex)
             {

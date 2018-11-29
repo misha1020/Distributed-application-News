@@ -12,6 +12,7 @@ namespace NewsServer
             else
                 throw new ConfigurationErrorsException($"fielel {key} not found");
         }
+
         public static void AddOrUpdate(string key, string value)
         {
             try

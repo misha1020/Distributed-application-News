@@ -26,9 +26,9 @@ namespace NewsServer
     {
         private static int pingReplyPort = Convert.ToInt32(ConfigManager.Get("pingPort"));
 
-        public static void SendString(Socket handler, string msg)
+        public static void SendMsg<T>(Socket handler, T msg)
         {
-            byte[] byteSet = BinFormatter.ToBytes<string>(msg);
+            byte[] byteSet = BinFormatter.ToBytes<T>(msg);
             handler.Send(BinFormatter.ToBytes<int>(byteSet.Length));
             handler.Send(byteSet);
         }
@@ -43,21 +43,19 @@ namespace NewsServer
                 Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sender.Connect(ipEndPoint);
 
-                SendString(sender, msg.hostIP);
-                SendString(sender, msg.login);
-                SendString(sender, msg.password);
+                SendMsg<string>(sender, msg.hostIP);
+                SendMsg<string>(sender, msg.login);
+                SendMsg<string>(sender, msg.password);
 
                 sender.Shutdown(SocketShutdown.Both);
                 sender.Close();
                 Console.WriteLine("Данные отправлены");
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
         }
-
 
         public static void pingReply()
         {
@@ -80,8 +78,6 @@ namespace NewsServer
                     Console.WriteLine(ex.Message + " in " + ex.Source);
                 }
             }
-
         }
-
     }
 }

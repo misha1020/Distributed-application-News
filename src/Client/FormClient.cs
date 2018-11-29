@@ -3,19 +3,30 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Data;
 using System.Windows.Forms;
+using System.Timers;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Client
 {
     public partial class FormClient : Form
     {
         RabbitMQClient RMQS;
-
-
+        
         public FormClient()
         {
             InitializeComponent();
             button_refresh_Click(null, null);
 
+            /*System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
+            pingTimer.Elapsed += Ping;
+            pingTimer.AutoReset = true;
+            pingTimer.Start();*/
+        }
+
+        private static void Ping(object sender, ElapsedEventArgs e)
+        {
+            //SocketClient.PingServs();
         }
 
         protected override void OnShown(EventArgs e)
