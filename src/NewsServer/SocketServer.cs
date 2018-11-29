@@ -24,7 +24,7 @@ namespace NewsServer
 
     class SocketServer
     {
-        private static int pingReplyPort = 11010;
+        private static int pingReplyPort = Convert.ToInt32(ConfigManager.Get("pingPort"));
 
         public static void SendString(Socket handler, string msg)
         {
