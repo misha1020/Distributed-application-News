@@ -10,6 +10,14 @@ namespace Client
     {
         RabbitMQClient RMQS;
 
+
+        public FormClient()
+        {
+            InitializeComponent();
+            button_refresh_Click(null, null);
+
+        }
+
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
@@ -34,14 +42,7 @@ namespace Client
             tbInfo.Text += value + Environment.NewLine;
         }
 
-        public FormClient()
-        {
-            InitializeComponent();
-            GetServersList();
-            
-        }
-
-        private bool GetServersList()
+        private string[] GetServersList()
         {
             bt_Reconnect.Visible = false;
             try
@@ -52,14 +53,14 @@ namespace Client
                 for (int i = 0; i < guids.Length; i++)
                     tbInfo.Text += guids[i] + Environment.NewLine;
                 TSMI_Connection.Text = "Online";
-                return true;
+                return guids;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + " in " + ex.TargetSite);
                 TSMI_Connection.Text = "Offline";
                 bt_Reconnect.Visible = true;
-                return false;
+                return null;
             }
         }
 
@@ -98,6 +99,19 @@ namespace Client
         {
             tbInfo.Text += Environment.NewLine;
             TryToConnect();
+        }
+
+        private void button_refresh_Click(object sender, EventArgs e)
+        {
+            var guids = GetServersList();
+            if (guids == null)
+                listView_servs.Enabled = false;
+            else
+            { 
+            listView_servs.Items.Clear();
+            foreach (var guid in guids)
+                listView_servs.Items.Add(guid);
+            }
         }
     }
 }

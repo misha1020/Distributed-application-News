@@ -33,16 +33,20 @@
             this.TSMI_Connection = new System.Windows.Forms.ToolStripMenuItem();
             this.bt_Reconnect = new System.Windows.Forms.Button();
             this.btGetNews = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.listView_servs = new System.Windows.Forms.ListView();
+            this.button_refresh = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbInfo
             // 
-            this.tbInfo.Location = new System.Drawing.Point(0, 112);
+            this.tbInfo.Location = new System.Drawing.Point(201, 112);
             this.tbInfo.Multiline = true;
             this.tbInfo.Name = "tbInfo";
             this.tbInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbInfo.Size = new System.Drawing.Size(599, 214);
+            this.tbInfo.Size = new System.Drawing.Size(398, 214);
             this.tbInfo.TabIndex = 1;
             // 
             // menuStrip1
@@ -82,11 +86,42 @@
             this.btGetNews.UseVisualStyleBackColor = true;
             this.btGetNews.Click += new System.EventHandler(this.btGetNews_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.button_refresh);
+            this.panel1.Controls.Add(this.listView_servs);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel1.Location = new System.Drawing.Point(0, 24);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(200, 301);
+            this.panel1.TabIndex = 6;
+            // 
+            // listView_servs
+            // 
+            this.listView_servs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView_servs.Location = new System.Drawing.Point(0, 0);
+            this.listView_servs.Name = "listView_servs";
+            this.listView_servs.Size = new System.Drawing.Size(200, 301);
+            this.listView_servs.TabIndex = 0;
+            this.listView_servs.UseCompatibleStateImageBehavior = false;
+            this.listView_servs.View = System.Windows.Forms.View.List;
+            // 
+            // button_refresh
+            // 
+            this.button_refresh.Location = new System.Drawing.Point(122, 3);
+            this.button_refresh.Name = "button_refresh";
+            this.button_refresh.Size = new System.Drawing.Size(75, 23);
+            this.button_refresh.TabIndex = 7;
+            this.button_refresh.Text = "refresh";
+            this.button_refresh.UseVisualStyleBackColor = true;
+            this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
+            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(599, 325);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.btGetNews);
             this.Controls.Add(this.bt_Reconnect);
             this.Controls.Add(this.tbInfo);
@@ -97,6 +132,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClient_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -108,6 +144,9 @@
         private System.Windows.Forms.ToolStripMenuItem TSMI_Connection;
         private System.Windows.Forms.Button bt_Reconnect;
         private System.Windows.Forms.Button btGetNews;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ListView listView_servs;
+        private System.Windows.Forms.Button button_refresh;
     }
 }
 
