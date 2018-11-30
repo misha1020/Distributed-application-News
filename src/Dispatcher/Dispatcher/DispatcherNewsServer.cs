@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using MessageSerdServe;
 
 namespace Dispatcher
 {
@@ -12,22 +13,31 @@ namespace Dispatcher
     {
         private static int pingServsPort = 11003;
 
-        public static string ReceiveString(Socket receiver)
+        public static T RecieveMsg<T>(Socket receiver)
         {
             byte[] length = new byte[256];
-            receiver.Receive(length, 0, length.Length, SocketFlags.None);
+
+            int c = 0;
+            int step = 256;
+            while (c < 256)
+            {
+                if (c + step > 256)
+                    step = 256 - c;
+                c += receiver.Receive(length, c, step, SocketFlags.None);
+            }
+
             int bytesRec = BinFormatter.FromBytes<int>(length);
             byte[] bytes = new byte[bytesRec];
 
             int a = 0;
-            int step = bytesRec;
+            step = bytesRec;
             while (a < bytesRec)
             {
                 if (a + step > bytesRec)
                     step = bytesRec - a;
                 a += receiver.Receive(bytes, a, step, SocketFlags.None);
             }
-            return BinFormatter.FromBytes<string>(bytes);
+            return BinFormatter.FromBytes<T>(bytes);
         }
 
         public static void SocketRecieve()
@@ -44,9 +54,9 @@ namespace Dispatcher
                 {
                     Socket receiver = sender.Accept();
 
-                    msg.hostIP = ReceiveString(receiver);
-                    msg.login = ReceiveString(receiver);
-                    msg.password = ReceiveString(receiver);
+                    msg.hostIP = RecieveMsg<string>(receiver);
+                    msg.login = RecieveMsg<string>(receiver);
+                    msg.password = RecieveMsg<string>(receiver);
                     msg.IP =(receiver.RemoteEndPoint as IPEndPoint).Address.ToString();
 
                     receiver.Shutdown(SocketShutdown.Both);

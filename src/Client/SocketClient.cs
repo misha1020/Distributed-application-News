@@ -6,10 +6,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MessageSerdServe;
 
 namespace Client
 {
-    struct MessageToRecieve
+    /*struct MessageToRecieve
     {
         public string hostIP;
         public string login;
@@ -21,7 +22,7 @@ namespace Client
             this.login = log;
             this.password = pass;
         }
-    }
+    }*/
 
     class SocketClient
     {
@@ -74,11 +75,11 @@ namespace Client
             }
             return guids;
         }
-
-        public static MessageToRecieve SocketRecieve()
+        
+        public static MessageSendRecieve SocketRecieve()
         {
             int port = 11005;
-            MessageToRecieve msg = new MessageToRecieve();
+            MessageSendRecieve msg = new MessageSendRecieve();
             try
             {
                 IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
@@ -86,9 +87,7 @@ namespace Client
                 Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 receiver.Connect(ipEndPoint);
 
-                msg.hostIP = ReceiveMsg<string>(receiver);
-                msg.login = ReceiveMsg<string>(receiver);
-                msg.password = ReceiveMsg<string>(receiver);
+                msg = ReceiveMsg<MessageSendRecieve>(receiver);
 
                 receiver.Shutdown(SocketShutdown.Both);
                 receiver.Close();
@@ -99,5 +98,34 @@ namespace Client
             }
             return msg;
         }
+
+        /*public static void PingServs()
+        {
+            Program.msgsWithHosts_Semaphore.WaitOne();
+            Dictionary<string, MessageToRecieve> msgsWithHosts = new Dictionary<string, MessageToRecieve>();
+            foreach (var host in Program.msgsWithHosts)
+                msgsWithHosts.Add(host.Key, host.Value);
+            Program.msgsWithHosts_Semaphore.Release();
+
+            foreach (var host in msgsWithHosts)
+            {
+                try
+                {
+                    Console.WriteLine($"trying to ping {host.Value.IP}");
+                    IPAddress ipAddr = IPAddress.Parse(host.Value.IP);
+                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
+                    Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    sender.Connect(ipEndPoint);
+                    Byte[] buf = new Byte[1];
+                    sender.Send(buf);
+                    sender.Receive(buf);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Host {host.Value.hostIP} doesn't answer");
+                    Console.WriteLine(ex.Message + " in " + ex.Source);
+                }
+            }
+        }*/
     }
 }

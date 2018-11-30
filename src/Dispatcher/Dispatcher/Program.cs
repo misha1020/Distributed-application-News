@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using MessageSerdServe;
 
 namespace Dispatcher
 {
     class Program
     {
         public static Dictionary<string, MessageSendRecieve> msgsWithHosts = new Dictionary<string, MessageSendRecieve>();
-
         public static Semaphore msgsWithHosts_Semaphore = new Semaphore(1, 1);
 
         static void Main(string[] args)
