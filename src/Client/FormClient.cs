@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Threading;
 using MessageSendServe;
 using System.Drawing;
+using Client.Properties;
+using System.IO;
 
 namespace Client
 {
@@ -18,7 +20,11 @@ namespace Client
         public FormClient()
         {
             InitializeComponent();
+
+            lvServs.StateImageList.Images.Add(new Icon("online.ico"));
+            lvServs.StateImageList.Images.Add(new Icon("offline.ico"));
             button_refresh_Click(null, null);
+            
 
             System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
             pingTimer.Elapsed += Ping;
@@ -70,7 +76,8 @@ namespace Client
                     index = lItem.Index;
             }
             if (index != -1)
-                lvServs.Items[index].BackColor = (ping) ? Color.Green: Color.Red;
+                lvServs.Items[index].StateImageIndex = 0;
+            //lvServs.Items[index].BackColor = (ping) ? Color.ForestGreen : Color.DarkRed;
         }
 
         private MessageSendRecieve[] GetServersList()
@@ -83,9 +90,8 @@ namespace Client
                 Program.msgsWithHosts_Semaphore.WaitOne();
                 Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
                 Program.msgsWithHosts_Semaphore.Release();
-                //tbInfo.Clear();
                 for (int i = 0; i < servers.Length; i++)
-                    tbInfo.Text += servers[i] + Environment.NewLine;
+                    tbInfo.Text +=  "[" + servers[i].serverName + "]" + Environment.NewLine;
                 TSMI_Connection.Text = "Online";
                 return servers;
             }
