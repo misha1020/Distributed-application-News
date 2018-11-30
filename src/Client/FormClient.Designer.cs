@@ -34,8 +34,8 @@
             this.bt_Reconnect = new System.Windows.Forms.Button();
             this.btGetNews = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.listView_servs = new System.Windows.Forms.ListView();
             this.button_refresh = new System.Windows.Forms.Button();
+            this.lvServs = new System.Windows.Forms.ListView();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -88,27 +88,16 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button_refresh);
-            this.panel1.Controls.Add(this.listView_servs);
+            this.panel1.Controls.Add(this.lvServs);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(200, 301);
             this.panel1.TabIndex = 6;
             // 
-            // listView_servs
-            // 
-            this.listView_servs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView_servs.Location = new System.Drawing.Point(0, 0);
-            this.listView_servs.Name = "listView_servs";
-            this.listView_servs.Size = new System.Drawing.Size(200, 301);
-            this.listView_servs.TabIndex = 0;
-            this.listView_servs.UseCompatibleStateImageBehavior = false;
-            this.listView_servs.View = System.Windows.Forms.View.List;
-            // 
             // button_refresh
             // 
-            this.button_refresh.Location = new System.Drawing.Point(122, 3);
+            this.button_refresh.Location = new System.Drawing.Point(206, 24);
             this.button_refresh.Name = "button_refresh";
             this.button_refresh.Size = new System.Drawing.Size(75, 23);
             this.button_refresh.TabIndex = 7;
@@ -116,11 +105,22 @@
             this.button_refresh.UseVisualStyleBackColor = true;
             this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
             // 
+            // lvServs
+            // 
+            this.lvServs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvServs.Location = new System.Drawing.Point(0, 0);
+            this.lvServs.Name = "lvServs";
+            this.lvServs.Size = new System.Drawing.Size(200, 301);
+            this.lvServs.TabIndex = 0;
+            this.lvServs.UseCompatibleStateImageBehavior = false;
+            this.lvServs.View = System.Windows.Forms.View.List;
+            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(599, 325);
+            this.Controls.Add(this.button_refresh);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btGetNews);
             this.Controls.Add(this.bt_Reconnect);
@@ -145,7 +145,7 @@
         private System.Windows.Forms.Button bt_Reconnect;
         private System.Windows.Forms.Button btGetNews;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ListView listView_servs;
+        private System.Windows.Forms.ListView lvServs;
         private System.Windows.Forms.Button button_refresh;
     }
 }

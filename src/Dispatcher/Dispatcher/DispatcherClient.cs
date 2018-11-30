@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using MessageSerdServe;
+using MessageSendServe;
 
 namespace Dispatcher
 { 
@@ -33,17 +33,17 @@ namespace Dispatcher
                     Socket handler = sender.Accept();
                     Program.msgsWithHosts_Semaphore.WaitOne();
                     int serversCount = Program.msgsWithHosts.Count;
-                    string[] guids = new string[serversCount]; 
+                    MessageSendRecieve[] servers = new MessageSendRecieve[serversCount]; 
                     if (serversCount != 0)
                     {
                         int i = 0;
                         foreach (var elem in Program.msgsWithHosts)
                         {
-                            string id = elem.Key;
-                            guids[i] = id;
+                            MessageSendRecieve msg = elem.Value;
+                            servers[i] = msg;
                             i++;
                         }
-                        SendMsg(handler, guids);
+                        SendMsg<MessageSendRecieve[]>(handler, servers);
                         Console.WriteLine("Список серверов отпрален!");
                     }
                     Program.msgsWithHosts_Semaphore.Release();
