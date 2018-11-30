@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dispatcher
 {
-    [Serializable]
+    /*[Serializable]
     struct  MessageSendRecieve
     {
         public string hostIP;
@@ -21,5 +21,5 @@ namespace Dispatcher
             this.login = log;
             this.password = pass;
         }
-    }
+    }*/
 }
