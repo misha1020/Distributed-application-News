@@ -5,23 +5,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using MessageSendServe;
 
 namespace NewsServer
 {
-    struct MessageToSend
-    {
-        public string hostIP;
-        public string login;
-        public string password;
-
-        public MessageToSend(string ip, string log, string pass)
-        {
-            this.hostIP = ip;
-            this.login = log;
-            this.password = pass;
-        }
-    }
-
     class SocketServer
     {
         private static int pingReplyPort = Convert.ToInt32(ConfigManager.Get("pingPort"));
@@ -33,7 +20,7 @@ namespace NewsServer
             handler.Send(byteSet);
         }
 
-        public static void SocketSend(MessageToSend msg, string ip)
+        public static void SocketSend(MessageSendRecieve msg, string ip)
         {
             int port = 11001;
             try
@@ -43,9 +30,7 @@ namespace NewsServer
                 Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sender.Connect(ipEndPoint);
 
-                SendMsg<string>(sender, msg.hostIP);
-                SendMsg<string>(sender, msg.login);
-                SendMsg<string>(sender, msg.password);
+                SendMsg<MessageSendRecieve>(sender, msg);
 
                 sender.Shutdown(SocketShutdown.Both);
                 sender.Close();

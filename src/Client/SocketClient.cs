@@ -107,11 +107,11 @@ namespace Client
                     Byte[] buf = new Byte[1];
                     sender.Send(buf);
                     sender.Receive(buf);
-                    formClient.AppendColorList(i, true);
+                    formClient.AppendColorList(host.guid, true);
                 }
                 catch (Exception ex)
                 {
-                    formClient.AppendColorList(i, false);
+                    formClient.AppendColorList(host.guid, false);
                     formClient.AppendTextBox($"serv missed! {host.IP}");
                 }
             }
