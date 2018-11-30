@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using MessageSerdServe;
 
 namespace Dispatcher
 { 
@@ -76,9 +77,7 @@ namespace Dispatcher
                     {
                         MessageSendRecieve msg = Program.msgsWithHosts.Values.First();
 
-                        SendMsg(handler, msg.hostIP);
-                        SendMsg(handler, msg.login);
-                        SendMsg(handler, msg.password);
+                        SendMsg(handler, msg);
                         Console.WriteLine("Данные отправлены");
                     }
                     Program.msgsWithHosts_Semaphore.Release();

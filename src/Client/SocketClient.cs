@@ -6,10 +6,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MessageSerdServe;
 
 namespace Client
 {
-    struct MessageToRecieve
+    /*struct MessageToRecieve
     {
         public string hostIP;
         public string login;
@@ -21,7 +22,7 @@ namespace Client
             this.login = log;
             this.password = pass;
         }
-    }
+    }*/
 
     class SocketClient
     {
@@ -74,11 +75,11 @@ namespace Client
             }
             return guids;
         }
-
-        public static MessageToRecieve SocketRecieve()
+        
+        public static MessageSendRecieve SocketRecieve()
         {
             int port = 11005;
-            MessageToRecieve msg = new MessageToRecieve();
+            MessageSendRecieve msg = new MessageSendRecieve();
             try
             {
                 IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
@@ -86,9 +87,7 @@ namespace Client
                 Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 receiver.Connect(ipEndPoint);
 
-                msg.hostIP = ReceiveMsg<string>(receiver);
-                msg.login = ReceiveMsg<string>(receiver);
-                msg.password = ReceiveMsg<string>(receiver);
+                msg = ReceiveMsg<MessageSendRecieve>(receiver);
 
                 receiver.Shutdown(SocketShutdown.Both);
                 receiver.Close();

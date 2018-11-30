@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Timers;
 using System.Collections.Generic;
 using System.Threading;
+using MessageSerdServe;
 
 namespace Client
 {
@@ -81,7 +82,7 @@ namespace Client
             try
             {
                 TSMI_Connection.Text = "Connecting...";
-                MessageToRecieve msg = SocketClient.SocketRecieve();
+                MessageSendRecieve msg = SocketClient.SocketRecieve();
                 RMQS = new RabbitMQClient(msg.hostIP, msg.login, msg.password);
                 RMQS.consumer.Received += sender;
                 TSMI_Connection.Text = "Online";
