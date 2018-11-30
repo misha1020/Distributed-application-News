@@ -39,7 +39,7 @@ namespace Dispatcher
                         int i = 0;
                         foreach (var elem in Program.msgsWithHosts)
                         {
-                            MessageSendRecieve msg = elem.Value;
+                            MessageSendRecieve msg = elem;
                             servers[i] = msg;
                             i++;
                         }
@@ -62,7 +62,7 @@ namespace Dispatcher
         public static void SocketSend()
         {
             int port = 11005;
-
+        
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Bind(new IPEndPoint(IPAddress.Any, port));
             sender.Listen(10);
@@ -71,21 +71,21 @@ namespace Dispatcher
                 try
                 {
                     Socket handler = sender.Accept();
-
+        
                     Program.msgsWithHosts_Semaphore.WaitOne();
                     if (Program.msgsWithHosts.Count != 0)
                     {
-                        MessageSendRecieve msg = Program.msgsWithHosts.Values.First();
-
+                        MessageSendRecieve msg = Program.msgsWithHosts.First();
+        
                         SendMsg(handler, msg);
                         Console.WriteLine("Данные отправлены");
                     }
                     Program.msgsWithHosts_Semaphore.Release();
-
+        
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                 }
-
+        
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());

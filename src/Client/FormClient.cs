@@ -55,14 +55,22 @@ namespace Client
             tbInfo.Text += value + Environment.NewLine;
         }
 
-        public void AppendColorList(int id, bool ping)
+        public void AppendColorList(string guid, bool ping)
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<int, bool>(AppendColorList), new object[] { id, ping });
+                this.Invoke(new Action<string, bool>(AppendColorList), new object[] { guid, ping });
                 return;
             }
-            lvServs.Items[id].BackColor = (ping) ? Color.Green: Color.Red;
+
+            int index = -1;
+            foreach (ListViewItem lItem in lvServs.Items)
+            {
+                if (lItem.Tag.ToString() == guid)
+                    index = lItem.Index;
+            }
+            if (index != -1)
+                lvServs.Items[index].BackColor = (ping) ? Color.Green: Color.Red;
         }
 
         private MessageSendRecieve[] GetServersList()
@@ -97,7 +105,7 @@ namespace Client
             {
                 TSMI_Connection.Text = "Connecting...";
                 MessageSendRecieve msg = SocketClient.SocketRecieve();
-                RMQS = new RabbitMQClient(msg.hostIP, msg.login, msg.password);
+                RMQS = new RabbitMQClient(msg.mqIP, msg.login, msg.password);
                 RMQS.consumer.Received += sender;
                 TSMI_Connection.Text = "Online";
                 return true;
@@ -136,7 +144,7 @@ namespace Client
             { 
                 lvServs.Items.Clear();
                 foreach (var serv in servers)
-                    lvServs.Items.Add(serv.IP);
+                    lvServs.Items.Add(serv.serverName).Tag = serv.guid;
             }
         }
     }

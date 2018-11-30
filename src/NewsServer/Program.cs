@@ -6,12 +6,16 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using MessageSendServe;
+
 //http://opendata.permkrai.ru/opendata/list.csv
-namespace NewsServer
+
+    namespace NewsServer
 {
     class Program
     {
         static RabbitMQServer mq;
+        static string serverName = ConfigManager.Get("serverName");
          static string dispatcherIp = ConfigManager.Get("dispatcherIp");
          static string rabbitMqIp = ConfigManager.Get("rabbitMqIp");
          static string username = ConfigManager.Get("username");
@@ -21,8 +25,8 @@ namespace NewsServer
             Thread pingReplier = new Thread(new ThreadStart(SocketServer.pingReply));
             pingReplier.Start();
 
-            MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
-            using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
+            MessageSendRecieve msg = new MessageSendRecieve(null, serverName, rabbitMqIp, username, password);
+            using (mq = new RabbitMQServer(msg.mqIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
             {
 				SocketServer.SocketSend(msg, dispatcherIp);

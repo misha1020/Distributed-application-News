@@ -44,24 +44,19 @@ namespace Dispatcher
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Bind(new IPEndPoint(IPAddress.Any, port));
             sender.Listen(10);
-
             while (true)
             {
                 MessageSendRecieve msg = new MessageSendRecieve();
                 try
                 {
                     Socket receiver = sender.Accept();
-
-                    msg.hostIP = RecieveMsg<string>(receiver);
-                    msg.login = RecieveMsg<string>(receiver);
-                    msg.password = RecieveMsg<string>(receiver);
+                    msg = RecieveMsg<MessageSendRecieve>(receiver);
                     msg.IP =(receiver.RemoteEndPoint as IPEndPoint).Address.ToString();
-
                     receiver.Shutdown(SocketShutdown.Both);
                     receiver.Close();
 
                     Program.msgsWithHosts_Semaphore.WaitOne();
-                    Program.msgsWithHosts.Add(Guid.NewGuid().ToString(), msg);
+                    Program.msgsWithHosts.Add(msg);
                     Console.WriteLine("New server connected!");
                     Program.msgsWithHosts_Semaphore.Release();
                 }
@@ -70,16 +65,15 @@ namespace Dispatcher
                     Console.WriteLine(ex.ToString());
                 }
             }
-
         }
 
         public static void PingServs()
         {
 
             Program.msgsWithHosts_Semaphore.WaitOne();
-            Dictionary<string, MessageSendRecieve> msgsWithHosts = new Dictionary<string, MessageSendRecieve>();
+            List<MessageSendRecieve> msgsWithHosts = new List<MessageSendRecieve>();
             foreach (var host in Program.msgsWithHosts)
-                msgsWithHosts.Add(host.Key,host.Value);
+                msgsWithHosts.Add(host);
             Program.msgsWithHosts_Semaphore.Release();
 
 
@@ -88,7 +82,7 @@ namespace Dispatcher
                 try
                 {
                     //Console.WriteLine($"trying to ping {host.Value.IP}");
-                    IPAddress ipAddr = IPAddress.Parse(host.Value.IP);
+                    IPAddress ipAddr = IPAddress.Parse(host.IP);
                     IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
                     Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sender.Connect(ipEndPoint);
@@ -98,12 +92,11 @@ namespace Dispatcher
                 }
                 catch (Exception ex)
                 {
-
                     Program.msgsWithHosts_Semaphore.WaitOne();
-                    Program.msgsWithHosts.Remove(host.Key);
+                    Program.msgsWithHosts.Remove(host);
                     Program.msgsWithHosts_Semaphore.Release();
 
-                    Console.WriteLine($"Host {host.Value.hostIP} doesn't answer");
+                    Console.WriteLine($"Host {host.IP} doesn't answer");
                     //Console.WriteLine(ex.Message + " in " + ex.Source);
                 }
             }

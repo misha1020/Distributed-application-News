@@ -11,7 +11,7 @@ namespace Dispatcher
 {
     class Program
     {
-        public static Dictionary<string, MessageSendRecieve> msgsWithHosts = new Dictionary<string, MessageSendRecieve>();
+        public static List<MessageSendRecieve> msgsWithHosts = new List<MessageSendRecieve>();
         public static Semaphore msgsWithHosts_Semaphore = new Semaphore(1, 1);
 
         static void Main(string[] args)
