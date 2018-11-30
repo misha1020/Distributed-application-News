@@ -86,33 +86,5 @@ namespace Client
             return msg;
         }
 
-        /*public static void PingServs()
-        {
-            Program.msgsWithHosts_Semaphore.WaitOne();
-            Dictionary<string, MessageToRecieve> msgsWithHosts = new Dictionary<string, MessageToRecieve>();
-            foreach (var host in Program.msgsWithHosts)
-                msgsWithHosts.Add(host.Key, host.Value);
-            Program.msgsWithHosts_Semaphore.Release();
-
-            foreach (var host in msgsWithHosts)
-            {
-                try
-                {
-                    Console.WriteLine($"trying to ping {host.Value.IP}");
-                    IPAddress ipAddr = IPAddress.Parse(host.Value.IP);
-                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
-                    Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    sender.Connect(ipEndPoint);
-                    Byte[] buf = new Byte[1];
-                    sender.Send(buf);
-                    sender.Receive(buf);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Host {host.Value.hostIP} doesn't answer");
-                    Console.WriteLine(ex.Message + " in " + ex.Source);
-                }
-            }
-        }*/
     }
 }
