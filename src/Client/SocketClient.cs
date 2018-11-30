@@ -10,19 +10,6 @@ using MessageSerdServe;
 
 namespace Client
 {
-    /*struct MessageToRecieve
-    {
-        public string hostIP;
-        public string login;
-        public string password;
-
-        public MessageToRecieve(string ip, string log, string pass)
-        {
-            this.hostIP = ip;
-            this.login = log;
-            this.password = pass;
-        }
-    }*/
 
     class SocketClient
     {

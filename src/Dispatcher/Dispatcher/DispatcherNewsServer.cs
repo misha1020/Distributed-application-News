@@ -11,8 +11,6 @@ namespace Dispatcher
 {
     class DispatcherNewsServer
     {
-        private static int pingServsPort = 11003;
-
         public static T RecieveMsg<T>(Socket receiver)
         {
             byte[] length = new byte[256];
@@ -89,7 +87,7 @@ namespace Dispatcher
             {
                 try
                 {
-                    Console.WriteLine($"trying to ping {host.Value.IP}");
+                    //Console.WriteLine($"trying to ping {host.Value.IP}");
                     IPAddress ipAddr = IPAddress.Parse(host.Value.IP);
                     IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
                     Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -104,6 +102,7 @@ namespace Dispatcher
                     Program.msgsWithHosts_Semaphore.WaitOne();
                     Program.msgsWithHosts.Remove(host.Key);
                     Program.msgsWithHosts_Semaphore.Release();
+
                     Console.WriteLine($"Host {host.Value.hostIP} doesn't answer");
                     //Console.WriteLine(ex.Message + " in " + ex.Source);
                 }

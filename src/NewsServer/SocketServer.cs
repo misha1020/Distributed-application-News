@@ -66,12 +66,12 @@ namespace NewsServer
             {
                 try
                 {
-                    Console.WriteLine("Waiting for ping");
+                    //Console.WriteLine("Waiting for ping");
                     Socket receiver = sender.Accept();
                     Byte[] buf = new Byte[1];
                     receiver.Receive(buf);
                     receiver.Send(buf);
-                    Console.WriteLine("Reply");
+                    //Console.WriteLine("Reply");
                 }
                 catch (Exception ex)
                 {

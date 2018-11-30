@@ -20,7 +20,7 @@ namespace NewsServer
         {
             Thread pingReplier = new Thread(new ThreadStart(SocketServer.pingReply));
             pingReplier.Start();
-            //Console.ReadKey();
+
             MessageToSend msg = new MessageToSend(rabbitMqIp, username, password);
             using (mq = new RabbitMQServer(msg.hostIP, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
