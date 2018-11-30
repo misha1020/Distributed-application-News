@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MessageSerdServe;
+using MessageSendServe;
 
 namespace Client
 {
@@ -41,18 +41,18 @@ namespace Client
             return BinFormatter.FromBytes<T>(bytes);
         }
 
-        public static string[] RecieveServersList()
+        public static MessageSendRecieve[] RecieveServersList()
         {
             int port = 11000;
-            string[] guids = null;
+            MessageSendRecieve[] servers = null;
             try
             {
                 IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
                 Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 receiver.Connect(ipEndPoint);
-                
-                guids = ReceiveMsg<string[]>(receiver);
+
+                servers = ReceiveMsg<MessageSendRecieve[]>(receiver);
                 receiver.Shutdown(SocketShutdown.Both);
                 receiver.Close();
             }
@@ -60,7 +60,7 @@ namespace Client
             {
                 MessageBox.Show(ex.ToString());
             }
-            return guids;
+            return servers;
         }
         
         public static MessageSendRecieve SocketRecieve()
@@ -86,33 +86,35 @@ namespace Client
             return msg;
         }
 
-        /*public static void PingServs()
+        public static void PingServs(FormClient formClient)
         {
             Program.msgsWithHosts_Semaphore.WaitOne();
-            Dictionary<string, MessageToRecieve> msgsWithHosts = new Dictionary<string, MessageToRecieve>();
+            List<MessageSendRecieve> msgsWithHosts = new List<MessageSendRecieve>();
             foreach (var host in Program.msgsWithHosts)
-                msgsWithHosts.Add(host.Key, host.Value);
+                msgsWithHosts.Add(host);
             Program.msgsWithHosts_Semaphore.Release();
 
-            foreach (var host in msgsWithHosts)
+            for (int i = 0; i < msgsWithHosts.Count; i++)
             {
+                MessageSendRecieve host = msgsWithHosts[i];
                 try
                 {
-                    Console.WriteLine($"trying to ping {host.Value.IP}");
-                    IPAddress ipAddr = IPAddress.Parse(host.Value.IP);
+                    //formClient.AppendTextBox($"trying to ping {host.IP}");
+                    IPAddress ipAddr = IPAddress.Parse(host.IP);
                     IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
                     Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sender.Connect(ipEndPoint);
                     Byte[] buf = new Byte[1];
                     sender.Send(buf);
                     sender.Receive(buf);
+                    formClient.AppendColorList(i, true);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Host {host.Value.hostIP} doesn't answer");
-                    Console.WriteLine(ex.Message + " in " + ex.Source);
+                    formClient.AppendColorList(i, false);
+                    formClient.AppendTextBox($"serv missed! {host.IP}");
                 }
             }
-        }*/
+        }
     }
 }

@@ -6,7 +6,8 @@ using System.Windows.Forms;
 using System.Timers;
 using System.Collections.Generic;
 using System.Threading;
-using MessageSerdServe;
+using MessageSendServe;
+using System.Drawing;
 
 namespace Client
 {
@@ -19,15 +20,15 @@ namespace Client
             InitializeComponent();
             button_refresh_Click(null, null);
 
-            /*System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
+            System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
             pingTimer.Elapsed += Ping;
             pingTimer.AutoReset = true;
-            pingTimer.Start();*/
+            pingTimer.Start();
         }
 
-        private static void Ping(object sender, ElapsedEventArgs e)
+        private void Ping(object sender, ElapsedEventArgs e)
         {
-            //SocketClient.PingServs();
+            SocketClient.PingServs(this);
         }
 
         protected override void OnShown(EventArgs e)
@@ -54,18 +55,31 @@ namespace Client
             tbInfo.Text += value + Environment.NewLine;
         }
 
-        private string[] GetServersList()
+        public void AppendColorList(int id, bool ping)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<int, bool>(AppendColorList), new object[] { id, ping });
+                return;
+            }
+            lvServs.Items[id].BackColor = (ping) ? Color.Green: Color.Red;
+        }
+
+        private MessageSendRecieve[] GetServersList()
         {
             bt_Reconnect.Visible = false;
             try
             {
                 TSMI_Connection.Text = "Connecting...";
-                string[] guids = SocketClient.RecieveServersList();
+                MessageSendRecieve[] servers = SocketClient.RecieveServersList();
+                Program.msgsWithHosts_Semaphore.WaitOne();
+                Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
+                Program.msgsWithHosts_Semaphore.Release();
                 //tbInfo.Clear();
-                for (int i = 0; i < guids.Length; i++)
-                    tbInfo.Text += guids[i] + Environment.NewLine;
+                for (int i = 0; i < servers.Length; i++)
+                    tbInfo.Text += servers[i] + Environment.NewLine;
                 TSMI_Connection.Text = "Online";
-                return guids;
+                return servers;
             }
             catch (Exception ex)
             {
@@ -115,14 +129,14 @@ namespace Client
 
         private void button_refresh_Click(object sender, EventArgs e)
         {
-            var guids = GetServersList();
-            if (guids == null)
-                listView_servs.Enabled = false;
+            var servers = GetServersList();
+            if (servers == null)
+                lvServs.Enabled = false;
             else
             { 
-            listView_servs.Items.Clear();
-            foreach (var guid in guids)
-                listView_servs.Items.Add(guid);
+                lvServs.Items.Clear();
+                foreach (var serv in servers)
+                    lvServs.Items.Add(serv.IP);
             }
         }
     }

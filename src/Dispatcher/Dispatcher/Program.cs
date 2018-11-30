@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using MessageSerdServe;
+using MessageSendServe;
 
 namespace Dispatcher
 {
