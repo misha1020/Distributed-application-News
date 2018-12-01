@@ -37,15 +37,18 @@ namespace Client
 
         private void ReadSavedMQs()
         {
-            var saveData = SavingXML.ReadFromXmlFile<List<SaveMq>>("data.txt");
-            foreach(var data in saveData)
+            if (System.IO.File.Exists("data.txt"))
             {
-                Program.msgsWithHosts_Semaphore.WaitOne();
-                Program.msgsWithHosts.Add(data.messageSendRecieve);
-                Program.msgsWithHosts_Semaphore.Release();
-                var lvItem = addServInLvServs(data.messageSendRecieve,true);
-                RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
-                RMQS[RMQS.Count - 1].consumer.Received += sender;
+                var saveData = SavingXML.ReadFromXmlFile<List<SaveMq>>("data.txt");
+                foreach (var data in saveData)
+                {
+                    Program.msgsWithHosts_Semaphore.WaitOne();
+                    Program.msgsWithHosts.Add(data.messageSendRecieve);
+                    Program.msgsWithHosts_Semaphore.Release();
+                    var lvItem = addServInLvServs(data.messageSendRecieve, true);
+                    RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
+                    RMQS[RMQS.Count - 1].consumer.Received += sender;
+                }
             }
         }
 
