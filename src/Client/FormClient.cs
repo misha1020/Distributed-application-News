@@ -16,20 +16,16 @@ namespace Client
     public partial class FormClient : Form
     {
         List<RabbitMQClient> RMQS = new List<RabbitMQClient>();
-        
+        ImageList imgsSub = new ImageList();
+        ImageList imgsOnOff = new ImageList();
+
         public FormClient()
         {
             InitializeComponent();
-            lvServs.CheckBoxes = true;
 
-            ImageList imgs = new ImageList();
-            foreach (String path in Directory.GetFiles(@"..\..\images"))
-                imgs.Images.Add(Image.FromFile(path));
-            imgs.ImageSize = new Size(30, 30);
-            
-            lvServs.StateImageList = imgs;
+            lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
             button_refresh_Click(null, null);
-            
 
             System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
             pingTimer.Elapsed += Ping;
@@ -73,7 +69,7 @@ namespace Client
                 this.Invoke(new Action<string, bool>(AppendColorList), new object[] { guid, ping });
                 return;
             }
-
+                    
             int index = -1;
             foreach (ListViewItem lItem in lvServs.Items)
             {
@@ -122,8 +118,19 @@ namespace Client
 
         private void button_refresh_Click(object sender, EventArgs e)
         {
+            foreach (String path in Directory.GetFiles(@"..\..\images\Connection"))
+                imgsOnOff.Images.Add(Image.FromFile(path));
+            imgsOnOff.ImageSize = new Size(30, 30);
+            lvServs.StateImageList = imgsOnOff;
+
+            foreach (String path in Directory.GetFiles(@"..\..\images\subscribe"))
+                imgsSub.Images.Add(Image.FromFile(path));
+            imgsSub.ImageSize = new Size(30, 30);
+            lvServs.SmallImageList = imgsSub;
+
             tbInfo.Clear();
             var servers = GetServersList();
+
             if (servers == null)
                 lvServs.Enabled = false;
             else
@@ -131,11 +138,12 @@ namespace Client
                 lvServs.Items.Clear();
                 foreach (var serv in servers)
                 {
-                    lvServs.Items.Add(serv.serverName).SubItems.AddRange(new string[] { "Nope" });
-                    ListViewItem lastItem = lvServs.Items[lvServs.Items.Count - 1];
-                    lastItem.Tag = serv.guid;
-                    lastItem.SubItems[1].Tag = false;
-                    lastItem.StateImageIndex = 0;                    
+                    ListViewItem item = new ListViewItem(new string[] { "     " + serv.serverName , ""});
+                    item.Tag = serv.guid;
+                    item.SubItems[0].Tag = false;
+                    item.ImageIndex = 1;
+                    item.StateImageIndex = 0;
+                    lvServs.Items.Add(item);                    
                 }
             }
         }
@@ -145,22 +153,20 @@ namespace Client
             Program.msgsWithHosts_Semaphore.WaitOne();
             var servers = new List<MessageSendRecieve>(Program.msgsWithHosts);
             Program.msgsWithHosts_Semaphore.Release();
-            //GetServersList();
             List<MessageSendRecieve> subList = new List<MessageSendRecieve>();
-            
+
             foreach (ListViewItem lvItem in lvServs.SelectedItems)
             {
                 for (int i = 0; i < servers.Count; i++)
                 {
-                    if ((bool) lvItem.SubItems[1].Tag == false && lvItem.Tag.ToString() == servers[i].guid )
+                    if ((bool) lvItem.SubItems[0].Tag == false && lvItem.Tag.ToString() == servers[i].guid )
                     {
-                        lvItem.SubItems[1].Tag = true;
-                        lvItem.SubItems[1].Text = "Yes";
+                        lvItem.SubItems[0].Tag = true;
+                        lvItem.ImageIndex = 0; 
                         subList.Add(servers[i]);
                     }
                 }
             }
-
             Subscribe(subList);
         }
     }

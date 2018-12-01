@@ -34,7 +34,6 @@
             this.button_refresh = new System.Windows.Forms.Button();
             this.lvServs = new System.Windows.Forms.ListView();
             this.chServerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chSubscribed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,8 +82,7 @@
             // lvServs
             // 
             this.lvServs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chServerName,
-            this.chSubscribed});
+            this.chServerName});
             this.lvServs.Location = new System.Drawing.Point(3, 24);
             this.lvServs.Name = "lvServs";
             this.lvServs.Size = new System.Drawing.Size(213, 303);
@@ -94,13 +92,8 @@
             // 
             // chServerName
             // 
-            this.chServerName.Text = "Server name";
-            this.chServerName.Width = 81;
-            // 
-            // chSubscribed
-            // 
-            this.chSubscribed.Text = "Subscribed";
-            this.chSubscribed.Width = 89;
+            this.chServerName.Text = "                    Server Name          ";
+            this.chServerName.Width = 180;
             // 
             // FormClient
             // 
@@ -125,7 +118,6 @@
         private System.Windows.Forms.Button button_refresh;
         private System.Windows.Forms.Button btSubscribe;
         private System.Windows.Forms.ColumnHeader chServerName;
-        private System.Windows.Forms.ColumnHeader chSubscribed;
     }
 }
 
