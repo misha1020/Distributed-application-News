@@ -1,34 +1,40 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using MessageSendServe;
 
 namespace Client
 {
-    class RabbitMQClient : IDisposable
+    public class RabbitMQClient : IDisposable
     {
         private ConnectionFactory factory;
         private IConnection connection;
         private IModel channel;
         public EventingBasicConsumer consumer { get; }
+        public MessageSendRecieve serv;
+        public string queueName;
 
-        public RabbitMQClient(string hostName, string login, string password)
+
+        public RabbitMQClient(MessageSendRecieve serv, string queueName = "")
         {
+            this.serv = serv;
             factory = new ConnectionFactory()
             {
-                UserName = login,
-                Password = password,
+                UserName = serv.login,
+                Password = serv.password,
                 VirtualHost = "/",
-                HostName = hostName,
+                HostName = serv.mqIP,
                 Port = 5672
             };
 
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
-            channel.ExchangeDeclare(exchange: "news", type: "fanout");
-            var queueName = channel.QueueDeclare().QueueName;
-            channel.QueueBind(queue: queueName, exchange: "news", routingKey: "");
+            channel.ExchangeDeclare(exchange: serv.mqName, type: "fanout");
+            this.queueName = (queueName=="")?channel.QueueDeclare(durable: true,exclusive: false, autoDelete: false).QueueName:queueName;
+            channel.QueueBind(queue: this.queueName, exchange: serv.mqName, routingKey: "");
             consumer = new EventingBasicConsumer(channel);
             channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+
         }
 
         public void Dispose()

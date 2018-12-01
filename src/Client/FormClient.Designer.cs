@@ -75,7 +75,7 @@
             this.button_refresh.Name = "button_refresh";
             this.button_refresh.Size = new System.Drawing.Size(108, 36);
             this.button_refresh.TabIndex = 7;
-            this.button_refresh.Text = "Refresh Servers List";
+            this.button_refresh.Text = "refresh";
             this.button_refresh.UseVisualStyleBackColor = true;
             this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
             // 
@@ -83,7 +83,9 @@
             // 
             this.lvServs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chServerName});
+            this.lvServs.FullRowSelect = true;
             this.lvServs.Location = new System.Drawing.Point(3, 24);
+            this.lvServs.MultiSelect = false;
             this.lvServs.Name = "lvServs";
             this.lvServs.Size = new System.Drawing.Size(213, 303);
             this.lvServs.TabIndex = 0;

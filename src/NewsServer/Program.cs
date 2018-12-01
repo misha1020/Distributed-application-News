@@ -16,17 +16,19 @@ using MessageSendServe;
     {
         static RabbitMQServer mq;
         static string serverName = ConfigManager.Get("serverName");
-         static string dispatcherIp = ConfigManager.Get("dispatcherIp");
-         static string rabbitMqIp = ConfigManager.Get("rabbitMqIp");
-         static string username = ConfigManager.Get("username");
-         static string password = ConfigManager.Get("password");
-         static void Main(string[] args)
+        static string dispatcherIp = ConfigManager.Get("dispatcherIp");
+        static string rabbitMqIp = ConfigManager.Get("rabbitMqIp");
+        static string rabbitMqName = ConfigManager.Get("rabbitMqName");
+        static string username = ConfigManager.Get("username");
+        static string password = ConfigManager.Get("password");
+
+        static void Main(string[] args)
         {
             Thread pingReplier = new Thread(new ThreadStart(SocketServer.pingReply));
             pingReplier.Start();
 
-            MessageSendRecieve msg = new MessageSendRecieve(null, serverName, rabbitMqIp, username, password);
-            using (mq = new RabbitMQServer(msg.mqIP, msg.login, msg.password))
+            MessageSendRecieve msg = new MessageSendRecieve(null, serverName, rabbitMqIp, rabbitMqName, username, password);
+            using (mq = new RabbitMQServer(msg.mqIP, msg.mqName, msg.login, msg.password))
             using (WebhoseReader reader = new WebhoseReader())
             {
 				SocketServer.SocketSend(msg, dispatcherIp);

@@ -9,14 +9,16 @@ namespace NewsServer
 {
     class RabbitMQServer : IDisposable
     {
+        private string mqName;
         private ConnectionFactory factory;
         private IConnection connection;
         private IModel channel;
         public delegate void MessageSendHandler(string message);
         public event MessageSendHandler MessageSend;
 
-        public RabbitMQServer(string hostName, string login, string password)
+        public RabbitMQServer(string hostName, string mqName, string login, string password)
         {
+            this.mqName = mqName;
             factory = new ConnectionFactory()
             {
                 UserName = login,
@@ -28,13 +30,13 @@ namespace NewsServer
 
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
-            channel.ExchangeDeclare(exchange: "news", type: "fanout");
+            channel.ExchangeDeclare(exchange: this.mqName, type: "fanout");
         }
 
         public void Send(string message)
         {
             var body = BinFormatter.ToBytes<string>(message);
-            channel.BasicPublish(exchange: "news",
+            channel.BasicPublish(exchange: mqName,
                                  routingKey: "",
                                  basicProperties: null,
                                  body: body);
