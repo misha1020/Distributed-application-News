@@ -5,9 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using MessageSendServe;
 
 namespace Client
 {
+    [Serializable]
+    public class SaveMq
+    {
+        public MessageSendRecieve messageSendRecieve { get; set; }
+        public string mqName { get; set; }
+        public SaveMq() {}
+        public SaveMq(MessageSendRecieve messageSendRecieve, string mqName)
+        {
+            this.messageSendRecieve = messageSendRecieve;
+            this.mqName = mqName;
+        }
+    }
+
+
     public class SavingXML
     {
         public static void WriteToXmlFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
