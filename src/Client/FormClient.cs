@@ -22,7 +22,7 @@ namespace Client
         public FormClient()
         {
             InitializeComponent();
-
+            
             lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
             button_refresh_Click(null, null);
@@ -192,13 +192,13 @@ namespace Client
                         if ((bool)lvItem.SubItems[0].Tag == false)
                         {
                             lvItem.SubItems[0].Tag = true;
-                            lvItem.ImageIndex = 1; 
+                            lvItem.ImageIndex = 0; 
                             Subscribe(servers[i]);
                         }
                         else
                         {
                             lvItem.SubItems[0].Tag = false;
-                            lvItem.ImageIndex = 0; 
+                            lvItem.ImageIndex = 1; 
                             Unsubscribe(servers[i]);
                         }
                     }
