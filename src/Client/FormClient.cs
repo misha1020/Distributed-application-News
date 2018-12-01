@@ -17,6 +17,7 @@ namespace Client
     {
         List<RabbitMQClient> RMQS = new List<RabbitMQClient>();
         
+        
         public FormClient()
         {
             InitializeComponent();
@@ -103,41 +104,43 @@ namespace Client
             }
         }
 
-        public void Subscribe(List<MessageSendRecieve> subList)
+        public void Subscribe(MessageSendRecieve sub)
         {
-            bt_Reconnect.Visible = false;
             try
             {
                 var queueName = "";
                 if (System.IO.File.Exists("data.txt"))
                 {
                     using (var input = new StreamReader("data.txt"))
-                        queueName = !input.EndOfStream?input.ReadLine():"";
-
+                        queueName = !input.EndOfStream ? input.ReadLine() : "";
                 }
-                MessageSendRecieve msg = SocketClient.SocketRecieve();
-                RMQS = new RabbitMQClient(msg.mqIP, msg.login, msg.password, queueName);
-                RMQS.consumer.Received += sender;
-                TSMI_Connection.Text = "Online";
-                return true;
+                RMQS.Add(new RabbitMQClient(sub, queueName));
+                RMQS[RMQS.Count - 1].consumer.Received += sender;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + " in " + ex.TargetSite);
-                bt_Reconnect.Visible = true;
-                return false;
             }
         }
 
-        private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
+        public void Unsubscribe(MessageSendRecieve Unsub)
         {
-
-            if (subList.Count != 0)
-                foreach (var serv in subList)
+            try
+            {
+                for (int i = RMQS.Count - 1; i >= 0; i--)
                 {
-                    RMQS.Add(new RabbitMQClient(serv.mqIP, serv.login, serv.password));
-                    RMQS[RMQS.Count-1].consumer.Received += sender;
+                    var mq = RMQS[i];
+                    if (mq.serv.mqName == Unsub.mqName)
+                    {
+                        RMQS.Remove(mq);
+                        mq.Dispose();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + " in " + ex.TargetSite);
+            }
         }
 
         private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
@@ -171,23 +174,30 @@ namespace Client
             Program.msgsWithHosts_Semaphore.WaitOne();
             var servers = new List<MessageSendRecieve>(Program.msgsWithHosts);
             Program.msgsWithHosts_Semaphore.Release();
-            //GetServersList();
-            List<MessageSendRecieve> subList = new List<MessageSendRecieve>();
-            
-            foreach (ListViewItem lvItem in lvServs.SelectedItems)
+                        
+            if(lvServs.SelectedItems.Count > 0)
             {
+                ListViewItem lvItem = lvServs.SelectedItems[0];
                 for (int i = 0; i < servers.Count; i++)
                 {
-                    if ((bool) lvItem.SubItems[1].Tag == false && lvItem.Tag.ToString() == servers[i].guid )
+                    if (lvItem.Tag.ToString() == servers[i].guid )
                     {
-                        lvItem.SubItems[1].Tag = true;
-                        lvItem.SubItems[1].Text = "Yes";
-                        subList.Add(servers[i]);
+                        if ((bool)lvItem.SubItems[1].Tag == false)
+                        {
+                            lvItem.SubItems[1].Tag = true;
+                            lvItem.SubItems[1].Text = "Yes";
+                            Subscribe(servers[i]);
+                        }
+                        else
+                        {
+                            lvItem.SubItems[1].Tag = false;
+                            lvItem.SubItems[1].Text = "Nope";
+                            Unsubscribe(servers[i]);
+                        }
                     }
                 }
             }
 
-            Subscribe(subList);
         }
 
     }
