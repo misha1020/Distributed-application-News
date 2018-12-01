@@ -31,7 +31,7 @@
             this.tbInfo = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btSubscribe = new System.Windows.Forms.Button();
-            this.button_refresh = new System.Windows.Forms.Button();
+            this.btRefresh = new System.Windows.Forms.Button();
             this.lvServs = new System.Windows.Forms.ListView();
             this.chServerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1.SuspendLayout();
@@ -45,13 +45,13 @@
             this.tbInfo.Multiline = true;
             this.tbInfo.Name = "tbInfo";
             this.tbInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbInfo.Size = new System.Drawing.Size(379, 303);
+            this.tbInfo.Size = new System.Drawing.Size(558, 303);
             this.tbInfo.TabIndex = 1;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btSubscribe);
-            this.panel1.Controls.Add(this.button_refresh);
+            this.panel1.Controls.Add(this.btRefresh);
             this.panel1.Controls.Add(this.lvServs);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -69,15 +69,15 @@
             this.btSubscribe.UseVisualStyleBackColor = true;
             this.btSubscribe.Click += new System.EventHandler(this.btSubscribe_Click);
             // 
-            // button_refresh
+            // btRefresh
             // 
-            this.button_refresh.Location = new System.Drawing.Point(3, 333);
-            this.button_refresh.Name = "button_refresh";
-            this.button_refresh.Size = new System.Drawing.Size(108, 36);
-            this.button_refresh.TabIndex = 7;
-            this.button_refresh.Text = "refresh";
-            this.button_refresh.UseVisualStyleBackColor = true;
-            this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
+            this.btRefresh.Location = new System.Drawing.Point(3, 333);
+            this.btRefresh.Name = "btRefresh";
+            this.btRefresh.Size = new System.Drawing.Size(108, 36);
+            this.btRefresh.TabIndex = 7;
+            this.btRefresh.Text = "Refresh";
+            this.btRefresh.UseVisualStyleBackColor = true;
+            this.btRefresh.Click += new System.EventHandler(this.button_refresh_Click);
             // 
             // lvServs
             // 
@@ -101,7 +101,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(606, 372);
+            this.ClientSize = new System.Drawing.Size(795, 372);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tbInfo);
             this.Name = "FormClient";
@@ -117,7 +117,7 @@
         private System.Windows.Forms.TextBox tbInfo;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ListView lvServs;
-        private System.Windows.Forms.Button button_refresh;
+        private System.Windows.Forms.Button btRefresh;
         private System.Windows.Forms.Button btSubscribe;
         private System.Windows.Forms.ColumnHeader chServerName;
     }

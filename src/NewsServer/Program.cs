@@ -47,6 +47,10 @@ using MessageSendServe;
                     {
                         reader.GetAllNews();
                     }
+                    if (input.ToUpper() == "GETSOME")
+                    {
+                        reader.GetSomeNews();
+                    }
                     input = Console.ReadLine();
                 }
                 Console.ReadKey();
@@ -58,7 +62,7 @@ using MessageSendServe;
         {
             try
             {
-                mq.Send(input);
+                mq.Send($"{serverName}:  {input}");
             }
             catch (Exception ex)
             {

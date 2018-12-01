@@ -47,12 +47,16 @@ namespace NewsServer
             timer.Stop();
         }
 
-        public void GetAllNews()
+        public void GetSomeNews()
         {
-            foreach(var art in Articles)
-            {
+            for (int i = 0; i < ((Articles.Count < 5)? Articles.Count : 4); i++)
+                NewsReceived(Articles[i].title);
+        }
+
+        public void GetAllNews()
+        {            
+            foreach (var art in Articles)
                 NewsReceived(art.title);
-            }
         }
 
         public void GetNews(object sender=null, ElapsedEventArgs e=null)

@@ -11,6 +11,9 @@ namespace Dispatcher
 {
     class DispatcherNewsServer
     {
+        private static int portDispatcherServer = Convert.ToInt32(ConfigManager.Get("portDispatcherServer"));
+        private static int portPingServers = Convert.ToInt32(ConfigManager.Get("portPingServers"));
+
         public static T RecieveMsg<T>(Socket receiver)
         {
             byte[] length = new byte[256];
@@ -40,9 +43,8 @@ namespace Dispatcher
 
         public static void SocketRecieve()
         {
-            int port = 11001;
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Bind(new IPEndPoint(IPAddress.Any, port));
+            sender.Bind(new IPEndPoint(IPAddress.Any, portDispatcherServer));
             sender.Listen(10);
             while (true)
             {
@@ -69,21 +71,18 @@ namespace Dispatcher
 
         public static void PingServs()
         {
-
             Program.msgsWithHosts_Semaphore.WaitOne();
             List<MessageSendRecieve> msgsWithHosts = new List<MessageSendRecieve>();
             foreach (var host in Program.msgsWithHosts)
                 msgsWithHosts.Add(host);
             Program.msgsWithHosts_Semaphore.Release();
 
-
             foreach (var host in msgsWithHosts)
             {
                 try
                 {
-                    //Console.WriteLine($"trying to ping {host.Value.IP}");
                     IPAddress ipAddr = IPAddress.Parse(host.IP);
-                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
+                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portPingServers);
                     Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sender.Connect(ipEndPoint);
                     Byte[] buf = new Byte[1];
@@ -96,8 +95,8 @@ namespace Dispatcher
                     Program.msgsWithHosts.Remove(host);
                     Program.msgsWithHosts_Semaphore.Release();
 
-                    Console.WriteLine($"Host {host.IP} doesn't answer");
-                    //Console.WriteLine(ex.Message + " in " + ex.Source);
+                    //Console.WriteLine($"Host {host.serverName} doesn't answer");
+                    Console.WriteLine($"Сервер {host.serverName} Не отвечает");
                 }
             }
         }

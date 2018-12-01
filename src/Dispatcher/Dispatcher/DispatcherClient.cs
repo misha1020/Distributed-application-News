@@ -11,6 +11,7 @@ namespace Dispatcher
 { 
     class DispatcherClient
     {
+        private static int portDispatcherClient = Convert.ToInt32(ConfigManager.Get("portDispatcherClient"));
 
         public static void SendMsg<T>(Socket handler, T msg)
         {
@@ -21,10 +22,8 @@ namespace Dispatcher
 
         public static void ServersListSend()
         {
-            int port = 11000;
-            
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Bind(new IPEndPoint(IPAddress.Any, port));
+            sender.Bind(new IPEndPoint(IPAddress.Any, portDispatcherClient));
             sender.Listen(10);
             while (true)
             {
@@ -45,6 +44,11 @@ namespace Dispatcher
                         }
                         SendMsg<MessageSendRecieve[]>(handler, servers);
                         Console.WriteLine("Список серверов отпрален!");
+                    }
+                    else
+                    {
+                        byte[] byteSet = BinFormatter.ToBytes<int>(0);
+                        handler.Send(byteSet);
                     }
                     Program.msgsWithHosts_Semaphore.Release();
 

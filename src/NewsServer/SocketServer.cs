@@ -11,8 +11,9 @@ namespace NewsServer
 {
     class SocketServer
     {
-        private static int pingReplyPort = Convert.ToInt32(ConfigManager.Get("pingPort"));
-
+        private static int portPingServers = Convert.ToInt32(ConfigManager.Get("portPingServers"));
+        private static int portDispatcherServer = Convert.ToInt32(ConfigManager.Get("portDispatcherServer"));
+        
         public static void SendMsg<T>(Socket handler, T msg)
         {
             byte[] byteSet = BinFormatter.ToBytes<T>(msg);
@@ -22,11 +23,10 @@ namespace NewsServer
 
         public static void SocketSend(MessageSendRecieve msg, string ip)
         {
-            int port = 11001;
             try
             {
                 IPAddress ipAddr = IPAddress.Parse(ip);
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherServer);
                 Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sender.Connect(ipEndPoint);
 
@@ -34,7 +34,7 @@ namespace NewsServer
 
                 sender.Shutdown(SocketShutdown.Both);
                 sender.Close();
-                Console.WriteLine("Данные отправлены");
+                Console.WriteLine("Подключено");
             }
             catch (Exception ex)
             {
@@ -45,18 +45,16 @@ namespace NewsServer
         public static void pingReply()
         {
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Bind(new IPEndPoint(IPAddress.Any, pingReplyPort));
+            sender.Bind(new IPEndPoint(IPAddress.Any, portPingServers));
             sender.Listen(10);
             while (true)
             {
                 try
                 {
-                    //Console.WriteLine("Waiting for ping");
                     Socket receiver = sender.Accept();
                     Byte[] buf = new Byte[1];
                     receiver.Receive(buf);
                     receiver.Send(buf);
-                    //Console.WriteLine("Reply");
                 }
                 catch (Exception ex)
                 {

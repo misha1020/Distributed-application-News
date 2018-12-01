@@ -88,8 +88,6 @@ namespace Client
                 Program.msgsWithHosts_Semaphore.WaitOne();
                 Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
                 Program.msgsWithHosts_Semaphore.Release();
-                for (int i = 0; i < servers.Length; i++)
-                    tbInfo.Text +=  "[" + servers[i].serverName + "]" + Environment.NewLine;
                 return servers;
             }
             catch (Exception ex)
