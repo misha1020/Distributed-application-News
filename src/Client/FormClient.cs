@@ -21,6 +21,9 @@ namespace Client
         public FormClient()
         {
             InitializeComponent();
+
+            ReadSavedMQs();
+
             lvServs.CheckBoxes = true;
 
             ImageList imgs = new ImageList();
@@ -36,6 +39,20 @@ namespace Client
             pingTimer.Elapsed += Ping;
             pingTimer.AutoReset = true;
             pingTimer.Start();
+        }
+
+        private void ReadSavedMQs()
+        {
+            var saveData = SavingXML.ReadFromXmlFile<List<SaveMq>>("data.txt");
+            foreach(var data in saveData)
+            {
+                Program.msgsWithHosts_Semaphore.WaitOne();
+                Program.msgsWithHosts.Add(data.messageSendRecieve);
+                Program.msgsWithHosts_Semaphore.Release();
+                var lvItem = addServInLvServs(data.messageSendRecieve,true);
+                RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
+                RMQS[RMQS.Count - 1].consumer.Received += sender;
+            }
         }
 
         private void Ping(object sender, ElapsedEventArgs e)
@@ -91,7 +108,14 @@ namespace Client
             {
                 MessageSendRecieve[] servers = SocketClient.RecieveServersList();
                 Program.msgsWithHosts_Semaphore.WaitOne();
-                Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
+                //Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
+                foreach(var serv in servers)
+                {
+                    if(RMQS.Find(mq => mq.serv.mqName == serv.mqName)==null)
+                    {
+                        Program.msgsWithHosts.Add(serv);
+                    }
+                }
                 Program.msgsWithHosts_Semaphore.Release();
                 for (int i = 0; i < servers.Length; i++)
                     tbInfo.Text +=  "[" + servers[i].serverName + "]" + Environment.NewLine;
@@ -109,12 +133,7 @@ namespace Client
             try
             {
                 var queueName = "";
-                if (System.IO.File.Exists("data.txt"))
-                {
-                    using (var input = new StreamReader("data.txt"))
-                        queueName = !input.EndOfStream ? input.ReadLine() : "";
-                }
-                RMQS.Add(new RabbitMQClient(sub, queueName));
+                RMQS.Add(new RabbitMQClient(sub));
                 RMQS[RMQS.Count - 1].consumer.Received += sender;
             }
             catch (Exception ex)
@@ -145,13 +164,17 @@ namespace Client
 
         private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
         {
+            List<SaveMq> mqSaveData = new List<SaveMq>();
+            foreach (var mq in RMQS)
+                mqSaveData.Add(new SaveMq(mq.serv, mq.queueName));
+            SavingXML.WriteToXmlFile("data.txt", mqSaveData);
             foreach (var rm in RMQS)
                 rm.Dispose();
         }
 
         private void button_refresh_Click(object sender, EventArgs e)
         {
-            tbInfo.Clear();
+            //tbInfo.Clear();
             var servers = GetServersList();
             if (servers == null)
                 lvServs.Enabled = false;
@@ -160,13 +183,22 @@ namespace Client
                 lvServs.Items.Clear();
                 foreach (var serv in servers)
                 {
-                    lvServs.Items.Add(serv.serverName).SubItems.AddRange(new string[] { "Nope" });
-                    ListViewItem lastItem = lvServs.Items[lvServs.Items.Count - 1];
-                    lastItem.Tag = serv.guid;
-                    lastItem.SubItems[1].Tag = false;
-                    lastItem.StateImageIndex = 0;                    
+                    if (RMQS.Find(mq => mq.serv.mqName == serv.mqName) == null)
+                        addServInLvServs(serv, false);
+                    else
+                        addServInLvServs(serv, true);
                 }
             }
+        }
+
+        private ListViewItem addServInLvServs(MessageSendRecieve serv, bool subscribed)
+        {
+            lvServs.Items.Add(serv.serverName).SubItems.AddRange(new string[] { subscribed?"Yes":"Nope" });
+            ListViewItem lastItem = lvServs.Items[lvServs.Items.Count - 1];
+            lastItem.Tag = serv.guid;
+            lastItem.SubItems[1].Tag = subscribed;
+            lastItem.StateImageIndex = 0;
+            return lastItem;
         }
 
         private void btSubscribe_Click(object sender, EventArgs e)
