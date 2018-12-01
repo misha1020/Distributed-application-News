@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using MessageSendServe;
 using System.Drawing;
+using System.IO;
 
 namespace Client
 {
@@ -104,8 +105,15 @@ namespace Client
             try
             {
                 TSMI_Connection.Text = "Connecting...";
+                var queueName = "";
+                if (System.IO.File.Exists("data.txt"))
+                {
+                    using (var input = new StreamReader("data.txt"))
+                        queueName = !input.EndOfStream?input.ReadLine():"";
+
+                }
                 MessageSendRecieve msg = SocketClient.SocketRecieve();
-                RMQS = new RabbitMQClient(msg.mqIP, msg.login, msg.password);
+                RMQS = new RabbitMQClient(msg.mqIP, msg.login, msg.password, queueName);
                 RMQS.consumer.Received += sender;
                 TSMI_Connection.Text = "Online";
                 return true;
@@ -121,7 +129,15 @@ namespace Client
 
         private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(RMQS!=null) RMQS.Dispose();
+
+            if (RMQS != null)
+            {
+                using(var output = new StreamWriter("data.txt"))
+                {
+                    output.WriteLine(RMQS.queueName);
+                }
+                RMQS.Dispose();
+            }
         }
 
         private void bt_Reconnect_Click(object sender, EventArgs e)
@@ -147,5 +163,6 @@ namespace Client
                     lvServs.Items.Add(serv.serverName).Tag = serv.guid;
             }
         }
+
     }
 }

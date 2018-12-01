@@ -4,14 +4,21 @@ using System;
 
 namespace Client
 {
-    class RabbitMQClient : IDisposable
+    [Serializable]
+    public class RabbitMQClient : IDisposable
     {
-        private ConnectionFactory factory;
-        private IConnection connection;
-        private IModel channel;
+        public ConnectionFactory factory;
+        public IConnection connection;
+        public IModel channel;
         public EventingBasicConsumer consumer { get; }
+        public string queueName;
 
-        public RabbitMQClient(string hostName, string login, string password)
+        public RabbitMQClient()
+        {
+
+        }
+
+        public RabbitMQClient(string hostName, string login, string password, string queueName = "")
         {
             factory = new ConnectionFactory()
             {
@@ -25,10 +32,11 @@ namespace Client
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
             channel.ExchangeDeclare(exchange: "news", type: "fanout");
-            var queueName = channel.QueueDeclare().QueueName;
-            channel.QueueBind(queue: queueName, exchange: "news", routingKey: "");
+            this.queueName = (queueName=="")?channel.QueueDeclare(durable: true,exclusive: false, autoDelete: false).QueueName:queueName;
+            channel.QueueBind(queue: this.queueName, exchange: "news", routingKey: "");
             consumer = new EventingBasicConsumer(channel);
             channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+
         }
 
         public void Dispose()

@@ -34,8 +34,8 @@
             this.bt_Reconnect = new System.Windows.Forms.Button();
             this.btGetNews = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button_refresh = new System.Windows.Forms.Button();
             this.lvServs = new System.Windows.Forms.ListView();
+            this.button_refresh = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -95,16 +95,6 @@
             this.panel1.Size = new System.Drawing.Size(200, 301);
             this.panel1.TabIndex = 6;
             // 
-            // button_refresh
-            // 
-            this.button_refresh.Location = new System.Drawing.Point(206, 24);
-            this.button_refresh.Name = "button_refresh";
-            this.button_refresh.Size = new System.Drawing.Size(75, 23);
-            this.button_refresh.TabIndex = 7;
-            this.button_refresh.Text = "refresh";
-            this.button_refresh.UseVisualStyleBackColor = true;
-            this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
-            // 
             // lvServs
             // 
             this.lvServs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -114,6 +104,16 @@
             this.lvServs.TabIndex = 0;
             this.lvServs.UseCompatibleStateImageBehavior = false;
             this.lvServs.View = System.Windows.Forms.View.List;
+            // 
+            // button_refresh
+            // 
+            this.button_refresh.Location = new System.Drawing.Point(206, 24);
+            this.button_refresh.Name = "button_refresh";
+            this.button_refresh.Size = new System.Drawing.Size(75, 23);
+            this.button_refresh.TabIndex = 7;
+            this.button_refresh.Text = "refresh";
+            this.button_refresh.UseVisualStyleBackColor = true;
+            this.button_refresh.Click += new System.EventHandler(this.button_refresh_Click);
             // 
             // FormClient
             // 
