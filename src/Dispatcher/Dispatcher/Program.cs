@@ -19,7 +19,6 @@ namespace Dispatcher
             Console.WriteLine("Write 'Q' to finish");
             Thread ThreadFromServer = new Thread(new ThreadStart(DispatcherNewsServer.SocketRecieve));
             Thread ThreadToClientSendList = new Thread(new ThreadStart(DispatcherClient.ServersListSend));
-            //Thread ThreadWorkWithClient = new Thread(new ThreadStart(DispatcherClient.SocketSend));
             System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
                 pingTimer.Elapsed += Ping;
                 pingTimer.AutoReset = true;
@@ -27,7 +26,6 @@ namespace Dispatcher
 
             ThreadFromServer.Start();
             ThreadToClientSendList.Start();
-            //ThreadWorkWithClient.Start();
             string input = Console.ReadLine();
         }
 

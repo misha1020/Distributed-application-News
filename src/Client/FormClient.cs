@@ -15,14 +15,19 @@ namespace Client
 {
     public partial class FormClient : Form
     {
-        RabbitMQClient RMQS;
+        List<RabbitMQClient> RMQS = new List<RabbitMQClient>();
         
         public FormClient()
         {
             InitializeComponent();
+            lvServs.CheckBoxes = true;
 
-            lvServs.StateImageList.Images.Add(new Icon("online.ico"));
-            lvServs.StateImageList.Images.Add(new Icon("offline.ico"));
+            ImageList imgs = new ImageList();
+            foreach (String path in Directory.GetFiles(@"..\..\images"))
+                imgs.Images.Add(Image.FromFile(path));
+            imgs.ImageSize = new Size(30, 30);
+            
+            lvServs.StateImageList = imgs;
             button_refresh_Click(null, null);
             
 
@@ -76,73 +81,48 @@ namespace Client
                     index = lItem.Index;
             }
             if (index != -1)
-                lvServs.Items[index].StateImageIndex = 0;
-            //lvServs.Items[index].BackColor = (ping) ? Color.ForestGreen : Color.DarkRed;
+                lvServs.Items[index].StateImageIndex = (ping) ? 1 : 0;
         }
 
         private MessageSendRecieve[] GetServersList()
         {
-            bt_Reconnect.Visible = false;
             try
             {
-                TSMI_Connection.Text = "Connecting...";
                 MessageSendRecieve[] servers = SocketClient.RecieveServersList();
                 Program.msgsWithHosts_Semaphore.WaitOne();
                 Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
                 Program.msgsWithHosts_Semaphore.Release();
                 for (int i = 0; i < servers.Length; i++)
                     tbInfo.Text +=  "[" + servers[i].serverName + "]" + Environment.NewLine;
-                TSMI_Connection.Text = "Online";
                 return servers;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + " in " + ex.TargetSite);
-                TSMI_Connection.Text = "Offline";
-                bt_Reconnect.Visible = true;
                 return null;
             }
         }
 
-        private bool TryToConnect()
+        public void Subscribe(List<MessageSendRecieve> subList)
         {
-            bt_Reconnect.Visible = false;
-            try
-            {
-                TSMI_Connection.Text = "Connecting...";
-                MessageSendRecieve msg = SocketClient.SocketRecieve();
-                RMQS = new RabbitMQClient(msg.mqIP, msg.login, msg.password);
-                RMQS.consumer.Received += sender;
-                TSMI_Connection.Text = "Online";
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + " in " + ex.TargetSite);
-                TSMI_Connection.Text = "Offline";
-                bt_Reconnect.Visible = true;
-                return false;
-            }
+
+            if (subList.Count != 0)
+                foreach (var serv in subList)
+                {
+                    RMQS.Add(new RabbitMQClient(serv.mqIP, serv.login, serv.password));
+                    RMQS[RMQS.Count-1].consumer.Received += sender;
+                }
         }
 
         private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(RMQS!=null) RMQS.Dispose();
-        }
-
-        private void bt_Reconnect_Click(object sender, EventArgs e)
-        {
-            TryToConnect();
-        }
-
-        private void btGetNews_Click(object sender, EventArgs e)
-        {
-            tbInfo.Text += Environment.NewLine;
-            TryToConnect();
+            foreach (var rm in RMQS)
+                rm.Dispose();
         }
 
         private void button_refresh_Click(object sender, EventArgs e)
         {
+            tbInfo.Clear();
             var servers = GetServersList();
             if (servers == null)
                 lvServs.Enabled = false;
@@ -150,8 +130,38 @@ namespace Client
             { 
                 lvServs.Items.Clear();
                 foreach (var serv in servers)
-                    lvServs.Items.Add(serv.serverName).Tag = serv.guid;
+                {
+                    lvServs.Items.Add(serv.serverName).SubItems.AddRange(new string[] { "Nope" });
+                    ListViewItem lastItem = lvServs.Items[lvServs.Items.Count - 1];
+                    lastItem.Tag = serv.guid;
+                    lastItem.SubItems[1].Tag = false;
+                    lastItem.StateImageIndex = 0;                    
+                }
             }
+        }
+
+        private void btSubscribe_Click(object sender, EventArgs e)
+        {
+            Program.msgsWithHosts_Semaphore.WaitOne();
+            var servers = new List<MessageSendRecieve>(Program.msgsWithHosts);
+            Program.msgsWithHosts_Semaphore.Release();
+            //GetServersList();
+            List<MessageSendRecieve> subList = new List<MessageSendRecieve>();
+            
+            foreach (ListViewItem lvItem in lvServs.SelectedItems)
+            {
+                for (int i = 0; i < servers.Count; i++)
+                {
+                    if ((bool) lvItem.SubItems[1].Tag == false && lvItem.Tag.ToString() == servers[i].guid )
+                    {
+                        lvItem.SubItems[1].Tag = true;
+                        lvItem.SubItems[1].Text = "Yes";
+                        subList.Add(servers[i]);
+                    }
+                }
+            }
+
+            Subscribe(subList);
         }
     }
 }
