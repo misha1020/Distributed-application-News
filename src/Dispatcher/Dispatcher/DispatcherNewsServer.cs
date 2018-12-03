@@ -55,6 +55,24 @@ namespace Dispatcher
                     Socket receiver = sender.Accept();
                     msg = RecieveMsg<MessageSendRecieve>(receiver);
                     msg.IP =(receiver.RemoteEndPoint as IPEndPoint).Address.ToString();
+
+
+                    Program.msgsWithHosts_Semaphore.WaitOne();
+                    bool nameRepeats = false;
+                    for (int i = 0; i < Program.msgsWithHosts.Count && !nameRepeats; i++)
+                        nameRepeats = Program.msgsWithHosts[i].mqName == msg.mqName;
+                    Program.msgsWithHosts_Semaphore.Release();
+
+                    if (nameRepeats)
+                        receiver.Send(BinFormatter.ToBytes<bool>(true));
+                    else
+                    {
+                        receiver.Send(BinFormatter.ToBytes<bool>(false));
+                        receiver.Shutdown(SocketShutdown.Both);
+                        receiver.Close();
+                        break;
+                    }
+
                     receiver.Shutdown(SocketShutdown.Both);
                     receiver.Close();
 
