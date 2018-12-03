@@ -24,18 +24,25 @@ namespace NewsServer
 
         public static void SocketSend(MessageSendRecieve msg, string ip)
         {
+            IPAddress ipAddr = IPAddress.Parse(ip);
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherServer);
+            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                IPAddress ipAddr = IPAddress.Parse(ip);
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherServer);
-                Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sender.Connect(ipEndPoint);
 
                 SendMsg<MessageSendRecieve>(sender, msg);
 
+
+                Byte[] buf = BinFormatter.ToBytes(false);
+                sender.Receive(buf);
+                if (BinFormatter.FromBytes<bool>(buf))
+                    Console.WriteLine("Подключено");
+                else
+                    Console.WriteLine("Denied");
+
                 sender.Shutdown(SocketShutdown.Both);
                 sender.Close();
-                Console.WriteLine("Подключено");
             }
             catch (Exception ex)
             {
