@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MessageSendServe;
 
@@ -42,12 +43,12 @@ namespace NewsServer
             }
         }
 
-        public static void pingReply()
+        public static async Task pingReply(CancellationToken ct)
         {
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Bind(new IPEndPoint(IPAddress.Any, portPingServers));
             sender.Listen(10);
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {

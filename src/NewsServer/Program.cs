@@ -24,8 +24,8 @@ using MessageSendServe;
 
         static void Main(string[] args)
         {
-            Thread pingReplier = new Thread(new ThreadStart(SocketServer.pingReply));
-            pingReplier.Start();
+            var pingReply_cts = new CancellationToken();
+            Task.Run(() => SocketServer.pingReply(pingReply_cts));
 
             MessageSendRecieve msg = new MessageSendRecieve(null, serverName, rabbitMqIp, rabbitMqName, username, password);
             using (mq = new RabbitMQServer(msg.mqIP, msg.mqName, msg.login, msg.password))
@@ -53,7 +53,6 @@ using MessageSendServe;
                     }
                     input = Console.ReadLine();
                 }
-                Console.ReadKey();
             }
         }
 

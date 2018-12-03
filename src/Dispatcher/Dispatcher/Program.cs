@@ -17,15 +17,16 @@ namespace Dispatcher
         static void Main(string[] args)
         {
             Console.WriteLine("Write 'Q' to finish");
-            Thread ThreadFromServer = new Thread(new ThreadStart(DispatcherNewsServer.SocketRecieve));
-            Thread ThreadToClientSendList = new Thread(new ThreadStart(DispatcherClient.ServersListSend));
+            
             System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
                 pingTimer.Elapsed += Ping;
                 pingTimer.AutoReset = true;
             pingTimer.Start();
 
-            ThreadFromServer.Start();
-            ThreadToClientSendList.Start();
+            var ThreadFromServer_cts = new CancellationToken();
+            Task.Run(() => DispatcherNewsServer.SocketRecieve(ThreadFromServer_cts));
+            var ThreadToClientSendList_cts = new CancellationToken();
+            Task.Run(() => DispatcherClient.ServersListSend(ThreadToClientSendList_cts));
             string input = Console.ReadLine();
         }
 

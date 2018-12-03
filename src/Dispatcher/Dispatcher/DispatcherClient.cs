@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MessageSendServe;
 
@@ -20,12 +21,12 @@ namespace Dispatcher
             handler.Send(byteSet);
         }
 
-        public static void ServersListSend()
+        public static async Task ServersListSend(CancellationToken ct)
         {
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Bind(new IPEndPoint(IPAddress.Any, portDispatcherClient));
             sender.Listen(10);
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {

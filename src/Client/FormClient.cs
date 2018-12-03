@@ -23,10 +23,19 @@ namespace Client
         {
             InitializeComponent();
 
-            ReadSavedMQs();
-            
+
+            foreach (String path in Directory.GetFiles(@"..\..\images\Connection"))
+                imgsOnOff.Images.Add(Image.FromFile(path));
+            imgsOnOff.ImageSize = new Size(30, 30);
+            lvServs.StateImageList = imgsOnOff;
+
+            foreach (String path in Directory.GetFiles(@"..\..\images\subscribe"))
+                imgsSub.Images.Add(Image.FromFile(path));
+            imgsSub.ImageSize = new Size(30, 30);
+            lvServs.SmallImageList = imgsSub;
             lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
+            ReadSavedMQs();
             button_refresh_Click(null, null);
 
             System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
@@ -113,13 +122,16 @@ namespace Client
                         Program.msgsWithHosts.Add(serv);
                     }
                 }
-                Program.msgsWithHosts_Semaphore.Release();
                 return servers;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + " in " + ex.TargetSite);
                 return null;
+            }
+            finally
+            {
+                Program.msgsWithHosts_Semaphore.Release();
             }
         }
 
@@ -169,21 +181,12 @@ namespace Client
 
         private void button_refresh_Click(object sender, EventArgs e)
         {
-            foreach (String path in Directory.GetFiles(@"..\..\images\Connection"))
-                imgsOnOff.Images.Add(Image.FromFile(path));
-            imgsOnOff.ImageSize = new Size(30, 30);
-            lvServs.StateImageList = imgsOnOff;
-
-            foreach (String path in Directory.GetFiles(@"..\..\images\subscribe"))
-                imgsSub.Images.Add(Image.FromFile(path));
-            imgsSub.ImageSize = new Size(30, 30);
-            lvServs.SmallImageList = imgsSub;
 
             //tbInfo.Clear();
             var servers = GetServersList();
 
             if (servers == null)
-                lvServs.Enabled = false;
+                lvServs.Enabled = true;
             else
             { 
                 lvServs.Items.Clear();
@@ -202,8 +205,8 @@ namespace Client
             ListViewItem item = new ListViewItem(new string[] { "     " + serv.serverName });
                     item.Tag = serv.guid;
                     item.SubItems[0].Tag = subscribed;
-                    item.ImageIndex = 1;
-                    item.StateImageIndex = (subscribed)? 1 : 0;
+                    item.StateImageIndex = 0;
+                    item.ImageIndex = (subscribed)? 0 : 1;
                     lvServs.Items.Add(item); 
             return item;
         }

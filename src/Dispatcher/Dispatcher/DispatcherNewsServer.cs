@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MessageSendServe;
 
@@ -41,12 +42,12 @@ namespace Dispatcher
             return BinFormatter.FromBytes<T>(bytes);
         }
 
-        public static void SocketRecieve()
+        public static async Task SocketRecieve(CancellationToken ct)
         {
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Bind(new IPEndPoint(IPAddress.Any, portDispatcherServer));
             sender.Listen(10);
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 MessageSendRecieve msg = new MessageSendRecieve();
                 try
