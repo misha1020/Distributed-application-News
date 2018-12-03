@@ -95,11 +95,11 @@ namespace Client
                     Byte[] buf = new Byte[1];
                     sender.Send(buf);
                     sender.Receive(buf);
-                    formClient.AppendColorList(host.mqName, true);
+                    formClient.AppendOnOffImg(host.mqName, true);
                 }
                 catch (Exception ex)
                 {
-                    formClient.AppendColorList(host.mqName, false);
+                    formClient.AppendOnOffImg(host.mqName, false);
                     formClient.AppendTextBox($"serv missed! {host.IP}");
                 }
             }

@@ -22,8 +22,23 @@ namespace Client
         public FormClient()
         {
             InitializeComponent();
+            lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            LoadImages();
+            ReadSavedMQs();
+            button_refresh_Click(null, null);
+            Ping();
+        }
 
+        private void Ping()
+        {
+            System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
+            pingTimer.Elapsed += Ping;
+            pingTimer.AutoReset = true;
+            pingTimer.Start();
+        }
 
+        private void LoadImages()
+        {
             foreach (String path in Directory.GetFiles(@"..\..\images\Connection"))
                 imgsOnOff.Images.Add(Image.FromFile(path));
             imgsOnOff.ImageSize = new Size(30, 30);
@@ -33,15 +48,6 @@ namespace Client
                 imgsSub.Images.Add(Image.FromFile(path));
             imgsSub.ImageSize = new Size(30, 30);
             lvServs.SmallImageList = imgsSub;
-            lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-
-            ReadSavedMQs();
-            button_refresh_Click(null, null);
-
-            System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
-            pingTimer.Elapsed += Ping;
-            pingTimer.AutoReset = true;
-            pingTimer.Start();
         }
 
         private void ReadSavedMQs()
@@ -90,11 +96,11 @@ namespace Client
             tbInfo.Text += value + Environment.NewLine;
         }
 
-        public void AppendColorList(string mqName, bool ping)
+        public void AppendOnOffImg(string mqName, bool ping)
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string, bool>(AppendColorList), new object[] { mqName, ping });
+                this.Invoke(new Action<string, bool>(AppendOnOffImg), new object[] { mqName, ping });
                 return;
             }
                     
@@ -114,7 +120,6 @@ namespace Client
             {
                 MessageSendRecieve[] servers = SocketClient.RecieveServersList();
                 Program.msgsWithHosts_Semaphore.WaitOne();
-                //Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
                 foreach(var serv in servers)
                 {
                     if(RMQS.Find(mq => mq.serv.mqName == serv.mqName)==null)
@@ -139,7 +144,6 @@ namespace Client
         {
             try
             {
-                var queueName = "";
                 RMQS.Add(new RabbitMQClient(sub));
                 RMQS[RMQS.Count - 1].consumer.Received += sender;
             }
@@ -238,8 +242,6 @@ namespace Client
                     }
                 }
             }
-
         }
-
     }
 }
