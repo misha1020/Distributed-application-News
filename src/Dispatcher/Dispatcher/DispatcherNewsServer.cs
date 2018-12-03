@@ -67,6 +67,7 @@ namespace Dispatcher
                         receiver.Send(BinFormatter.ToBytes<bool>(true));
                     else
                     {
+                        Console.WriteLine($"Server {msg.mqIP} denied");
                         receiver.Send(BinFormatter.ToBytes<bool>(false));
                         receiver.Shutdown(SocketShutdown.Both);
                         receiver.Close();

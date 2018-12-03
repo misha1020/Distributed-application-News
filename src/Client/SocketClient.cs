@@ -50,28 +50,21 @@ namespace Client
         public static MessageSendRecieve[] RecieveServersList()
         {
             MessageSendRecieve[] servers = null;
+            IPAddress ipAddr = IPAddress.Parse(dispatcherIp);
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherClient);
+            Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            receiver.Connect(ipEndPoint);
+
             try
             {
-                IPAddress ipAddr = IPAddress.Parse(dispatcherIp);
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherClient);
-                Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                receiver.Connect(ipEndPoint);
-
-                try
-                {
-                    servers = ReceiveMsg<MessageSendRecieve[]>(receiver);
-                }
-                catch(FormatException ex)
-                {
-                    servers = new MessageSendRecieve[0];
-                }
-                receiver.Shutdown(SocketShutdown.Both);
-                receiver.Close();
+                servers = ReceiveMsg<MessageSendRecieve[]>(receiver);
             }
-            catch (Exception ex)
+            catch (FormatException ex)
             {
-                MessageBox.Show(ex.ToString());
+                servers = new MessageSendRecieve[0];
             }
+            receiver.Shutdown(SocketShutdown.Both);
+            receiver.Close();
             return servers;
         }
 
@@ -100,7 +93,6 @@ namespace Client
                 catch (Exception ex)
                 {
                     formClient.AppendOnOffImg(host.mqName, false);
-                    formClient.AppendTextBox($"serv missed! {host.IP}");
                 }
             }
         }
