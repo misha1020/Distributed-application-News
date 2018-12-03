@@ -15,6 +15,7 @@ namespace Client
     {
         private static int portPingServers = Convert.ToInt32(ConfigManager.Get("portPingServers"));
         private static int portDispatcherClient = Convert.ToInt32(ConfigManager.Get("portDispatcherClient"));
+        private static string dispatcherIp = ConfigManager.Get("dispatcherIp");
 
         public static T ReceiveMsg<T>(Socket receiver)
         {
@@ -51,7 +52,7 @@ namespace Client
             MessageSendRecieve[] servers = null;
             try
             {
-                IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
+                IPAddress ipAddr = IPAddress.Parse(dispatcherIp);
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherClient);
                 Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 receiver.Connect(ipEndPoint);
@@ -94,11 +95,11 @@ namespace Client
                     Byte[] buf = new Byte[1];
                     sender.Send(buf);
                     sender.Receive(buf);
-                    formClient.AppendColorList(host.guid, true);
+                    formClient.AppendColorList(host.mqName, true);
                 }
                 catch (Exception ex)
                 {
-                    formClient.AppendColorList(host.guid, false);
+                    formClient.AppendColorList(host.mqName, false);
                     formClient.AppendTextBox($"serv missed! {host.IP}");
                 }
             }

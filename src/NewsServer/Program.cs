@@ -10,7 +10,7 @@ using MessageSendServe;
 
 //http://opendata.permkrai.ru/opendata/list.csv
 
-    namespace NewsServer
+namespace NewsServer
 {
     class Program
     {

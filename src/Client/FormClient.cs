@@ -90,18 +90,18 @@ namespace Client
             tbInfo.Text += value + Environment.NewLine;
         }
 
-        public void AppendColorList(string guid, bool ping)
+        public void AppendColorList(string mqName, bool ping)
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string, bool>(AppendColorList), new object[] { guid, ping });
+                this.Invoke(new Action<string, bool>(AppendColorList), new object[] { mqName, ping });
                 return;
             }
                     
             int index = -1;
             foreach (ListViewItem lItem in lvServs.Items)
             {
-                if (lItem.Tag.ToString() == guid)
+                if (lItem.Tag.ToString() == mqName)
                     index = lItem.Index;
             }
             if (index != -1)
@@ -181,15 +181,16 @@ namespace Client
 
         private void button_refresh_Click(object sender, EventArgs e)
         {
-
-            //tbInfo.Clear();
             var servers = GetServersList();
 
             if (servers == null)
                 lvServs.Enabled = true;
             else
-            { 
-                lvServs.Items.Clear();
+            {
+                for (int i = lvServs.Items.Count - 1; i >= 0; i--)
+                    if (!(bool)lvServs.Items[i].SubItems[0].Tag)
+                        lvServs.Items[i].Remove();
+
                 foreach (var serv in servers)
                 {                   
                     if (RMQS.Find(mq => mq.serv.mqName == serv.mqName) == null)
@@ -203,7 +204,7 @@ namespace Client
         private ListViewItem addServInLvServs(MessageSendRecieve serv, bool subscribed)
         {
             ListViewItem item = new ListViewItem(new string[] { "     " + serv.serverName });
-                    item.Tag = serv.guid;
+                    item.Tag = serv.mqName;
                     item.SubItems[0].Tag = subscribed;
                     item.StateImageIndex = 0;
                     item.ImageIndex = (subscribed)? 0 : 1;
@@ -222,7 +223,7 @@ namespace Client
                 ListViewItem lvItem = lvServs.SelectedItems[0];
                 for (int i = 0; i < servers.Count; i++)
                 {
-                    if (lvItem.Tag.ToString() == servers[i].guid )
+                    if (lvItem.Tag.ToString() == servers[i].mqName )
                     {
                         if ((bool)lvItem.SubItems[0].Tag == false)
                         {
