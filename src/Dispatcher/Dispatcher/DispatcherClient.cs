@@ -44,7 +44,7 @@ namespace Dispatcher
                             i++;
                         }
                         SendMsg<MessageSendRecieve[]>(handler, servers);
-                        Console.WriteLine("Список серверов отпрален!");
+                        Console.WriteLine("Server list send");
                     }
                     else
                     {

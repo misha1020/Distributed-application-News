@@ -16,8 +16,6 @@ namespace Dispatcher
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Write 'Q' to finish");
-            
             System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
                 pingTimer.Elapsed += Ping;
                 pingTimer.AutoReset = true;
@@ -27,7 +25,17 @@ namespace Dispatcher
             Task.Run(() => DispatcherNewsServer.SocketRecieve(ThreadFromServer_cts));
             var ThreadToClientSendList_cts = new CancellationToken();
             Task.Run(() => DispatcherClient.ServersListSend(ThreadToClientSendList_cts));
+
+            Console.WriteLine("Write \"Exit\" to finish");
             string input = Console.ReadLine();
+            while (input.ToUpper() != "EXIT")
+            {
+                //if (input.ToUpper() == "GET")
+                //{
+                //    reader.GetNews();
+                //}
+                input = Console.ReadLine();
+            }
         }
 
         private static void Ping(object sender, ElapsedEventArgs e)

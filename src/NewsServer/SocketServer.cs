@@ -35,7 +35,7 @@ namespace NewsServer
 
                 sender.Shutdown(SocketShutdown.Both);
                 sender.Close();
-                Console.WriteLine("Подключено");
+                Console.WriteLine("Server connected");
             }
             catch (Exception ex)
             {

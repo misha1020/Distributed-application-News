@@ -194,16 +194,14 @@ namespace Client
                 foreach (var serv in servers)
                 {                   
                     if (RMQS.Find(mq => mq.serv.mqName == serv.mqName) == null)
-                        addServInLvServs(serv, false);
-                    else
-                        addServInLvServs(serv, true);
+                        addServInLvServs(serv, false);                    
                 }
             }
         }
 
         private ListViewItem addServInLvServs(MessageSendRecieve serv, bool subscribed)
         {
-            ListViewItem item = new ListViewItem(new string[] { "     " + serv.serverName });
+            ListViewItem item = new ListViewItem(new string[] { "     " + serv.mqName });
                     item.Tag = serv.mqName;
                     item.SubItems[0].Tag = subscribed;
                     item.StateImageIndex = 0;

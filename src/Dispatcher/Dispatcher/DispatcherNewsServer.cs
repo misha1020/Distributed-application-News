@@ -60,7 +60,7 @@ namespace Dispatcher
 
                     Program.msgsWithHosts_Semaphore.WaitOne();
                     Program.msgsWithHosts.Add(msg);
-                    Console.WriteLine("New server connected!");
+                    Console.WriteLine("New server connected");
                     Program.msgsWithHosts_Semaphore.Release();
                 }
                 catch (Exception ex)
@@ -96,8 +96,7 @@ namespace Dispatcher
                     Program.msgsWithHosts.Remove(host);
                     Program.msgsWithHosts_Semaphore.Release();
 
-                    //Console.WriteLine($"Host {host.serverName} doesn't answer");
-                    Console.WriteLine($"Сервер {host.serverName} Не отвечает");
+                    Console.WriteLine($"Server {host.mqName} disconnected");
                 }
             }
         }
