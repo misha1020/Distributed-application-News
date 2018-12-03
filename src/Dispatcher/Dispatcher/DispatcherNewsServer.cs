@@ -63,10 +63,11 @@ namespace Dispatcher
                         nameRepeats = Program.msgsWithHosts[i].mqName == msg.mqName;
                     Program.msgsWithHosts_Semaphore.Release();
 
-                    if (nameRepeats)
+                    if (!nameRepeats)
                         receiver.Send(BinFormatter.ToBytes<bool>(true));
                     else
                     {
+                        Console.WriteLine($"Server {msg.mqIP} denied");
                         receiver.Send(BinFormatter.ToBytes<bool>(false));
                         receiver.Shutdown(SocketShutdown.Both);
                         receiver.Close();

@@ -112,8 +112,8 @@ namespace Client
         {
             try
             {
-                MessageSendRecieve[] servers = SocketClient.RecieveServersList();
                 Program.msgsWithHosts_Semaphore.WaitOne();
+                MessageSendRecieve[] servers = SocketClient.RecieveServersList();
                 //Program.msgsWithHosts = new List<MessageSendRecieve>(servers);
                 foreach(var serv in servers)
                 {
@@ -126,7 +126,7 @@ namespace Client
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + " in " + ex.TargetSite);
+                MessageBox.Show("Dispacher connection error");
                 return null;
             }
             finally

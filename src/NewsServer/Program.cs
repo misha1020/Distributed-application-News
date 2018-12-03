@@ -50,6 +50,10 @@ namespace NewsServer
                     {
                         reader.GetSomeNews();
                     }
+                    if( input.ToUpper() == "REG")
+                    {
+                        SocketServer.SocketSend(msg, dispatcherIp);
+                    }
                     input = Console.ReadLine();
                 }
             }
