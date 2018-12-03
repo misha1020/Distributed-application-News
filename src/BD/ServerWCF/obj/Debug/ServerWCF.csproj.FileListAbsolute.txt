@@ -1,0 +1,15 @@
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\ServerWCF.exe.config
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\ServerWCF.exe
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\ServerWCF.pdb
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\NewsServiceLibrary.dll
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\EntityFramework.dll
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\NewsServiceLibrary.pdb
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\EntityFramework.xml
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\obj\Debug\ServerWCF.csprojResolveAssemblyReference.cache
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\obj\Debug\ServerWCF.exe
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\obj\Debug\ServerWCF.pdb
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\EntityFramework.SqlServer.dll
+J:\Универ\4 курс\Параллель\WCFForBD\ServerWCF\bin\Debug\EntityFramework.SqlServer.xml
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\ServerWCF\bin\Debug\ServerWCF.exe.config
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\ServerWCF\obj\Debug\ServerWCF.exe
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\ServerWCF\obj\Debug\ServerWCF.pdb

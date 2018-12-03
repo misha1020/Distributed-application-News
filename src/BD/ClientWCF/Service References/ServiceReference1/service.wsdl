@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="NewsService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/NewsServiceLibrary" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="INewsService_CreateNews_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNews" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_CreateNews_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_CreateCategory_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateCategory" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_CreateCategory_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateCategoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_CreateCategoryForNews_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateCategoryForNews" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_CreateCategoryForNews_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateCategoryForNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategoryForNews_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategoryForNews" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategoryForNews_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategoryForNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategorysForNews_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategorysForNews" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategorysForNews_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategorysForNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategoryFromAllNews_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategoryFromAllNews" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategoryFromAllNews_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategoryFromAllNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategory_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategory" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteCategory_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCategoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteNews_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteNews" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_DeleteNews_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_SelectNewsFromCategory_InputMessage">
+    <wsdl:part name="parameters" element="tns:SelectNewsFromCategory" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_SelectNewsFromCategory_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SelectNewsFromCategoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_SelectAllNews_InputMessage">
+    <wsdl:part name="parameters" element="tns:SelectAllNews" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_SelectAllNews_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SelectAllNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_SelectAllCategory_InputMessage">
+    <wsdl:part name="parameters" element="tns:SelectAllCategory" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_SelectAllCategory_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SelectAllCategoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_Test_InputMessage">
+    <wsdl:part name="parameters" element="tns:Test" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_Test_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TestResponse" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_CreateNewWithCat_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNewWithCat" />
+  </wsdl:message>
+  <wsdl:message name="INewsService_CreateNewWithCat_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNewWithCatResponse" />
+  </wsdl:message>
+  <wsdl:portType name="INewsService">
+    <wsdl:operation name="CreateNews">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/CreateNews" message="tns:INewsService_CreateNews_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/CreateNewsResponse" message="tns:INewsService_CreateNews_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateCategory">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/CreateCategory" message="tns:INewsService_CreateCategory_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/CreateCategoryResponse" message="tns:INewsService_CreateCategory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateCategoryForNews">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/CreateCategoryForNews" message="tns:INewsService_CreateCategoryForNews_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/CreateCategoryForNewsResponse" message="tns:INewsService_CreateCategoryForNews_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategoryForNews">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/DeleteCategoryForNews" message="tns:INewsService_DeleteCategoryForNews_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/DeleteCategoryForNewsResponse" message="tns:INewsService_DeleteCategoryForNews_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategorysForNews">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/DeleteCategorysForNews" message="tns:INewsService_DeleteCategorysForNews_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/DeleteCategorysForNewsResponse" message="tns:INewsService_DeleteCategorysForNews_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategoryFromAllNews">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/DeleteCategoryFromAllNews" message="tns:INewsService_DeleteCategoryFromAllNews_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/DeleteCategoryFromAllNewsResponse" message="tns:INewsService_DeleteCategoryFromAllNews_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategory">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/DeleteCategory" message="tns:INewsService_DeleteCategory_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/DeleteCategoryResponse" message="tns:INewsService_DeleteCategory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteNews">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/DeleteNews" message="tns:INewsService_DeleteNews_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/DeleteNewsResponse" message="tns:INewsService_DeleteNews_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SelectNewsFromCategory">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/SelectNewsFromCategory" message="tns:INewsService_SelectNewsFromCategory_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/SelectNewsFromCategoryResponse" message="tns:INewsService_SelectNewsFromCategory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SelectAllNews">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/SelectAllNews" message="tns:INewsService_SelectAllNews_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/SelectAllNewsResponse" message="tns:INewsService_SelectAllNews_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SelectAllCategory">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/SelectAllCategory" message="tns:INewsService_SelectAllCategory_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/SelectAllCategoryResponse" message="tns:INewsService_SelectAllCategory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Test">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/Test" message="tns:INewsService_Test_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/TestResponse" message="tns:INewsService_Test_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewWithCat">
+      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/CreateNewWithCat" message="tns:INewsService_CreateNewWithCat_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/CreateNewWithCatResponse" message="tns:INewsService_CreateNewWithCat_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_INewsService" type="tns:INewsService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateNews">
+      <soap:operation soapAction="http://tempuri.org/INewsService/CreateNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCategory">
+      <soap:operation soapAction="http://tempuri.org/INewsService/CreateCategory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCategoryForNews">
+      <soap:operation soapAction="http://tempuri.org/INewsService/CreateCategoryForNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategoryForNews">
+      <soap:operation soapAction="http://tempuri.org/INewsService/DeleteCategoryForNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategorysForNews">
+      <soap:operation soapAction="http://tempuri.org/INewsService/DeleteCategorysForNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategoryFromAllNews">
+      <soap:operation soapAction="http://tempuri.org/INewsService/DeleteCategoryFromAllNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCategory">
+      <soap:operation soapAction="http://tempuri.org/INewsService/DeleteCategory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteNews">
+      <soap:operation soapAction="http://tempuri.org/INewsService/DeleteNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SelectNewsFromCategory">
+      <soap:operation soapAction="http://tempuri.org/INewsService/SelectNewsFromCategory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SelectAllNews">
+      <soap:operation soapAction="http://tempuri.org/INewsService/SelectAllNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SelectAllCategory">
+      <soap:operation soapAction="http://tempuri.org/INewsService/SelectAllCategory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="http://tempuri.org/INewsService/Test" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewWithCat">
+      <soap:operation soapAction="http://tempuri.org/INewsService/CreateNewWithCat" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NewsService">
+    <wsdl:port name="BasicHttpBinding_INewsService" binding="tns:BasicHttpBinding_INewsService">
+      <soap:address location="http://localhost:8733/Design_Time_Addresses/NewsServiceLibrary/Service1/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,9 @@
+J:\Универ\4 курс\Параллель\WCFForBD\ClientWCF\bin\Debug\ClientWCF.exe.config
+J:\Универ\4 курс\Параллель\WCFForBD\ClientWCF\bin\Debug\ClientWCF.exe
+J:\Универ\4 курс\Параллель\WCFForBD\ClientWCF\bin\Debug\ClientWCF.pdb
+J:\Универ\4 курс\Параллель\WCFForBD\ClientWCF\obj\Debug\ClientWCF.csprojResolveAssemblyReference.cache
+J:\Универ\4 курс\Параллель\WCFForBD\ClientWCF\obj\Debug\ClientWCF.exe
+J:\Универ\4 курс\Параллель\WCFForBD\ClientWCF\obj\Debug\ClientWCF.pdb
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\ClientWCF\bin\Debug\ClientWCF.exe.config
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\ClientWCF\obj\Debug\ClientWCF.exe
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\ClientWCF\obj\Debug\ClientWCF.pdb
