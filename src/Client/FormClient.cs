@@ -22,6 +22,7 @@ namespace Client
         public FormClient()
         {
             InitializeComponent();
+            btClear.BringToFront();
             lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             LoadImages();
             ReadSavedMQs();
@@ -93,7 +94,7 @@ namespace Client
                 this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
                 return;
             }
-            tbInfo.Text += value + Environment.NewLine;
+            dgvInfo.Rows.Add(new object[] { value });
         }
 
         public void AppendOnOffImg(string mqName, bool ping)
@@ -242,6 +243,16 @@ namespace Client
                     }
                 }
             }
+        }
+
+        private void btOff_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btClear_Click(object sender, EventArgs e)
+        {
+            dgvInfo.Rows.Clear();
         }
     }
 }
