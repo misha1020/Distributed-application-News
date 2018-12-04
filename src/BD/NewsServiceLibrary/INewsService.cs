@@ -55,6 +55,9 @@ namespace NewsServiceLibrary
 
         [OperationContract]
         List<LibNews> SelectNewsFromRestoran(string nameRest);
+
+        [OperationContract]
+        List<string> SelectRestorans();
         //[OperationContract]
         //News GetDataUsingDataContract(News composite);
 
