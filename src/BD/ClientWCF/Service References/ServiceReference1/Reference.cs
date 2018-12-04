@@ -23,9 +23,6 @@ namespace ClientWCF.ServiceReference1 {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private ClientWCF.ServiceReference1.LibCategory[] CategotiesField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int RefIdRestField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -44,19 +41,6 @@ namespace ClientWCF.ServiceReference1 {
             }
             set {
                 this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public ClientWCF.ServiceReference1.LibCategory[] Categoties {
-            get {
-                return this.CategotiesField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CategotiesField, value) != true)) {
-                    this.CategotiesField = value;
-                    this.RaisePropertyChanged("Categoties");
-                }
             }
         }
         
@@ -264,6 +248,18 @@ namespace ClientWCF.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/CreateNewWithCat", ReplyAction="http://tempuri.org/INewsService/CreateNewWithCatResponse")]
         System.Threading.Tasks.Task CreateNewWithCatAsync(ClientWCF.ServiceReference1.LibNews news, string[] categoryes);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/CreateNewWithCatAndRest", ReplyAction="http://tempuri.org/INewsService/CreateNewWithCatAndRestResponse")]
+        void CreateNewWithCatAndRest(ClientWCF.ServiceReference1.LibNews news, string[] categoryes, string nameRest);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/CreateNewWithCatAndRest", ReplyAction="http://tempuri.org/INewsService/CreateNewWithCatAndRestResponse")]
+        System.Threading.Tasks.Task CreateNewWithCatAndRestAsync(ClientWCF.ServiceReference1.LibNews news, string[] categoryes, string nameRest);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectNewsFromRestoran", ReplyAction="http://tempuri.org/INewsService/SelectNewsFromRestoranResponse")]
+        ClientWCF.ServiceReference1.LibNews[] SelectNewsFromRestoran(string nameRest);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectNewsFromRestoran", ReplyAction="http://tempuri.org/INewsService/SelectNewsFromRestoranResponse")]
+        System.Threading.Tasks.Task<ClientWCF.ServiceReference1.LibNews[]> SelectNewsFromRestoranAsync(string nameRest);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -395,6 +391,22 @@ namespace ClientWCF.ServiceReference1 {
         
         public System.Threading.Tasks.Task CreateNewWithCatAsync(ClientWCF.ServiceReference1.LibNews news, string[] categoryes) {
             return base.Channel.CreateNewWithCatAsync(news, categoryes);
+        }
+        
+        public void CreateNewWithCatAndRest(ClientWCF.ServiceReference1.LibNews news, string[] categoryes, string nameRest) {
+            base.Channel.CreateNewWithCatAndRest(news, categoryes, nameRest);
+        }
+        
+        public System.Threading.Tasks.Task CreateNewWithCatAndRestAsync(ClientWCF.ServiceReference1.LibNews news, string[] categoryes, string nameRest) {
+            return base.Channel.CreateNewWithCatAndRestAsync(news, categoryes, nameRest);
+        }
+        
+        public ClientWCF.ServiceReference1.LibNews[] SelectNewsFromRestoran(string nameRest) {
+            return base.Channel.SelectNewsFromRestoran(nameRest);
+        }
+        
+        public System.Threading.Tasks.Task<ClientWCF.ServiceReference1.LibNews[]> SelectNewsFromRestoranAsync(string nameRest) {
+            return base.Channel.SelectNewsFromRestoranAsync(nameRest);
         }
     }
 }

@@ -52,6 +52,9 @@ namespace NewsServiceLibrary
 
         [OperationContract]
         void CreateNewWithCatAndRest(LibNews news, string[] categoryes,string nameRest);
+
+        [OperationContract]
+        List<LibNews> SelectNewsFromRestoran(string nameRest);
         //[OperationContract]
         //News GetDataUsingDataContract(News composite);
 

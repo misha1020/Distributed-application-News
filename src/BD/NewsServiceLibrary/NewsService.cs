@@ -343,6 +343,44 @@ namespace NewsServiceLibrary
             }
         }
 
+        public List<LibNews> SelectNewsFromRestoran(string nameRest)
+        {
+            List<LibNews> list = new List<LibNews>();
+            using (var ctx = new NewsEntities())
+            {
+                var rests = ctx.Restorans.Where(c => c.Name == nameRest).ToList();
+                if (rests.Count != 0)
+                {
+                    int idRest = rests[0].Id;
+                    LibNews temp = new LibNews();                  
+                 
+                    //создание массива классов
+                    var newsWithRests = ctx.News.Where(c => c.RefIdRest == idRest).ToList();
+                    if (newsWithRests.Count != 0)
+                    {
+                        foreach (var newsWithRest in newsWithRests)
+                        {
+                           
+                            //вывод в класс
+                            temp.Title = newsWithRest.Title;
+                            temp.TextContent = newsWithRest.TextContent;
+                            temp.ReleaseDate = newsWithRest.Date;
+                            list.Add(temp);
+                            Console.WriteLine("Заголовок: " + newsWithRest.Title + " Дата " + newsWithRest.Date + " Содержимое" + newsWithRest.TextContent);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Нет ни одной новости, в которой есть ссылка на этот ресторан");
+                    }                    
+                }
+                else
+                {
+                    Console.WriteLine("Не существует такого ресторана");
+                }
 
+            }
+            return list;
+        }
     }
 }
