@@ -1,1 +1,0 @@
-J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\WCFForBD.exe.config
