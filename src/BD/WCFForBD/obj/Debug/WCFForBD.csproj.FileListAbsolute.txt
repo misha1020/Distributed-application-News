@@ -9,3 +9,4 @@ J:\Универ\4 курс\Распределённое\Laba_4\Distributed-appli
 J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\ru\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
 J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\obj\Debug\WCFForBD.exe
 J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\obj\Debug\WCFForBD.pdb
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\obj\Debug\WCFForBD.csprojResolveAssemblyReference.cache
