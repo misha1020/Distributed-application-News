@@ -41,7 +41,11 @@ namespace ClientWCF
                 // mitmweb --web-port 28000 --listen-port 18000 --mode reverse:http://localhost:13044
                 var kk = new NewsServiceClient("BasicHttpBinding_INewsService",
                     $"http://localhost:{proxyPort.Value}/INewService");
-                kk.SelectAllCategory();
+                var ar = kk.SelectAllCategory();
+                foreach( var item in ar)
+                {
+                    Console.WriteLine(item.NameCat);
+                }
                 kk.CreateNewWithCat(kek,new string[] { "Актуально сейчас","Актуально всегда"});           
                 Console.WriteLine("Querying through proxy has been completed");
             }

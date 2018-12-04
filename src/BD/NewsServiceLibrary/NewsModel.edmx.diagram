@@ -9,13 +9,12 @@
         <EntityTypeShape EntityType="NewsModel.CategoryOfNews" Width="1.5" PointX="7.5" PointY="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="NewsModel.News" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="NewsModel.Phones" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NewsModel.Restorans" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="NewsModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
         <AssociationConnector Association="NewsModel.FK_CategoryOfNews_Category" ManuallyRouted="false" />
         <AssociationConnector Association="NewsModel.FK_CategoryOfNews_News" ManuallyRouted="false" />
-        <AssociationConnector Association="NewsModel.FK_News_Restorans" ManuallyRouted="false" />
-        <AssociationConnector Association="NewsModel.FK_Restorans_Phones" ManuallyRouted="false" />
-      </Diagram>
+        <EntityTypeShape EntityType="NewsModel.Restorans" Width="1.5" PointX="3" PointY="1.125" />
+        <AssociationConnector Association="NewsModel.FK_News_Restorans" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

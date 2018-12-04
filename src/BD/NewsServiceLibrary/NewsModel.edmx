@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище NewsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище NewsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="IdCategories" />
@@ -41,15 +41,14 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Latitude_wgs84" Type="float" />
-          <Property Name="Longitude_wgs84" Type="float" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" />
-          <Property Name="Adress" Type="nvarchar" MaxLength="70" />
-          <Property Name="AdmArea" Type="nchar" MaxLength="50" />
-          <Property Name="District" Type="nchar" MaxLength="30" />
-          <Property Name="SeatsCount" Type="int" />
-          <Property Name="IdPhone" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Latitude_WGS84" Type="numeric" Precision="19" Scale="16" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="AdmArea" Type="varchar" MaxLength="39" Nullable="false" />
+          <Property Name="District" Type="varchar" MaxLength="27" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="SeatsCount" Type="int" Nullable="false" />
+          <Property Name="Longitude_WGS84" Type="numeric" Precision="19" Scale="16" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -94,18 +93,6 @@
             </Principal>
             <Dependent Role="News">
               <PropertyRef Name="RefIdRest" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Restorans_Phones">
-          <End Role="Phones" Type="Self.Phones" Multiplicity="1" />
-          <End Role="Restorans" Type="Self.Restorans" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Phones">
-              <PropertyRef Name="Id_phone" />
-            </Principal>
-            <Dependent Role="Restorans">
-              <PropertyRef Name="IdPhone" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -159,13 +146,8 @@
             <End Role="Restorans" EntitySet="Restorans" />
             <End Role="News" EntitySet="News" />
           </AssociationSet>
-          <AssociationSet Name="FK_Restorans_Phones" Association="Self.FK_Restorans_Phones">
-            <End Role="Phones" EntitySet="Phones" />
-            <End Role="Restorans" EntitySet="Restorans" />
-          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="NewsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -197,7 +179,7 @@
           <Property Name="TextContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RefIdRest" Type="Int32" />
           <NavigationProperty Name="CategoryOfNews" Relationship="Self.FK_CategoryOfNews_News" FromRole="News" ToRole="CategoryOfNews" />
-          <NavigationProperty Name="Restorans" Relationship="Self.FK_News_Restorans" FromRole="News" ToRole="Restorans" />
+          <NavigationProperty Name="Restorans" Relationship="NewsModel.FK_News_Restorans" FromRole="News" ToRole="Restorans" />
         </EntityType>
         <EntityType Name="Phones">
           <Key>
@@ -205,23 +187,6 @@
           </Key>
           <Property Name="Id_phone" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PublicPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Restorans" Relationship="Self.FK_Restorans_Phones" FromRole="Phones" ToRole="Restorans" />
-        </EntityType>
-        <EntityType Name="Restorans">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Latitude_wgs84" Type="Double" />
-          <Property Name="Longitude_wgs84" Type="Double" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Adress" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
-          <Property Name="AdmArea" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-          <Property Name="District" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
-          <Property Name="SeatsCount" Type="Int32" />
-          <Property Name="IdPhone" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="News" Relationship="Self.FK_News_Restorans" FromRole="Restorans" ToRole="News" />
-          <NavigationProperty Name="Phones" Relationship="Self.FK_Restorans_Phones" FromRole="Restorans" ToRole="Phones" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -257,36 +222,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_News_Restorans">
-          <End Role="Restorans" Type="Self.Restorans" Multiplicity="0..1" />
-          <End Role="News" Type="Self.News" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Restorans">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="News">
-              <PropertyRef Name="RefIdRest" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Restorans_Phones">
-          <End Role="Phones" Type="Self.Phones" Multiplicity="1" />
-          <End Role="Restorans" Type="Self.Restorans" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Phones">
-              <PropertyRef Name="Id_phone" />
-            </Principal>
-            <Dependent Role="Restorans">
-              <PropertyRef Name="IdPhone" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="NewsEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Category" EntityType="Self.Category" />
           <EntitySet Name="CategoryOfNews" EntityType="Self.CategoryOfNews" />
           <EntitySet Name="News" EntityType="Self.News" />
           <EntitySet Name="Phones" EntityType="Self.Phones" />
-          <EntitySet Name="Restorans" EntityType="Self.Restorans" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <AssociationSet Name="FK_CategoryOfNews_Category" Association="Self.FK_CategoryOfNews_Category">
             <End Role="Category" EntitySet="Category" />
@@ -295,14 +235,6 @@
           <AssociationSet Name="FK_CategoryOfNews_News" Association="Self.FK_CategoryOfNews_News">
             <End Role="News" EntitySet="News" />
             <End Role="CategoryOfNews" EntitySet="CategoryOfNews" />
-          </AssociationSet>
-          <AssociationSet Name="FK_News_Restorans" Association="Self.FK_News_Restorans">
-            <End Role="Restorans" EntitySet="Restorans" />
-            <End Role="News" EntitySet="News" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Restorans_Phones" Association="Self.FK_Restorans_Phones">
-            <End Role="Phones" EntitySet="Phones" />
-            <End Role="Restorans" EntitySet="Restorans" />
           </AssociationSet>
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
@@ -334,6 +266,11 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="Restorans" EntityType="NewsModel.Restorans" />
+          <AssociationSet Name="FK_News_Restorans" Association="NewsModel.FK_News_Restorans">
+            <End Role="Restorans" EntitySet="Restorans" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -346,6 +283,32 @@
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
+        <EntityType Name="Restorans">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Latitude_WGS84" Type="Decimal" Nullable="false" Precision="19" Scale="16" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="AdmArea" Type="String" Nullable="false" MaxLength="39" FixedLength="false" Unicode="false" />
+          <Property Name="District" Type="String" Nullable="false" MaxLength="27" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="SeatsCount" Type="Int32" Nullable="false" />
+          <Property Name="Longitude_WGS84" Type="Decimal" Nullable="false" Precision="19" Scale="16" />
+          <NavigationProperty Name="News" Relationship="NewsModel.FK_News_Restorans" FromRole="Restorans" ToRole="News" />
+        </EntityType>
+        <Association Name="FK_News_Restorans">
+          <End Type="NewsModel.Restorans" Role="Restorans" Multiplicity="0..1" />
+          <End Type="NewsModel.News" Role="News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Restorans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="RefIdRest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -388,21 +351,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Restorans">
-            <EntityTypeMapping TypeName="NewsModel.Restorans">
-              <MappingFragment StoreEntitySet="Restorans">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Latitude_wgs84" ColumnName="Latitude_wgs84" />
-                <ScalarProperty Name="Longitude_wgs84" ColumnName="Longitude_wgs84" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Adress" ColumnName="Adress" />
-                <ScalarProperty Name="AdmArea" ColumnName="AdmArea" />
-                <ScalarProperty Name="District" ColumnName="District" />
-                <ScalarProperty Name="SeatsCount" ColumnName="SeatsCount" />
-                <ScalarProperty Name="IdPhone" ColumnName="IdPhone" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
             <EntityTypeMapping TypeName="NewsModel.sysdiagrams">
               <MappingFragment StoreEntitySet="sysdiagrams">
@@ -438,6 +386,20 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище NewsModel.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище NewsModel.sp_upgraddiagrams" />
+          <EntitySetMapping Name="Restorans">
+            <EntityTypeMapping TypeName="NewsModel.Restorans">
+              <MappingFragment StoreEntitySet="Restorans">
+                <ScalarProperty Name="Longitude_WGS84" ColumnName="Longitude_WGS84" />
+                <ScalarProperty Name="SeatsCount" ColumnName="SeatsCount" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="District" ColumnName="District" />
+                <ScalarProperty Name="AdmArea" ColumnName="AdmArea" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Latitude_WGS84" ColumnName="Latitude_WGS84" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

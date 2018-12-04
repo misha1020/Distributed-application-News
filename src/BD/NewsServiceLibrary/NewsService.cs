@@ -10,6 +10,17 @@ namespace NewsServiceLibrary
     // ПРИМЕЧАНИЕ. Команду "Переименовать" в меню "Рефакторинг" можно использовать для одновременного изменения имени класса "Service1" в коде и файле конфигурации.
     public class NewsService : INewsService
     {
+        static string mqIp = ConfigManager.Get("mqIp");
+        static string mqLogin = ConfigManager.Get("mqLogin");
+        static string mqPassword = ConfigManager.Get("mqPassword");
+        static string mqName = ConfigManager.Get("mqName");
+        static RabbitMQServer mq;
+
+        public NewsService()
+        {            
+            mq = new RabbitMQServer(mqIp, mqName, mqLogin, mqPassword);
+        }
+
         public void CreateCategory(string title)
         {
             using (var ctx = new NewsEntities())
@@ -69,23 +80,25 @@ namespace NewsServiceLibrary
                         TextContent = news.TextContent
                     };
                     ctx.News.Add(newNews);
-                    ctx.SaveChanges();
+                    //ctx.SaveChanges();
+                    mq.Send(newNews.TextContent);
                     Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
-                    using (var ptx = new NewsEntities())
-                    {
-                        SelectAllNews();
-                        Console.WriteLine("Передана дата " + news.ReleaseDate.Date + " заголовок " + news.Title);
-                        var idNew = ptx.News.Where(c => c.Date == news.ReleaseDate.Date && c.Title == news.Title).First().Id_news;
-                        int idCateg = -1;
-                        foreach (var category in categoryes)
-                        {
-                            var check = ctx.Category.Where(c => c.CatName == category).ToList();
-                            if (check.Count == 0)
-                                CreateCategory(category);
-                            idCateg = ptx.Category.Where(c => c.CatName == category).FirstOrDefault().IdCategories;
-                            CreateCategoryForNews(idCateg, idNew);
-                        }
-                    }
+                    //using (var ptx = new NewsEntities())
+                    //{
+                    //    SelectAllNews();
+                    //    Console.WriteLine("Передана дата " + news.ReleaseDate.Date + " заголовок " + news.Title);
+                    //    var idNew = ptx.News.Where(c => c.Date == news.ReleaseDate.Date && c.Title == news.Title).First().Id_news;
+                    //    int idCateg = -1;
+                    //    foreach (var category in categoryes)
+                    //    {
+                    //        var check = ctx.Category.Where(c => c.CatName == category).ToList();
+                    //        if (check.Count == 0)
+                    //            ;
+                    //            //CreateCategory(category);
+                    //       // idCateg = ptx.Category.Where(c => c.CatName == category).FirstOrDefault().IdCategories;
+                    //        //CreateCategoryForNews(idCateg, idNew);
+                    //    }
+                    //}
                 }
                 else
                 {
@@ -236,10 +249,8 @@ namespace NewsServiceLibrary
                 {
                     //создание массива класса категории                   
                     foreach (var cat in cats)
-                    {
-                        temp.IdCat = cat.IdCategories;
-                        temp.NameCat = cat.CatName;
-                        list.Add(temp);
+                    {   
+                        list.Add(new LibCategory() { IdCat = cat.IdCategories, NameCat = cat.CatName });
                         //вывод в класс
                         Console.WriteLine("Название категории: " + cat.CatName);
                     }
@@ -252,18 +263,14 @@ namespace NewsServiceLibrary
         {
             List<LibNews> list = new List<LibNews>();
             using (var ctx = new NewsEntities())
-            {
-                LibNews temp = new LibNews();
+            {                
                 var news = ctx.News.ToList();
                 if (news.Count != 0)
                 {
                     //создание массива класса категории                   
                     foreach (var onenew in news)
-                    {
-                        temp.Title = onenew.Title;
-                        temp.TextContent = onenew.TextContent;
-                        temp.ReleaseDate = onenew.Date;
-                        list.Add(temp);
+                    {                        
+                        list.Add(new LibNews(){ Title = onenew.Title, TextContent = onenew.TextContent, ReleaseDate = onenew.Date });
                         //вывод в класс
                         Console.WriteLine("Заголовок: " + onenew.Title + " Дата " + onenew.Date + " Содержимое" + onenew.TextContent);
                     }
@@ -277,7 +284,6 @@ namespace NewsServiceLibrary
             List<LibNews> list = new List<LibNews>();
             using (var ctx = new NewsEntities())
             {
-                LibNews temp = new LibNews();
                 var cat = ctx.Category.Where(c => c.CatName == nameCat).ToList();
                 if (cat.Count != 0)
                 {
@@ -288,10 +294,7 @@ namespace NewsServiceLibrary
                     {
                         var news = ctx.News.Where(c => c.Id_news == newFromCat.IdNews).FirstOrDefault();
                         //вывод в класс
-                        temp.Title = news.Title;
-                        temp.TextContent = news.TextContent;
-                        temp.ReleaseDate = news.Date;
-                        list.Add(temp);
+                        list.Add(new LibNews() { Title = news.Title, TextContent = news.TextContent, ReleaseDate = news.Date });
                         Console.WriteLine("Заголовок: " + news.Title + " Дата " + news.Date + " Содержимое" + news.TextContent);
                     }
                 }
@@ -351,8 +354,7 @@ namespace NewsServiceLibrary
                 var rests = ctx.Restorans.Where(c => c.Name == nameRest).ToList();
                 if (rests.Count != 0)
                 {
-                    int idRest = rests[0].Id;
-                    LibNews temp = new LibNews();                  
+                    int idRest = rests[0].Id;                 
                  
                     //создание массива классов
                     var newsWithRests = ctx.News.Where(c => c.RefIdRest == idRest).ToList();
@@ -361,11 +363,8 @@ namespace NewsServiceLibrary
                         foreach (var newsWithRest in newsWithRests)
                         {
                            
-                            //вывод в класс
-                            temp.Title = newsWithRest.Title;
-                            temp.TextContent = newsWithRest.TextContent;
-                            temp.ReleaseDate = newsWithRest.Date;
-                            list.Add(temp);
+                            //вывод в класс                            
+                            list.Add(new LibNews() { Title = newsWithRest.Title, TextContent = newsWithRest.TextContent, ReleaseDate = newsWithRest.Date });
                             Console.WriteLine("Заголовок: " + newsWithRest.Title + " Дата " + newsWithRest.Date + " Содержимое" + newsWithRest.TextContent);
                         }
                     }
@@ -379,6 +378,32 @@ namespace NewsServiceLibrary
                     Console.WriteLine("Не существует такого ресторана");
                 }
 
+            }
+            return list;
+        }
+
+        public List<string> SelectRestorans()
+        {
+            var list = new List<string>();
+            using (var ctx = new NewsEntities())
+            {
+                var restorans = ctx.Restorans.ToList();
+                if (restorans.Count != 0)
+                {
+                    //создание массива класса категории                   
+                    foreach (var restoran in restorans)
+                    {
+                        if (list.Where(c => c == restoran.Name).ToList().Count == 0)
+                        {
+                            list.Add(restoran.Name);
+                        }
+                        //вывод в класс                        
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ресторанов не существует");
+                }
             }
             return list;
         }
