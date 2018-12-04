@@ -13,11 +13,12 @@ namespace NewsServiceLibrary
         static string mqIp = ConfigManager.Get("mqIp");
         static string mqLogin = ConfigManager.Get("mqLogin");
         static string mqPassword = ConfigManager.Get("mqPassword");
+        static string mqName = ConfigManager.Get("mqName");
         static RabbitMQServer mq;
 
         public NewsService()
-        {
-            mq = new RabbitMQServer(mqIp, mqLogin, mqPassword);
+        {            
+            mq = new RabbitMQServer(mqIp, mqName, mqLogin, mqPassword);
         }
 
         public void CreateCategory(string title)
@@ -79,24 +80,25 @@ namespace NewsServiceLibrary
                         TextContent = news.TextContent
                     };
                     ctx.News.Add(newNews);
-                    ctx.SaveChanges();
+                    //ctx.SaveChanges();
                     mq.Send(newNews.TextContent);
                     Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
-                    using (var ptx = new NewsEntities())
-                    {
-                        SelectAllNews();
-                        Console.WriteLine("Передана дата " + news.ReleaseDate.Date + " заголовок " + news.Title);
-                        var idNew = ptx.News.Where(c => c.Date == news.ReleaseDate.Date && c.Title == news.Title).First().Id_news;
-                        int idCateg = -1;
-                        foreach (var category in categoryes)
-                        {
-                            var check = ctx.Category.Where(c => c.CatName == category).ToList();
-                            if (check.Count == 0)
-                                CreateCategory(category);
-                            idCateg = ptx.Category.Where(c => c.CatName == category).FirstOrDefault().IdCategories;
-                            CreateCategoryForNews(idCateg, idNew);
-                        }
-                    }
+                    //using (var ptx = new NewsEntities())
+                    //{
+                    //    SelectAllNews();
+                    //    Console.WriteLine("Передана дата " + news.ReleaseDate.Date + " заголовок " + news.Title);
+                    //    var idNew = ptx.News.Where(c => c.Date == news.ReleaseDate.Date && c.Title == news.Title).First().Id_news;
+                    //    int idCateg = -1;
+                    //    foreach (var category in categoryes)
+                    //    {
+                    //        var check = ctx.Category.Where(c => c.CatName == category).ToList();
+                    //        if (check.Count == 0)
+                    //            ;
+                    //            //CreateCategory(category);
+                    //       // idCateg = ptx.Category.Where(c => c.CatName == category).FirstOrDefault().IdCategories;
+                    //        //CreateCategoryForNews(idCateg, idNew);
+                    //    }
+                    //}
                 }
                 else
                 {

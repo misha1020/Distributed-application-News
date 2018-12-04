@@ -1,1 +1,11 @@
 J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\WCFForBD.exe.config
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\WCFForBD.exe
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\WCFForBD.pdb
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\EntityFramework.dll
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\EntityFramework.SqlServer.dll
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\EntityFramework.xml
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\EntityFramework.SqlServer.xml
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\bin\Debug\ru\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\obj\Debug\WCFForBD.exe
+J:\Универ\4 курс\Распределённое\Laba_4\Distributed-application-News\src\BD\WCFForBD\obj\Debug\WCFForBD.pdb
