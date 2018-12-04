@@ -18,7 +18,8 @@ namespace ServerWCF
                 HttpGetEnabled = true,
                 MetadataExporter = { PolicyVersion = PolicyVersion.Policy15 }
             };
-            var host = new ServiceHost(typeof(NewsService), new Uri("http://localhost:13044/our/service"));
+            var host = new ServiceHost(typeof(NewsService), new Uri("http://localhost:8000/INewService"));
+            ServiceEndpoint ep = host.AddServiceEndpoint(typeof(INewsService), new BasicHttpBinding(), "");
             host.Description.Behaviors.Add(behavior);
             host.AddServiceEndpoint(typeof(INewsService), new BasicHttpBinding(), "basic");
             host.Open();
@@ -26,4 +27,4 @@ namespace ServerWCF
             Console.ReadLine();
         }
     }
-}
+} 

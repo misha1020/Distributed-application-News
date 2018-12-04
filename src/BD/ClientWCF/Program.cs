@@ -35,12 +35,12 @@ namespace ClientWCF
             kek.ReleaseDate = DateTime.Now;
             kek.TextContent = "Очень интересное описание новости";
 
-            int? proxyPort = 18000; // 18000;
+            int? proxyPort = 8000; // 18000;
             if (proxyPort.HasValue)            
             {
                 // mitmweb --web-port 28000 --listen-port 18000 --mode reverse:http://localhost:13044
                 var kk = new NewsServiceClient("BasicHttpBinding_INewsService",
-                    $"http://localhost:{proxyPort.Value}/our/service/basic");
+                    $"http://localhost:{proxyPort.Value}/INewService");
                 kk.SelectAllCategory();
                 kk.CreateNewWithCat(kek,new string[] { "Актуально сейчас","Актуально всегда"});           
                 Console.WriteLine("Querying through proxy has been completed");
