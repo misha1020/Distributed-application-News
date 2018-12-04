@@ -11,6 +11,7 @@ namespace NewsServiceLibrary
     [ServiceContract]
     public interface INewsService
     {
+
         [OperationContract]
         void CreateNews(LibNews news);
 

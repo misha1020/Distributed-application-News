@@ -10,6 +10,16 @@ namespace NewsServiceLibrary
     // ПРИМЕЧАНИЕ. Команду "Переименовать" в меню "Рефакторинг" можно использовать для одновременного изменения имени класса "Service1" в коде и файле конфигурации.
     public class NewsService : INewsService
     {
+        static string mqIp = ConfigManager.Get("mqIp");
+        static string mqLogin = ConfigManager.Get("mqLogin");
+        static string mqPassword = ConfigManager.Get("mqPassword");
+        static RabbitMQServer mq;
+
+        public NewsService()
+        {
+            mq = new RabbitMQServer(mqIp, mqLogin, mqPassword);
+        }
+
         public void CreateCategory(string title)
         {
             using (var ctx = new NewsEntities())
@@ -70,6 +80,7 @@ namespace NewsServiceLibrary
                     };
                     ctx.News.Add(newNews);
                     ctx.SaveChanges();
+                    mq.Send(newNews.TextContent);
                     Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
                     using (var ptx = new NewsEntities())
                     {
