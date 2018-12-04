@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MessageSendServe;
 
@@ -11,6 +12,7 @@ namespace Dispatcher
 { 
     class DispatcherClient
     {
+        private static int portDispatcherClient = Convert.ToInt32(ConfigManager.Get("portDispatcherClient"));
 
         public static void SendMsg<T>(Socket handler, T msg)
         {
@@ -19,14 +21,12 @@ namespace Dispatcher
             handler.Send(byteSet);
         }
 
-        public static void ServersListSend()
+        public static async Task ServersListSend(CancellationToken ct)
         {
-            int port = 11000;
-            
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Bind(new IPEndPoint(IPAddress.Any, port));
+            sender.Bind(new IPEndPoint(IPAddress.Any, portDispatcherClient));
             sender.Listen(10);
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {
@@ -39,53 +39,23 @@ namespace Dispatcher
                         int i = 0;
                         foreach (var elem in Program.msgsWithHosts)
                         {
-                            MessageSendRecieve msg = elem.Value;
+                            MessageSendRecieve msg = elem;
                             servers[i] = msg;
                             i++;
                         }
                         SendMsg<MessageSendRecieve[]>(handler, servers);
-                        Console.WriteLine("Список серверов отпрален!");
+                        Console.WriteLine("Server list send");
                     }
-                    Program.msgsWithHosts_Semaphore.Release();
-
-                    handler.Shutdown(SocketShutdown.Both);
-                    handler.Close();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
-        }
-
-
-        public static void SocketSend()
-        {
-            int port = 11005;
-
-            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Bind(new IPEndPoint(IPAddress.Any, port));
-            sender.Listen(10);
-            while (true)
-            {
-                try
-                {
-                    Socket handler = sender.Accept();
-
-                    Program.msgsWithHosts_Semaphore.WaitOne();
-                    if (Program.msgsWithHosts.Count != 0)
+                    else
                     {
-                        MessageSendRecieve msg = Program.msgsWithHosts.Values.First();
-
-                        SendMsg(handler, msg);
-                        Console.WriteLine("Данные отправлены");
+                        byte[] byteSet = BinFormatter.ToBytes<int>(0);
+                        handler.Send(byteSet);
                     }
                     Program.msgsWithHosts_Semaphore.Release();
 
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                 }
-
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());

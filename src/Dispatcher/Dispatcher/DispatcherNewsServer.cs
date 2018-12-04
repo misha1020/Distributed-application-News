@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MessageSendServe;
 
@@ -11,6 +12,9 @@ namespace Dispatcher
 {
     class DispatcherNewsServer
     {
+        private static int portDispatcherServer = Convert.ToInt32(ConfigManager.Get("portDispatcherServer"));
+        private static int portPingServers = Convert.ToInt32(ConfigManager.Get("portPingServers"));
+
         public static T RecieveMsg<T>(Socket receiver)
         {
             byte[] length = new byte[256];
@@ -38,31 +42,44 @@ namespace Dispatcher
             return BinFormatter.FromBytes<T>(bytes);
         }
 
-        public static void SocketRecieve()
+        public static async Task SocketRecieve(CancellationToken ct)
         {
-            int port = 11001;
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Bind(new IPEndPoint(IPAddress.Any, port));
+            sender.Bind(new IPEndPoint(IPAddress.Any, portDispatcherServer));
             sender.Listen(10);
-
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 MessageSendRecieve msg = new MessageSendRecieve();
                 try
                 {
                     Socket receiver = sender.Accept();
-
-                    msg.hostIP = RecieveMsg<string>(receiver);
-                    msg.login = RecieveMsg<string>(receiver);
-                    msg.password = RecieveMsg<string>(receiver);
+                    msg = RecieveMsg<MessageSendRecieve>(receiver);
                     msg.IP =(receiver.RemoteEndPoint as IPEndPoint).Address.ToString();
+
+
+                    Program.msgsWithHosts_Semaphore.WaitOne();
+                    bool nameRepeats = false;
+                    for (int i = 0; i < Program.msgsWithHosts.Count && !nameRepeats; i++)
+                        nameRepeats = Program.msgsWithHosts[i].mqName == msg.mqName;
+                    Program.msgsWithHosts_Semaphore.Release();
+
+                    if (!nameRepeats)
+                        receiver.Send(BinFormatter.ToBytes<bool>(true));
+                    else
+                    {
+                        Console.WriteLine($"Server {msg.mqIP} denied");
+                        receiver.Send(BinFormatter.ToBytes<bool>(false));
+                        receiver.Shutdown(SocketShutdown.Both);
+                        receiver.Close();
+                        break;
+                    }
 
                     receiver.Shutdown(SocketShutdown.Both);
                     receiver.Close();
 
                     Program.msgsWithHosts_Semaphore.WaitOne();
-                    Program.msgsWithHosts.Add(Guid.NewGuid().ToString(), msg);
-                    Console.WriteLine("New server connected!");
+                    Program.msgsWithHosts.Add(msg);
+                    Console.WriteLine("New server connected");
                     Program.msgsWithHosts_Semaphore.Release();
                 }
                 catch (Exception ex)
@@ -70,26 +87,22 @@ namespace Dispatcher
                     Console.WriteLine(ex.ToString());
                 }
             }
-
         }
 
         public static void PingServs()
         {
-
             Program.msgsWithHosts_Semaphore.WaitOne();
-            Dictionary<string, MessageSendRecieve> msgsWithHosts = new Dictionary<string, MessageSendRecieve>();
+            List<MessageSendRecieve> msgsWithHosts = new List<MessageSendRecieve>();
             foreach (var host in Program.msgsWithHosts)
-                msgsWithHosts.Add(host.Key,host.Value);
+                msgsWithHosts.Add(host);
             Program.msgsWithHosts_Semaphore.Release();
-
 
             foreach (var host in msgsWithHosts)
             {
                 try
                 {
-                    //Console.WriteLine($"trying to ping {host.Value.IP}");
-                    IPAddress ipAddr = IPAddress.Parse(host.Value.IP);
-                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
+                    IPAddress ipAddr = IPAddress.Parse(host.IP);
+                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portPingServers);
                     Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sender.Connect(ipEndPoint);
                     Byte[] buf = new Byte[1];
@@ -98,13 +111,11 @@ namespace Dispatcher
                 }
                 catch (Exception ex)
                 {
-
                     Program.msgsWithHosts_Semaphore.WaitOne();
-                    Program.msgsWithHosts.Remove(host.Key);
+                    Program.msgsWithHosts.Remove(host);
                     Program.msgsWithHosts_Semaphore.Release();
 
-                    Console.WriteLine($"Host {host.Value.hostIP} doesn't answer");
-                    //Console.WriteLine(ex.Message + " in " + ex.Source);
+                    Console.WriteLine($"Server {host.mqName} disconnected");
                 }
             }
         }

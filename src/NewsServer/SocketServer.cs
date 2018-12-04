@@ -4,28 +4,17 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using MessageSendServe;
 
 namespace NewsServer
 {
-    struct MessageToSend
-    {
-        public string hostIP;
-        public string login;
-        public string password;
-
-        public MessageToSend(string ip, string log, string pass)
-        {
-            this.hostIP = ip;
-            this.login = log;
-            this.password = pass;
-        }
-    }
-
     class SocketServer
     {
-        private static int pingReplyPort = Convert.ToInt32(ConfigManager.Get("pingPort"));
-
+        private static int portPingServers = Convert.ToInt32(ConfigManager.Get("portPingServers"));
+        private static int portDispatcherServer = Convert.ToInt32(ConfigManager.Get("portDispatcherServer"));
+        
         public static void SendMsg<T>(Socket handler, T msg)
         {
             byte[] byteSet = BinFormatter.ToBytes<T>(msg);
@@ -33,23 +22,27 @@ namespace NewsServer
             handler.Send(byteSet);
         }
 
-        public static void SocketSend(MessageToSend msg, string ip)
+        public static void SocketSend(MessageSendRecieve msg, string ip)
         {
-            int port = 11001;
+            IPAddress ipAddr = IPAddress.Parse(ip);
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherServer);
+            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                IPAddress ipAddr = IPAddress.Parse(ip);
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-                Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sender.Connect(ipEndPoint);
 
-                SendMsg<string>(sender, msg.hostIP);
-                SendMsg<string>(sender, msg.login);
-                SendMsg<string>(sender, msg.password);
+                SendMsg<MessageSendRecieve>(sender, msg);
+
+
+                Byte[] buf = BinFormatter.ToBytes(false);
+                sender.Receive(buf);
+                if (BinFormatter.FromBytes<bool>(buf))
+                    Console.WriteLine("Server connected");
+                else
+                    Console.WriteLine("Server denied");
 
                 sender.Shutdown(SocketShutdown.Both);
                 sender.Close();
-                Console.WriteLine("Данные отправлены");
             }
             catch (Exception ex)
             {
@@ -57,21 +50,19 @@ namespace NewsServer
             }
         }
 
-        public static void pingReply()
+        public static async Task pingReply(CancellationToken ct)
         {
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Bind(new IPEndPoint(IPAddress.Any, pingReplyPort));
+            sender.Bind(new IPEndPoint(IPAddress.Any, portPingServers));
             sender.Listen(10);
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {
-                    //Console.WriteLine("Waiting for ping");
                     Socket receiver = sender.Accept();
                     Byte[] buf = new Byte[1];
                     receiver.Receive(buf);
                     receiver.Send(buf);
-                    //Console.WriteLine("Reply");
                 }
                 catch (Exception ex)
                 {

@@ -9,15 +9,17 @@ namespace MessageSendServe
     [Serializable]
     public struct MessageSendRecieve
     {
-        public string hostIP { get; set; }
+        public string IP { get; set; }
+        public string mqIP { get; set; }
         public string login { get; set; }
         public string password { get; set; }
-        public string IP { get; set; }
+        public string mqName { get; set; }
 
-        public MessageSendRecieve(string IP, string hostip, string log, string pass)
+        public MessageSendRecieve(string IP, string mqIP, string mqName, string log, string pass)
         {
             this.IP = IP;
-            this.hostIP = hostip;
+            this.mqName = mqName;
+            this.mqIP = mqIP;
             this.login = log;
             this.password = pass;
         }

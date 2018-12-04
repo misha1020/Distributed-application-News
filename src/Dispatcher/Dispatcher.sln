@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dispatcher", "Dispatcher\Dispatcher.csproj", "{4F965114-A331-4F2B-95CB-3CF61AA523E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageSerdServe", "MessageSerdServe\MessageSerdServe.csproj", "{F6572736-3349-4E79-9F61-B46385593366}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageSendServe", "MessageSerdServe\MessageSendServe.csproj", "{F6572736-3349-4E79-9F61-B46385593366}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

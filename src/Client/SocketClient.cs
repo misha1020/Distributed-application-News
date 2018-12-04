@@ -13,6 +13,9 @@ namespace Client
 
     class SocketClient
     {
+        private static int portPingServers = Convert.ToInt32(ConfigManager.Get("portPingServers"));
+        private static int portDispatcherClient = Convert.ToInt32(ConfigManager.Get("portDispatcherClient"));
+        private static string dispatcherIp = ConfigManager.Get("dispatcherIp");
 
         public static T ReceiveMsg<T>(Socket receiver)
         {
@@ -38,52 +41,31 @@ namespace Client
                     step = bytesRec - a;
                 a += receiver.Receive(bytes, a, step, SocketFlags.None);
             }
-            return BinFormatter.FromBytes<T>(bytes);
+            if (bytesRec != 0)
+                return BinFormatter.FromBytes<T>(bytes);
+            else
+                throw new FormatException("Серверов нет");
         }
 
         public static MessageSendRecieve[] RecieveServersList()
         {
-            int port = 11000;
             MessageSendRecieve[] servers = null;
+            IPAddress ipAddr = IPAddress.Parse(dispatcherIp);
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portDispatcherClient);
+            Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            receiver.Connect(ipEndPoint);
+
             try
             {
-                IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-                Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                receiver.Connect(ipEndPoint);
-
                 servers = ReceiveMsg<MessageSendRecieve[]>(receiver);
-                receiver.Shutdown(SocketShutdown.Both);
-                receiver.Close();
             }
-            catch (Exception ex)
+            catch (FormatException ex)
             {
-                MessageBox.Show(ex.ToString());
+                servers = new MessageSendRecieve[0];
             }
+            receiver.Shutdown(SocketShutdown.Both);
+            receiver.Close();
             return servers;
-        }
-        
-        public static MessageSendRecieve SocketRecieve()
-        {
-            int port = 11005;
-            MessageSendRecieve msg = new MessageSendRecieve();
-            try
-            {
-                IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-                Socket receiver = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                receiver.Connect(ipEndPoint);
-
-                msg = ReceiveMsg<MessageSendRecieve>(receiver);
-
-                receiver.Shutdown(SocketShutdown.Both);
-                receiver.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            return msg;
         }
 
         public static void PingServs(FormClient formClient)
@@ -99,20 +81,18 @@ namespace Client
                 MessageSendRecieve host = msgsWithHosts[i];
                 try
                 {
-                    //formClient.AppendTextBox($"trying to ping {host.IP}");
                     IPAddress ipAddr = IPAddress.Parse(host.IP);
-                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11010);
+                    IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, portPingServers);
                     Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sender.Connect(ipEndPoint);
                     Byte[] buf = new Byte[1];
                     sender.Send(buf);
                     sender.Receive(buf);
-                    formClient.AppendColorList(i, true);
+                    formClient.AppendOnOffImg(host.mqName, true);
                 }
                 catch (Exception ex)
                 {
-                    formClient.AppendColorList(i, false);
-                    formClient.AppendTextBox($"serv missed! {host.IP}");
+                    formClient.AppendOnOffImg(host.mqName, false);
                 }
             }
         }
