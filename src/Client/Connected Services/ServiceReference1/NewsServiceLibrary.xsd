@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/NewsServiceLibrary" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NewsServiceLibrary" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="LibNews">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="RefIdRest" type="xs:int" />
+      <xs:element minOccurs="0" name="ReleaseDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="TextContent" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Title" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LibNews" nillable="true" type="tns:LibNews" />
+  <xs:complexType name="ArrayOfLibNews">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LibNews" nillable="true" type="tns:LibNews" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfLibNews" nillable="true" type="tns:ArrayOfLibNews" />
+  <xs:complexType name="ArrayOfLibCategory">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LibCategory" nillable="true" type="tns:LibCategory" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfLibCategory" nillable="true" type="tns:ArrayOfLibCategory" />
+  <xs:complexType name="LibCategory">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IdCat" type="xs:int" />
+      <xs:element minOccurs="0" name="NameCat" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LibCategory" nillable="true" type="tns:LibCategory" />
+</xs:schema>

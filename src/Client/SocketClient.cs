@@ -59,7 +59,7 @@ namespace Client
             {
                 servers = ReceiveMsg<MessageSendRecieve[]>(receiver);
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
                 servers = new MessageSendRecieve[0];
             }
@@ -90,7 +90,7 @@ namespace Client
                     sender.Receive(buf);
                     formClient.AppendOnOffImg(host.mqName, true);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     formClient.AppendOnOffImg(host.mqName, false);
                 }

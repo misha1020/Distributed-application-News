@@ -10,24 +10,39 @@ using MessageSendServe;
 using System.Drawing;
 using Client.Properties;
 using System.IO;
+using Client.ServiceReference1;
+using System.Threading.Tasks;
 
 namespace Client
 {
     public partial class FormClient : Form
     {
+        static string wcfServerIp = ConfigManager.Get("wcfServerIp");
         List<RabbitMQClient> RMQS = new List<RabbitMQClient>();
+        RabbitMQClient ourMQ;
         ImageList imgsSub = new ImageList();
         ImageList imgsOnOff = new ImageList();
 
         public FormClient()
         {
             InitializeComponent();
-            btClear.BringToFront();
+            InitializeOurMQ();
             lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             LoadImages();
             ReadSavedMQs();
             button_refresh_Click(null, null);
             Ping();
+        }
+
+        private void InitializeOurMQ()
+        {
+            string mqIp = ConfigManager.Get("rabbitMqIp");
+            string mqName = ConfigManager.Get("rabbitMqName");
+            string mqLog = ConfigManager.Get("rabbitMqNLogin");
+            string mqPass = ConfigManager.Get("rabbitMqPassword");
+            MessageSendRecieve ourMqMessage = new MessageSendRecieve(null, mqIp, mqName, mqLog, mqPass);
+            ourMQ = new RabbitMQClient(ourMqMessage);
+            ourMQ.consumer.Received += sender;
         }
 
         private void Ping()
@@ -84,14 +99,14 @@ namespace Client
             string msg;
             var body = ea.Body;
             msg = BinFormatter.FromBytes<string>(body);
-            AppendTextBox(msg);
+            AppendDataGridView(msg);
         }
 
-        public void AppendTextBox(string value)
+        public void AppendDataGridView(string value)
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string>(AppendTextBox), new object[] { value });
+                this.Invoke(new Action<string>(AppendDataGridView), new object[] { value });
                 return;
             }
             dgvInfo.Rows.Add(new object[] { value });
@@ -104,7 +119,7 @@ namespace Client
                 this.Invoke(new Action<string, bool>(AppendOnOffImg), new object[] { mqName, ping });
                 return;
             }
-                    
+
             int index = -1;
             foreach (ListViewItem lItem in lvServs.Items)
             {
@@ -121,16 +136,16 @@ namespace Client
             {
                 Program.msgsWithHosts_Semaphore.WaitOne();
                 MessageSendRecieve[] servers = SocketClient.RecieveServersList();
-                foreach(var serv in servers)
+                foreach (var serv in servers)
                 {
-                    if(RMQS.Find(mq => mq.serv.mqName == serv.mqName)==null)
+                    if (RMQS.Find(mq => mq.serv.mqName == serv.mqName) == null)
                     {
                         Program.msgsWithHosts.Add(serv);
                     }
                 }
                 return servers;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Dispacher connection error");
                 return null;
@@ -182,6 +197,8 @@ namespace Client
             SavingXML.WriteToXmlFile("data.txt", mqSaveData);
             foreach (var rm in RMQS)
                 rm.Dispose();
+            ourMQ.Dispose();
+            
         }
 
         private void button_refresh_Click(object sender, EventArgs e)
@@ -197,9 +214,9 @@ namespace Client
                         lvServs.Items[i].Remove();
 
                 foreach (var serv in servers)
-                {                   
+                {
                     if (RMQS.Find(mq => mq.serv.mqName == serv.mqName) == null)
-                        addServInLvServs(serv, false);                    
+                        addServInLvServs(serv, false);
                 }
             }
         }
@@ -207,11 +224,11 @@ namespace Client
         private ListViewItem addServInLvServs(MessageSendRecieve serv, bool subscribed)
         {
             ListViewItem item = new ListViewItem(new string[] { "     " + serv.mqName });
-                    item.Tag = serv.mqName;
-                    item.SubItems[0].Tag = subscribed;
-                    item.StateImageIndex = 0;
-                    item.ImageIndex = (subscribed)? 0 : 1;
-                    lvServs.Items.Add(item); 
+            item.Tag = serv.mqName;
+            item.SubItems[0].Tag = subscribed;
+            item.StateImageIndex = 0;
+            item.ImageIndex = (subscribed) ? 0 : 1;
+            lvServs.Items.Add(item);
             return item;
         }
 
@@ -220,24 +237,24 @@ namespace Client
             Program.msgsWithHosts_Semaphore.WaitOne();
             var servers = new List<MessageSendRecieve>(Program.msgsWithHosts);
             Program.msgsWithHosts_Semaphore.Release();
-                        
-            if(lvServs.SelectedItems.Count > 0)
+
+            if (lvServs.SelectedItems.Count > 0)
             {
                 ListViewItem lvItem = lvServs.SelectedItems[0];
                 for (int i = 0; i < servers.Count; i++)
                 {
-                    if (lvItem.Tag.ToString() == servers[i].mqName )
+                    if (lvItem.Tag.ToString() == servers[i].mqName)
                     {
                         if ((bool)lvItem.SubItems[0].Tag == false)
                         {
                             lvItem.SubItems[0].Tag = true;
-                            lvItem.ImageIndex = 0; 
+                            lvItem.ImageIndex = 0;
                             Subscribe(servers[i]);
                         }
                         else
                         {
                             lvItem.SubItems[0].Tag = false;
-                            lvItem.ImageIndex = 1; 
+                            lvItem.ImageIndex = 1;
                             Unsubscribe(servers[i]);
                         }
                     }
@@ -245,9 +262,122 @@ namespace Client
             }
         }
 
+        private static long Benchmark(string endpointConfigurationName)
+        {
+            INewsService serviceClient = new NewsServiceClient(endpointConfigurationName);
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            for (var i = 0; i < 2000; i++)
+            {
+                serviceClient.Test();
+            }
+
+            watch.Stop();
+            return watch.ElapsedMilliseconds;
+        }
+
         private void btOff_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btHideShow_Click(object sender, EventArgs e)
+        {
+            if (btHideShow.Text == "Create news")
+            {
+                lbConnecting.Visible = true;
+                try
+                {
+                    var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                        $"http://{wcfServerIp}/INewService");
+                    //NSC.Test();
+
+                    panelNews.Visible = !panelNews.Visible;
+                    panelNewNews.Visible = !panelNewNews.Visible;
+                    btHideShow.Text = "Watch news";
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("News server is not connected");
+                }
+                finally
+                {
+                    lbConnecting.Visible = false;
+                }
+            }
+            else
+            {
+                btHideShow.Text = "Create news";
+                panelNews.Visible = !panelNews.Visible;
+                panelNewNews.Visible = !panelNewNews.Visible;
+            }
+        }
+
+        private void btAdd_Click(object sender, EventArgs e)
+        {
+            lbConnecting.Visible = true;
+            try
+            {
+                LibNews addingNews = new LibNews();
+                addingNews.Title = tbTitle.Text;
+                addingNews.ReleaseDate = DateTime.Now;
+                addingNews.TextContent = tbTextContent.Text;
+
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                NSC.CreateNewWithCat(addingNews, new string[] { cbCategory.Text });
+                cbCategory.Text = "";
+                tbTitle.Text = "";
+                tbTextContent.Text = "";
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("News server is not connected right now");
+            }
+            finally
+            {
+                lbConnecting.Visible = false;
+            }
+        }
+
+        private void cbCategory_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void tbTitle_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void tbTextContent_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void cbCategory_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                LibCategory[] allCategories = NSC.SelectAllCategory();
+                cbCategory.Items.Clear();
+                foreach (var category in allCategories)
+                    cbCategory.Items.Add(category.NameCat);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server with categories is not connected right now");
+            }
         }
 
         private void btClear_Click(object sender, EventArgs e)
