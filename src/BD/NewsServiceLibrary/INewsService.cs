@@ -45,10 +45,13 @@ namespace NewsServiceLibrary
         List<LibCategory> SelectAllCategory();
 
         [OperationContract]
-       void Test();
+        void Test();
+
         [OperationContract]
         void CreateNewWithCat(LibNews news, string[] categoryes);
 
+        [OperationContract]
+        void CreateNewWithCatAndRest(LibNews news, string[] categoryes,string nameRest);
         //[OperationContract]
         //News GetDataUsingDataContract(News composite);
 
@@ -121,6 +124,51 @@ namespace NewsServiceLibrary
         {
             get { return nameCat; }
             set { nameCat = value; }
+        }
+    }
+
+    [DataContract]
+    public class libRestoran
+    {
+        int idRest;
+        string name;
+        string adress;
+        string district;
+        int seatsCount;
+
+        [DataMember]
+        int IdRest
+        {
+            get { return idRest; }
+            set { idRest = value; }
+        }
+
+        [DataMember]
+        string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        [DataMember]
+        string Adress
+        {
+            get { return adress; }
+            set { adress = value; }
+        }
+
+        [DataMember]
+        string District
+        {
+            get { return district; }
+            set { district = value; }
+        }
+
+        [DataMember]
+        int SeatsCount
+        {
+            get { return seatsCount; }
+            set { seatsCount = value; }
         }
     }
 }

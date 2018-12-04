@@ -55,7 +55,7 @@ namespace NewsServiceLibrary
             }
         }
 
-        public void CreateNewWithCat(LibNews news,string[] categoryes)
+        public void CreateNewWithCat(LibNews news, string[] categoryes)
         {
             using (var ctx = new NewsEntities())
             {
@@ -223,13 +223,13 @@ namespace NewsServiceLibrary
                     Console.WriteLine("Такой новости не существует");
                 }
             }
-        }       
+        }
 
         public List<LibCategory> SelectAllCategory()
         {
             List<LibCategory> list = new List<LibCategory>();
             using (var ctx = new NewsEntities())
-            {               
+            {
                 LibCategory temp = new LibCategory();
                 var cats = ctx.Category.ToList();
                 if (cats.Count != 0)
@@ -308,5 +308,41 @@ namespace NewsServiceLibrary
         {
             var a = 1;
         }
+
+        public void CreateNewWithCatAndRest(LibNews news, string[] categoryes, string nameRest)
+        {
+            using (var ctx = new NewsEntities())
+            {
+                var search = ctx.News.Where(c => c.Date == news.ReleaseDate.Date && c.Title == news.Title).ToList();
+                if (search.Count == 0)
+                {
+                    int idRest = -1;
+                    var rests = ctx.Restorans.Where(c => c.Name == nameRest).ToList();
+                    if (rests.Count != 0)
+                    {
+                        idRest = rests[0].Id;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ресторана не существует");
+                    }
+
+                    News newNews = new News
+                    {
+                        Title = news.Title,
+                        Date = news.ReleaseDate,
+                        TextContent = news.TextContent
+                    };
+                    if (idRest != -1)
+                        newNews.RefIdRest = idRest;
+                    ctx.News.Add(newNews);
+                    ctx.SaveChanges();
+                    Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
+
+                }
+            }
+        }
+
+
     }
 }
