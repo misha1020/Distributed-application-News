@@ -121,7 +121,7 @@ namespace Client
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string>(AppendDataGridView), new object[] { value });
+                this.Invoke(new Action<Article>(AppendDataGridView), new object[] { value });
                 return;
             }
             //dgvInfo.Rows.Add(new object[] { value });
