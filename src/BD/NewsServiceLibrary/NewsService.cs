@@ -350,6 +350,7 @@ namespace NewsServiceLibrary
                         newNews.RefIdRest = idRest;
                     ctx.News.Add(newNews);
                     ctx.SaveChanges();
+                    mq.Send(newNews.TextContent);
                     Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
                     using (var ptx = new NewsEntities())
                     {
