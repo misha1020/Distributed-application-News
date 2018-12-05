@@ -27,6 +27,8 @@ namespace Client
         {
             InitializeComponent();
             InitializeOurMQ();
+            dgvInfo.Columns[0].Width = 50;
+            dgvRestNews.Columns[0].Width = 50;
             lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             LoadImages();
             ReadSavedMQs();
@@ -46,7 +48,7 @@ namespace Client
                 ourMQ = new RabbitMQClient(ourMqMessage);
                 ourMQ.consumer.Received += sender;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("rabbitMq doesn't answer");
             }
@@ -89,7 +91,7 @@ namespace Client
                         RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
                         RMQS[RMQS.Count - 1].consumer.Received += sender;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         MessageBox.Show($"RabbitMq at {data.messageSendRecieve.mqIP} doesn't answer");
                     }
@@ -107,23 +109,26 @@ namespace Client
             base.OnShown(e);
             ActiveControl = null;
         }
-
+        
         public void sender(object model, BasicDeliverEventArgs ea)
         {
-            string msg;
+            Article msg=null;
             var body = ea.Body;
-            msg = BinFormatter.FromBytes<string>(body);
+            msg = BinFormatter.FromBytes<Article>(body);
             AppendDataGridView(msg);
         }
 
-        public void AppendDataGridView(string value)
+        public void AppendDataGridView(Article value)
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string>(AppendDataGridView), new object[] { value });
+                this.Invoke(new Action<Article>(AppendDataGridView), new object[] { value });
                 return;
             }
-            dgvInfo.Rows.Add(new object[] { value });
+            dgvInfo.Rows.Add();
+            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
+            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
+            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[2].Value = value.PublishedAt;
         }
 
         public void AppendOnOffImg(string mqName, bool ping)
@@ -211,8 +216,8 @@ namespace Client
             SavingXML.WriteToXmlFile("data.txt", mqSaveData);
             foreach (var rm in RMQS)
                 rm.Dispose();
-            if(ourMQ != null) ourMQ.Dispose();
-            
+            if (ourMQ != null) ourMQ.Dispose();
+
         }
 
         private void button_refresh_Click(object sender, EventArgs e)
@@ -303,7 +308,7 @@ namespace Client
                 {
                     var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                         $"http://{wcfServerIp}/INewService");
-                    //NSC.Test();
+                    NSC.Test();
 
                     panelNews.Visible = !panelNews.Visible;
                     panelNewNews.Visible = !panelNewNews.Visible;
@@ -335,10 +340,12 @@ namespace Client
                 addingNews.Title = tbTitle.Text;
                 addingNews.ReleaseDate = DateTime.Now;
                 addingNews.TextContent = tbTextContent.Text;
+                string restaurantName = cbRestaurantAdd.Text;
 
                 var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                     $"http://{wcfServerIp}/INewService");
-                NSC.CreateNewWithCat(addingNews, new string[] { cbCategory.Text });
+                NSC.CreateNewWithCatAndRest(addingNews, new string[] { cbCategory.Text }, restaurantName, null);
+                cbRestaurantAdd.Text = "";
                 cbCategory.Text = "";
                 tbTitle.Text = "";
                 tbTextContent.Text = "";
@@ -397,6 +404,83 @@ namespace Client
         private void btClear_Click(object sender, EventArgs e)
         {
             dgvInfo.Rows.Clear();
+        }
+
+        private void btClearRestNews_Click(object sender, EventArgs e)
+        {
+            dgvRestNews.Rows.Clear();
+        }
+
+        private void btOff2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btLoadNews_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LibNews[] restaurantNews;
+                string restaurantName = cbRestaurants.Text;
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                
+                restaurantNews = NSC.SelectNewsFromRestoran(restaurantName);
+                dgvRestNews.Rows.Clear();
+                foreach (var news in restaurantNews)
+                {
+                    dgvRestNews.Rows.Add();
+                    dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[0].Value = news.Title;
+                    dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[1].Value = news.TextContent;
+                    dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[2].Value = news.ReleaseDate;
+                }  
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Server with restaurants is not connected right now");
+            }   
+        }
+        private void cbRestaurantAdd_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                string[] restaurants = NSC.SelectRestorans();
+                cbRestaurantAdd.Items.Clear();
+                foreach (var restaurant in restaurants)
+                    cbRestaurantAdd.Items.Add(restaurant);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server with restaurants is not connected right now");
+            }
+        }
+
+        private void cbRestaurants_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                int sitsCount = Convert.ToInt32(nudSitsCount.Value);
+                string[] restaurantsWithSitsCount = NSC.SelectRestWithCount(sitsCount);
+                cbRestaurants.Items.Clear();
+                foreach (var restaurant in restaurantsWithSitsCount)
+                    cbRestaurants.Items.Add(restaurant);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server with restaurants is not connected right now");
+            }
+        }
+        
+        private void cbRestaurants_TextChanged(object sender, EventArgs e)
+        {
+            if (cbRestaurants.Text != "")
+                btLoadNews.Enabled = true;
+            else
+                btLoadNews.Enabled = false;
         }
     }
 }

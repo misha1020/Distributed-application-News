@@ -12,24 +12,18 @@ namespace NewsServiceLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class News
+    public partial class Users
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public News()
+        public Users()
         {
-            this.CategoryOfNews = new HashSet<CategoryOfNews>();
+            this.News = new HashSet<News>();
         }
     
-        public int Id_news { get; set; }
-        public string Title { get; set; }
-        public System.DateTime Date { get; set; }
-        public string TextContent { get; set; }
-        public Nullable<int> RefIdRest { get; set; }
-        public string User { get; set; }
+        public string Login { get; set; }
+        public string Password { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CategoryOfNews> CategoryOfNews { get; set; }
-        public virtual Restorans Restorans { get; set; }
-        public virtual Users Users { get; set; }
+        public virtual ICollection<News> News { get; set; }
     }
 }
