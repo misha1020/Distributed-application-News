@@ -48,7 +48,7 @@ namespace Client
                 ourMQ = new RabbitMQClient(ourMqMessage);
                 ourMQ.consumer.Received += sender;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("rabbitMq doesn't answer");
             }
@@ -91,7 +91,7 @@ namespace Client
                         RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
                         RMQS[RMQS.Count - 1].consumer.Received += sender;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         MessageBox.Show($"RabbitMq at {data.messageSendRecieve.mqIP} doesn't answer");
                     }
@@ -109,13 +109,13 @@ namespace Client
             base.OnShown(e);
             ActiveControl = null;
         }
-
+        
         public void sender(object model, BasicDeliverEventArgs ea)
         {
-            Article news = new Article();
+            Article msg=null;
             var body = ea.Body;
-            news = BinFormatter.FromBytes<Article>(body);
-            AppendDataGridView(news);
+            msg = BinFormatter.FromBytes<Article>(body);
+            AppendDataGridView(msg);
         }
 
         public void AppendDataGridView(Article value)
@@ -125,7 +125,6 @@ namespace Client
                 this.Invoke(new Action<Article>(AppendDataGridView), new object[] { value });
                 return;
             }
-            //dgvInfo.Rows.Add(new object[] { value });
             dgvInfo.Rows.Add();
             dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
             dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
@@ -217,8 +216,8 @@ namespace Client
             SavingXML.WriteToXmlFile("data.txt", mqSaveData);
             foreach (var rm in RMQS)
                 rm.Dispose();
-            if(ourMQ != null) ourMQ.Dispose();
-            
+            if (ourMQ != null) ourMQ.Dispose();
+
         }
 
         private void button_refresh_Click(object sender, EventArgs e)
@@ -347,7 +346,6 @@ namespace Client
                     $"http://{wcfServerIp}/INewService");
                 NSC.CreateNewWithCatAndRest(addingNews, new string[] { cbCategory.Text }, restaurantName, null);
                 cbCategory.Text = "";
-                cbRestaurantAdd.Text = "";
                 tbTitle.Text = "";
                 tbTextContent.Text = "";
             }
@@ -361,6 +359,29 @@ namespace Client
             }
         }
 
+        private void cbCategory_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void tbTitle_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void tbTextContent_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
 
         private void cbCategory_DropDown(object sender, EventArgs e)
         {
@@ -394,14 +415,6 @@ namespace Client
             this.Close();
         }
 
-        private void cbRestaurants_TextChanged(object sender, EventArgs e)
-        {
-            if (cbRestaurants.Text != "")
-                btLoadNews.Enabled = true;
-            else
-                btLoadNews.Enabled = false;
-        }
-
         private void btLoadNews_Click(object sender, EventArgs e)
         {
             try
@@ -424,7 +437,23 @@ namespace Client
             catch (Exception ex)
             {
                 MessageBox.Show("Server with restaurants is not connected right now");
-            }            
+            }   
+        }
+        private void cbRestaurantAdd_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                string[] restaurants = NSC.SelectRestorans();
+                cbRestaurantAdd.Items.Clear();
+                foreach (var restaurant in restaurants)
+                    cbRestaurantAdd.Items.Add(restaurant);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server with restaurants is not connected right now");
+            }
         }
 
         private void cbRestaurants_DropDown(object sender, EventArgs e)
@@ -444,46 +473,13 @@ namespace Client
                 MessageBox.Show("Server with restaurants is not connected right now");
             }
         }
-
-        private void cbCategory_TextChanged(object sender, EventArgs e)
+        
+        private void cbRestaurants_TextChanged(object sender, EventArgs e)
         {
-            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
-                btAdd.Enabled = true;
+            if (cbRestaurants.Text != "")
+                btLoadNews.Enabled = true;
             else
-                btAdd.Enabled = false;
-        }
-
-        private void tbTitle_TextChanged(object sender, EventArgs e)
-        {
-            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
-                btAdd.Enabled = true;
-            else
-                btAdd.Enabled = false;
-        }
-
-        private void tbTextContent_TextChanged(object sender, EventArgs e)
-        {
-            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
-                btAdd.Enabled = true;
-            else
-                btAdd.Enabled = false;
-        }
-
-        private void cbRestaurantAdd_DropDown(object sender, EventArgs e)
-        {
-            try
-            {
-                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
-                    $"http://{wcfServerIp}/INewService");
-                string[] restaurants = NSC.SelectRestorans();
-                cbRestaurantAdd.Items.Clear();
-                foreach (var restaurant in restaurants)
-                    cbRestaurantAdd.Items.Add(restaurant);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Server with restaurants is not connected right now");
-            }
+                btLoadNews.Enabled = false;
         }
     }
 }
