@@ -27,10 +27,10 @@ namespace NewsServer
             Task.Run(() => SocketServer.pingReply(pingReply_cts));
 
             MessageSendRecieve msg = new MessageSendRecieve(null, rabbitMqIp, rabbitMqName, username, password);
-            try
+            //try
             {
                 using (mq = new RabbitMQServer(msg.mqIP, msg.mqName, msg.login, msg.password))
-                using (WebhoseReader reader = new WebhoseReader())
+                using (INewsReader reader = new NewsAPIReader())
                 {
                     SocketServer.SocketSend(msg, dispatcherIp);
                     mq.MessageSend += Pr;
@@ -60,11 +60,11 @@ namespace NewsServer
                     }
                 }
             }
-            catch(Exception ex)
+            /*catch(Exception ex)
             {
                 Console.WriteLine(ex.Message + " in " + ex.TargetSite);
                 Console.ReadKey();
-            }
+            }*/
         }
 
 

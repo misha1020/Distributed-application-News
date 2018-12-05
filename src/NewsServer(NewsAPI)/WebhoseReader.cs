@@ -8,7 +8,7 @@ using webhoseio;
 
 namespace NewsServer
 {
-    class WebhoseReader:IDisposable
+    class WebhoseReader:INewsReader
     {
         public struct Article
         {
@@ -21,7 +21,7 @@ namespace NewsServer
         private Timer timer;
         private double timerInterval = TimeSpan.FromHours(1).TotalMilliseconds;
 
-        public delegate void NewsReceivedHandler(string message);
+        //public delegate void NewsReceivedHandler(string message);
         public event NewsReceivedHandler NewsReceived;
 
         public List<Article> Articles;
@@ -69,7 +69,7 @@ namespace NewsServer
                 queryParams.Add("q", "language:russian");
                 queryParams.Add("sort", "crawled"); 
                 queryParams.Add("site", "ruposters.ru");
-                 var output = client.QueryAsync("filterWebContent", queryParams);
+                var output = client.QueryAsync("filterWebContent", queryParams);
                 while (!output.IsCompleted) { }
                 if (output.IsCompleted)
                 {
