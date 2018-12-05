@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Article">
+      <HintPath>.\Article.dll</HintPath>
+    </Reference>
     <Reference Include="MessageSerdServe">
       <HintPath>.\MessageSerdServe.dll</HintPath>
     </Reference>

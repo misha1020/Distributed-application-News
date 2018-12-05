@@ -27,44 +27,52 @@ namespace NewsServer
             Task.Run(() => SocketServer.pingReply(pingReply_cts));
 
             MessageSendRecieve msg = new MessageSendRecieve(null, rabbitMqIp, rabbitMqName, username, password);
-            using (mq = new RabbitMQServer(msg.mqIP, msg.mqName, msg.login, msg.password))
-            using (WebhoseReader reader = new WebhoseReader())
+            //try
             {
-				SocketServer.SocketSend(msg, dispatcherIp);
-                mq.MessageSend += Pr;
-                reader.NewsReceived += NewNewsReceived;
-                reader.Start();
-                Console.WriteLine("Write \"Exit\" to finish");
-                string input = Console.ReadLine();
-                while(input.ToUpper() != "EXIT")
+                using (mq = new RabbitMQServer(msg.mqIP, msg.mqName, msg.login, msg.password))
+                using (INewsReader reader = new NewsAPIReader())
                 {
-                    if(input.ToUpper() == "GET")
+                    SocketServer.SocketSend(msg, dispatcherIp);
+                    mq.MessageSend += Pr;
+                    reader.NewsReceived += NewNewsReceived;
+                    reader.Start();
+                    Console.WriteLine("Write \"Exit\" to finish");
+                    string input = Console.ReadLine();
+                    while (input.ToUpper() != "EXIT")
                     {
-                        reader.GetNews();
+                        if (input.ToUpper() == "GET")
+                        {
+                            reader.GetNews();
+                        }
+                        if (input.ToUpper() == "GETALL")
+                        {
+                            reader.GetAllNews();
+                        }
+                        if (input.ToUpper() == "GETSOME")
+                        {
+                            reader.GetSomeNews();
+                        }
+                        if (input.ToUpper() == "REG")
+                        {
+                            SocketServer.SocketSend(msg, dispatcherIp);
+                        }
+                        input = Console.ReadLine();
                     }
-                    if (input.ToUpper() == "GETALL")
-                    {
-                        reader.GetAllNews();
-                    }
-                    if (input.ToUpper() == "GETSOME")
-                    {
-                        reader.GetSomeNews();
-                    }
-                    if( input.ToUpper() == "REG")
-                    {
-                        SocketServer.SocketSend(msg, dispatcherIp);
-                    }
-                    input = Console.ReadLine();
                 }
             }
+            /*catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message + " in " + ex.TargetSite);
+                Console.ReadKey();
+            }*/
         }
 
 
-        private static void NewNewsReceived(string input)
+        private static void NewNewsReceived(Article input)
         {
             try
             {
-                mq.Send($"{rabbitMqName}:  {input}");
+                mq.Send(input);
             }
             catch (Exception ex)
             {

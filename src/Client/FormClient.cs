@@ -41,9 +41,16 @@ namespace Client
             string mqName = ConfigManager.Get("rabbitMqName");
             string mqLog = ConfigManager.Get("rabbitMqNLogin");
             string mqPass = ConfigManager.Get("rabbitMqPassword");
-            MessageSendRecieve ourMqMessage = new MessageSendRecieve(null, mqIp, mqName, mqLog, mqPass);
-            ourMQ = new RabbitMQClient(ourMqMessage);
-            ourMQ.consumer.Received += sender;
+            try
+            {
+                MessageSendRecieve ourMqMessage = new MessageSendRecieve(null, mqIp, mqName, mqLog, mqPass);
+                ourMQ = new RabbitMQClient(ourMqMessage);
+                ourMQ.consumer.Received += sender;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("rabbitMq doesn't answer");
+            }
         }
 
         private void Ping()
@@ -78,8 +85,15 @@ namespace Client
                     Program.msgsWithHosts.Add(data.messageSendRecieve);
                     Program.msgsWithHosts_Semaphore.Release();
                     var lvItem = addServInLvServs(data.messageSendRecieve, true);
-                    RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
-                    RMQS[RMQS.Count - 1].consumer.Received += sender;
+                    try
+                    {
+                        RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
+                        RMQS[RMQS.Count - 1].consumer.Received += sender;
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show($"RabbitMq at {data.messageSendRecieve.mqIP} doesn't answer");
+                    }
                 }
             }
         }
@@ -97,27 +111,24 @@ namespace Client
 
         public void sender(object model, BasicDeliverEventArgs ea)
         {
-            string msg;
-            //Article news = new Article();
+            Article news = new Article();
             var body = ea.Body;
-            //news = BinFormatter.FromBytes<Article>(body);
-            msg = BinFormatter.FromBytes<string>(body);
-            //AppendDataGridView(news);
-            AppendDataGridView(msg);
+            news = BinFormatter.FromBytes<Article>(body);
+            AppendDataGridView(news);
         }
 
-        public void AppendDataGridView(string value) //Article value)
+        public void AppendDataGridView(Article value)
         {
             if (InvokeRequired)
             {
                 this.Invoke(new Action<string>(AppendDataGridView), new object[] { value });
                 return;
             }
-            dgvInfo.Rows.Add(new object[] { value });
-            //dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
-            //dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
-            //dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[2].Value = value.PublishedAt;
-            //dgvInfo.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
+            //dgvInfo.Rows.Add(new object[] { value });
+            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
+            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
+            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[2].Value = value.PublishedAt;
+            dgvInfo.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
         }
 
         public void AppendOnOffImg(string mqName, bool ping)
@@ -205,7 +216,7 @@ namespace Client
             SavingXML.WriteToXmlFile("data.txt", mqSaveData);
             foreach (var rm in RMQS)
                 rm.Dispose();
-            ourMQ.Dispose();
+            if(ourMQ != null) ourMQ.Dispose();
             
         }
 
