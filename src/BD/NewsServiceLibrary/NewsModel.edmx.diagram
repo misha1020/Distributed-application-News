@@ -14,6 +14,8 @@
         <AssociationConnector Association="NewsModel.FK_CategoryOfNews_News" ManuallyRouted="false" />
         <EntityTypeShape EntityType="NewsModel.Restorans" Width="1.5" PointX="3" PointY="1.125" />
         <AssociationConnector Association="NewsModel.FK_News_Restorans" />
+        <EntityTypeShape EntityType="NewsModel.Users" Width="1.5" PointX="7.375" PointY="4.875" />
+        <AssociationConnector Association="NewsModel.FK_News_Users" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

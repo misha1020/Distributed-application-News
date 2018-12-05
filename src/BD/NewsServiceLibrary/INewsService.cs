@@ -59,6 +59,15 @@ namespace NewsServiceLibrary
 
         [OperationContract]
         List<string> SelectRestorans();
+
+        [OperationContract]
+        bool UnicUser(string user);
+
+        [OperationContract]
+        void CreateUser(string login, string password);
+
+        [OperationContract]
+        bool SignIn(string login, string password);
         //[OperationContract]
         //News GetDataUsingDataContract(News composite);
 

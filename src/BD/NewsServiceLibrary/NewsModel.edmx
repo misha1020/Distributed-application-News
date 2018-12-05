@@ -29,6 +29,7 @@
           <Property Name="Date" Type="date" Nullable="false" />
           <Property Name="TextContent" Type="nvarchar(max)" Nullable="false" />
           <Property Name="RefIdRest" Type="int" />
+          <Property Name="User" Type="nvarchar" MaxLength="25" />
         </EntityType>
         <EntityType Name="Phones">
           <Key>
@@ -59,6 +60,13 @@
           <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Login" />
+          </Key>
+          <Property Name="Login" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="25" Nullable="false" />
         </EntityType>
         <Association Name="FK_CategoryOfNews_Category">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
@@ -93,6 +101,18 @@
             </Principal>
             <Dependent Role="News">
               <PropertyRef Name="RefIdRest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_News_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Login" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="User" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -134,6 +154,7 @@
           <EntitySet Name="Phones" EntityType="Self.Phones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Restorans" EntityType="Self.Restorans" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CategoryOfNews_Category" Association="Self.FK_CategoryOfNews_Category">
             <End Role="Category" EntitySet="Category" />
             <End Role="CategoryOfNews" EntitySet="CategoryOfNews" />
@@ -144,6 +165,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_News_Restorans" Association="Self.FK_News_Restorans">
             <End Role="Restorans" EntitySet="Restorans" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_News_Users" Association="Self.FK_News_Users">
+            <End Role="Users" EntitySet="Users" />
             <End Role="News" EntitySet="News" />
           </AssociationSet>
         </EntityContainer>
@@ -180,6 +205,8 @@
           <Property Name="RefIdRest" Type="Int32" />
           <NavigationProperty Name="CategoryOfNews" Relationship="Self.FK_CategoryOfNews_News" FromRole="News" ToRole="CategoryOfNews" />
           <NavigationProperty Name="Restorans" Relationship="NewsModel.FK_News_Restorans" FromRole="News" ToRole="Restorans" />
+          <Property Name="User" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users" Relationship="NewsModel.FK_News_Users" FromRole="News" ToRole="Users" />
         </EntityType>
         <EntityType Name="Phones">
           <Key>
@@ -271,6 +298,11 @@
             <End Role="Restorans" EntitySet="Restorans" />
             <End Role="News" EntitySet="News" />
           </AssociationSet>
+          <EntitySet Name="Users" EntityType="NewsModel.Users" />
+          <AssociationSet Name="FK_News_Users" Association="NewsModel.FK_News_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -309,6 +341,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Login" />
+          </Key>
+          <Property Name="Login" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="News" Relationship="NewsModel.FK_News_Users" FromRole="Users" ToRole="News" />
+        </EntityType>
+        <Association Name="FK_News_Users">
+          <End Type="NewsModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="NewsModel.News" Role="News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Login" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -335,6 +387,7 @@
           <EntitySetMapping Name="News">
             <EntityTypeMapping TypeName="NewsModel.News">
               <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="User" ColumnName="User" />
                 <ScalarProperty Name="Id_news" ColumnName="Id_news" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
@@ -397,6 +450,14 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Latitude_WGS84" ColumnName="Latitude_WGS84" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="NewsModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
