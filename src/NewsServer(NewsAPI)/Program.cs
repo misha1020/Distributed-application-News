@@ -68,11 +68,11 @@ namespace NewsServer
         }
 
 
-        private static void NewNewsReceived(string input)
+        private static void NewNewsReceived(Article input)
         {
             try
             {
-                mq.Send($"{rabbitMqName}:  {input}");
+                mq.Send(input);
             }
             catch (Exception ex)
             {

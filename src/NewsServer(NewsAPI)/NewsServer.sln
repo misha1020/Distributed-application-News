@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsServer", "NewsServer.csproj", "{ABA75061-1BF7-48B2-96ED-AEFED45AEE00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageSendServe", "..\MessageSendServe\MessageSendServe.csproj", "{4187B1F6-0DFC-4702-92B8-0A0416FD7E42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDll", "MessageSendServe\ArticleDll.csproj", "{4187B1F6-0DFC-4702-92B8-0A0416FD7E42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,12 +5,13 @@ using System.Text;
 using System.Timers;
 using System.Threading.Tasks;
 using webhoseio;
+using MessageSendServe;
 
 namespace NewsServer
 {
     class WebhoseReader:INewsReader
     {
-        public struct Article
+        public struct _Article
         {
             public string title;
             public string text;
@@ -24,11 +25,11 @@ namespace NewsServer
         //public delegate void NewsReceivedHandler(string message);
         public event NewsReceivedHandler NewsReceived;
 
-        public List<Article> Articles;
+        public List<_Article> Articles;
 
         public WebhoseReader()
         {
-            Articles = new List<Article>();
+            Articles = new List<_Article>();
 
             timer = new Timer(timerInterval);
             timer.Elapsed += GetNews;
@@ -50,18 +51,18 @@ namespace NewsServer
         public void GetSomeNews()
         {
             for (int i = 0; i < ((Articles.Count < 5)? Articles.Count : 4); i++)
-                NewsReceived(Articles[i].title);
+                NewsReceived(new Article(Articles[i].title, Articles[i].text, Articles[i].published.ToString()));
         }
 
         public void GetAllNews()
         {            
-            foreach (var art in Articles)
-                NewsReceived(art.title);
+            foreach (var article in Articles)
+                NewsReceived(new Article(article.title, article.text, article.published.ToString()));
         }
 
         public void GetNews(object sender=null, ElapsedEventArgs e=null)
         {
-            List<Article> newNews = new List<Article>();
+            List<_Article> newNews = new List<_Article>();
             try
             {
                 var client = new WebhoseClient(token: token);
@@ -80,7 +81,7 @@ namespace NewsServer
                     for(int i=0;i<output.Result["posts"].Count();i++)
                     {
                         var article = output.Result["posts"][i];
-                            var _article = new Article()
+                            var _article = new _Article()
                             {
                                 published = article["published"].ToObject<DateTime>(),
                                 title = article["title"].ToObject<string>(),
@@ -109,7 +110,7 @@ namespace NewsServer
                     /*Console.WriteLine(article.title);
                     Console.WriteLine(article.text);
                     Console.WriteLine(article.published);*/
-                    NewsReceived(article.title);
+                    NewsReceived(new Article(article.title, article.text, article.published.ToString()));
                 }
                 Console.WriteLine(newNews.Count);
             }

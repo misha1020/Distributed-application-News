@@ -18,15 +18,15 @@ namespace NewsServer
         string apiKey = "0a3d290866794fec80d604841a0cc97e";
         private Timer timer;
         private double timerInterval = TimeSpan.FromHours(1).TotalMilliseconds;
-
+        
         //public delegate void NewsReceivedHandler(string message);
         public event NewsReceivedHandler NewsReceived;
 
-        public List<Article> Articles;
+        public List<NewsAPI.Models.Article> Articles;
 
         public NewsAPIReader()
         {
-            Articles = new List<Article>();
+            Articles = new List<NewsAPI.Models.Article>();
 
             timer = new Timer(timerInterval);
             timer.Elapsed += GetNews;
@@ -37,7 +37,7 @@ namespace NewsServer
         public void Start()
         {
             timer.Start();
-            GetNews();
+            GetNews(null, null);
         }
 
         public void Stop()
@@ -49,18 +49,18 @@ namespace NewsServer
         public void GetSomeNews()
         {
             for (int i = 0; i < ((Articles.Count < 5) ? Articles.Count : 4); i++)
-                NewsReceived(Articles[i].Title);
+                NewsReceived(new MessageSendServe.Article(Articles[i].Title, Articles[i].Description, Articles[i].PublishedAt.ToString()));
         }
 
         public void GetAllNews()
         {
             foreach (var art in Articles)
-                NewsReceived(art.Title);
+                NewsReceived(new MessageSendServe.Article(art.Title, art.Description, art.PublishedAt.ToString()));
         }
 
         public void GetNews(object sender=null, ElapsedEventArgs e=null)
         {
-            List<Article> newNews = new List<Article>();
+            List<NewsAPI.Models.Article> newNews = new List<NewsAPI.Models.Article>();
             try
             {
                 var newsApiClient = new NewsApiClient(apiKey);
@@ -101,15 +101,15 @@ namespace NewsServer
             }
             finally
             {
-                foreach(var article in newNews)
+                foreach(var art in newNews)
                 {
-                    Console.WriteLine(article.Title);
-                    /*Console.WriteLine(article.Author);
+                    /*Console.WriteLine(art.Title);
+                    Console.WriteLine(article.Author);
                     Console.WriteLine(article.Description);
                     Console.WriteLine(article.Url);
                     Console.WriteLine(article.UrlToImage);
                     Console.WriteLine(article.PublishedAt);*/
-                    NewsReceived(article.Title);
+                    NewsReceived(new MessageSendServe.Article(art.Title, art.Description, art.PublishedAt.ToString()));
                 }
             }
         }

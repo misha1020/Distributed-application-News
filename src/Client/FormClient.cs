@@ -110,10 +110,10 @@ namespace Client
 
         public void sender(object model, BasicDeliverEventArgs ea)
         {
-            string msg;
+            Article msg;
             var body = ea.Body;
-            msg = BinFormatter.FromBytes<string>(body);
-            AppendDataGridView(msg);
+            msg = BinFormatter.FromBytes<Article>(body);
+            AppendDataGridView(msg.Title);
         }
 
         public void AppendDataGridView(string value)
