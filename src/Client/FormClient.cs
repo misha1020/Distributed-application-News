@@ -27,6 +27,7 @@ namespace Client
         {
             InitializeComponent();
             InitializeOurMQ();
+            dgvInfo.Columns[0].Width = 50;
             lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             LoadImages();
             ReadSavedMQs();
@@ -97,12 +98,15 @@ namespace Client
         public void sender(object model, BasicDeliverEventArgs ea)
         {
             string msg;
+            //Article news = new Article();
             var body = ea.Body;
+            //news = BinFormatter.FromBytes<Article>(body);
             msg = BinFormatter.FromBytes<string>(body);
+            //AppendDataGridView(news);
             AppendDataGridView(msg);
         }
 
-        public void AppendDataGridView(string value)
+        public void AppendDataGridView(string value) //Article value)
         {
             if (InvokeRequired)
             {
@@ -110,6 +114,10 @@ namespace Client
                 return;
             }
             dgvInfo.Rows.Add(new object[] { value });
+            //dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
+            //dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
+            //dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[2].Value = value.PublishedAt;
+            //dgvInfo.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
         }
 
         public void AppendOnOffImg(string mqName, bool ping)
@@ -383,6 +391,61 @@ namespace Client
         private void btClear_Click(object sender, EventArgs e)
         {
             dgvInfo.Rows.Clear();
+        }
+
+        private void btClearRestNews_Click(object sender, EventArgs e)
+        {
+            dgvRestNews.Rows.Clear();
+        }
+
+        private void btOff2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void cbRestaurants_TextChanged(object sender, EventArgs e)
+        {
+            if (cbRestaurants.Text != "")
+                btLoadNews.Enabled = true;
+            else
+                btLoadNews.Enabled = false;
+        }
+
+        private void btLoadNews_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                List<LibNews> restaurantNews = new List<LibNews>();
+                string restaurantName = cbRestaurants.Text;
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+
+                //addingNews = NSC.GETNEWSABOUTTHISRESTAURANT(restaurantName);
+                //foreach(var news in restaurantNews)
+                //    dgvRestNews.Rows.Add(new object[] { news.NOVOST });
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server with restaurants is not connected right now");
+            }            
+        }
+
+        private void cbRestaurants_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                int sitsCount = Convert.ToInt32(nudSitsCount.Value);
+                //string[] restaurantsWithSitsCount = NSC.SELECTRESTORANI(sitsCount);
+                cbRestaurants.Items.Clear();
+                //foreach (var restaurant in restaurantsWithSitsCount)
+                //    cbRestaurants.Items.Add(restaurant.Name);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server with restaurants is not connected right now");
+            }
         }
     }
 }

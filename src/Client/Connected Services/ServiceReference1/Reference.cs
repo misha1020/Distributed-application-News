@@ -260,6 +260,12 @@ namespace Client.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectNewsFromRestoran", ReplyAction="http://tempuri.org/INewsService/SelectNewsFromRestoranResponse")]
         System.Threading.Tasks.Task<Client.ServiceReference1.LibNews[]> SelectNewsFromRestoranAsync(string nameRest);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectRestorans", ReplyAction="http://tempuri.org/INewsService/SelectRestoransResponse")]
+        string[] SelectRestorans();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectRestorans", ReplyAction="http://tempuri.org/INewsService/SelectRestoransResponse")]
+        System.Threading.Tasks.Task<string[]> SelectRestoransAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -407,6 +413,14 @@ namespace Client.ServiceReference1 {
         
         public System.Threading.Tasks.Task<Client.ServiceReference1.LibNews[]> SelectNewsFromRestoranAsync(string nameRest) {
             return base.Channel.SelectNewsFromRestoranAsync(nameRest);
+        }
+        
+        public string[] SelectRestorans() {
+            return base.Channel.SelectRestorans();
+        }
+        
+        public System.Threading.Tasks.Task<string[]> SelectRestoransAsync() {
+            return base.Channel.SelectRestoransAsync();
         }
     }
 }
