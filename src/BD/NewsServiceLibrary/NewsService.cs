@@ -77,7 +77,7 @@ namespace NewsServiceLibrary
                     {
                         Title = news.Title,
                         Date = news.ReleaseDate,
-                        TextContent = news.TextContent
+                        TextContent = news.TextContent                        
                     };
                     ctx.News.Add(newNews);
                     //ctx.SaveChanges();
@@ -220,7 +220,7 @@ namespace NewsServiceLibrary
         {
             using (var ctx = new NewsEntities())
             {
-                var search = ctx.News.Where(c => c.Title == title && c.Date == date).ToList();
+                var search = ctx.News.Where(c => c.Title == title && c.Date == date.Date).ToList();
                 if (search.Count != 0)
                 {
                     foreach (var item in search)
@@ -235,6 +235,14 @@ namespace NewsServiceLibrary
                 {
                     Console.WriteLine("Такой новости не существует");
                 }
+            }
+        }
+
+        public void DeleteNewsVerified (string title, DateTime date, string login, string password)
+        {
+            if( SignIn(login, password) )
+            {
+                DeleteNews(title, date);
             }
         }
 
@@ -312,7 +320,7 @@ namespace NewsServiceLibrary
             var a = 1;
         }
 
-        public void CreateNewWithCatAndRest(LibNews news, string[] categoryes, string nameRest)
+        public void CreateNewWithCatAndRest(LibNews news, string[] categoryes, string nameRest, string login)
         {
             using (var ctx = new NewsEntities())
             {
@@ -334,7 +342,8 @@ namespace NewsServiceLibrary
                     {
                         Title = news.Title,
                         Date = news.ReleaseDate,
-                        TextContent = news.TextContent
+                        TextContent = news.TextContent,
+                        User = (login != null) ? login : null
                     };
                     if (idRest != -1)
                         newNews.RefIdRest = idRest;
@@ -346,6 +355,19 @@ namespace NewsServiceLibrary
             }
         }
 
+        public void CreateUser(string login, string password)
+        {
+            if(UnicUser(login))
+                using (var ctx = new NewsEntities())
+                {
+                    var user = new Users
+                    {
+                        Login = login,
+                        Password = password
+                    };
+                    ctx.Users.Add(user);
+                }
+        }
         public List<LibNews> SelectNewsFromRestoran(string nameRest)
         {
             List<LibNews> list = new List<LibNews>();
@@ -407,5 +429,57 @@ namespace NewsServiceLibrary
             }
             return list;
         }
+
+        public List<string> SelectRestWithCount(int count)
+        {
+            var list = new List<string>();
+            using (var ctx = new NewsEntities())
+            {
+                var restorans = ctx.Restorans.Where(c => c.SeatsCount >= count).ToList();
+                if (restorans.Count != 0)
+                {
+                    //создание массива класса категории                   
+                    foreach (var restoran in restorans)
+                    {
+                        if (list.Where(c => c == restoran.Name).ToList().Count == 0)
+                        {
+                            list.Add(restoran.Name);
+                        }
+                        //вывод в класс                        
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ресторанов с таким колличеством мест не существует");
+                }
+            }
+            return list;
+        }
+
+        public bool SignIn(string login, string password)
+        {
+            bool sign = false;
+            using (var ctx = new NewsEntities())
+            {
+                int count = ctx.Users.Where(c => c.Login == login && c.Password == password).Count();
+                if (count == 1)
+                    sign = true;
+            }
+            return sign;
+        }
+
+        public bool UnicUser(string user)
+        {
+            bool unic = true;
+            using (var ctx = new NewsEntities())
+            {
+                int count = ctx.Users.Where(c => c.Login == user).Count();
+                if (count != 0)
+                    unic = false;
+            }
+            return unic;
+        }
+
+
     }
 }

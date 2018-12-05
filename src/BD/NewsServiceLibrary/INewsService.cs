@@ -52,13 +52,25 @@ namespace NewsServiceLibrary
         void CreateNewWithCat(LibNews news, string[] categoryes);
 
         [OperationContract]
-        void CreateNewWithCatAndRest(LibNews news, string[] categoryes,string nameRest);
+        void CreateNewWithCatAndRest(LibNews news, string[] categoryes,string nameRest, string login);
 
         [OperationContract]
         List<LibNews> SelectNewsFromRestoran(string nameRest);
 
         [OperationContract]
         List<string> SelectRestorans();
+
+        [OperationContract]
+        bool UnicUser(string user);
+
+        [OperationContract]
+        void CreateUser(string login, string password);
+
+        [OperationContract]
+        bool SignIn(string login, string password);
+
+        [OperationContract]
+        List<string> SelectRestWithCount(int count);
         //[OperationContract]
         //News GetDataUsingDataContract(News composite);
 
