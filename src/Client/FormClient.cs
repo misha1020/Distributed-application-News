@@ -40,9 +40,16 @@ namespace Client
             string mqName = ConfigManager.Get("rabbitMqName");
             string mqLog = ConfigManager.Get("rabbitMqNLogin");
             string mqPass = ConfigManager.Get("rabbitMqPassword");
-            MessageSendRecieve ourMqMessage = new MessageSendRecieve(null, mqIp, mqName, mqLog, mqPass);
-            ourMQ = new RabbitMQClient(ourMqMessage);
-            ourMQ.consumer.Received += sender;
+            try
+            {
+                MessageSendRecieve ourMqMessage = new MessageSendRecieve(null, mqIp, mqName, mqLog, mqPass);
+                ourMQ = new RabbitMQClient(ourMqMessage);
+                ourMQ.consumer.Received += sender;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("rabbitMq doesn't answer");
+            }
         }
 
         private void Ping()
@@ -77,8 +84,15 @@ namespace Client
                     Program.msgsWithHosts.Add(data.messageSendRecieve);
                     Program.msgsWithHosts_Semaphore.Release();
                     var lvItem = addServInLvServs(data.messageSendRecieve, true);
-                    RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
-                    RMQS[RMQS.Count - 1].consumer.Received += sender;
+                    try
+                    {
+                        RMQS.Add(new RabbitMQClient(data.messageSendRecieve, data.mqName));
+                        RMQS[RMQS.Count - 1].consumer.Received += sender;
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show($"RabbitMq at {data.messageSendRecieve.mqIP} doesn't answer");
+                    }
                 }
             }
         }
@@ -197,7 +211,7 @@ namespace Client
             SavingXML.WriteToXmlFile("data.txt", mqSaveData);
             foreach (var rm in RMQS)
                 rm.Dispose();
-            ourMQ.Dispose();
+            if(ourMQ != null) ourMQ.Dispose();
             
         }
 
