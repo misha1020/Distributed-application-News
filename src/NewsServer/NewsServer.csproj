@@ -65,7 +65,7 @@
     <Compile Include="ConfigManager.cs" />
     <Compile Include="New.cs" />
     <Compile Include="NewsAPIReader.cs" />
-    <Compile Include="INewsReader.cs" />
+    <Compile Include="NewsReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RabbitMQServer.cs" />
@@ -79,9 +79,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="MessageSendServe\ArticleDll.csproj">
+    <ProjectReference Include="MessageSendServe\MessageSendServe.csproj">
       <Project>{4187b1f6-0dfc-4702-92b8-0a0416fd7e42}</Project>
-      <Name>ArticleDll</Name>
+      <Name>MessageSendServe</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
