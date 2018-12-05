@@ -46,6 +46,8 @@
             this.btHideShow = new System.Windows.Forms.Button();
             this.lbConnecting = new System.Windows.Forms.Label();
             this.panelNewNews = new System.Windows.Forms.Panel();
+            this.gbRestaurantAdd = new System.Windows.Forms.GroupBox();
+            this.cbRestaurantAdd = new System.Windows.Forms.ComboBox();
             this.btAdd = new System.Windows.Forms.Button();
             this.gbTextContent = new System.Windows.Forms.GroupBox();
             this.tbTextContent = new System.Windows.Forms.TextBox();
@@ -60,19 +62,18 @@
             this.btLoadNews = new System.Windows.Forms.Button();
             this.btClearRestNews = new System.Windows.Forms.Button();
             this.dgvRestNews = new System.Windows.Forms.DataGridView();
+            this.cRestaurantTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cRestaurantDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbRestaurants = new System.Windows.Forms.GroupBox();
             this.cbRestaurants = new System.Windows.Forms.ComboBox();
             this.gbSitsCount = new System.Windows.Forms.GroupBox();
             this.nudSitsCount = new System.Windows.Forms.NumericUpDown();
-            this.gbRestaurantAdd = new System.Windows.Forms.GroupBox();
-            this.cbRestaurantAdd = new System.Windows.Forms.ComboBox();
-            this.cRestaurantTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cRestaurantDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelServers.SuspendLayout();
             this.panelNews.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInfo)).BeginInit();
             this.panelNewNews.SuspendLayout();
+            this.gbRestaurantAdd.SuspendLayout();
             this.gbTextContent.SuspendLayout();
             this.gbTitle.SuspendLayout();
             this.gbCategory.SuspendLayout();
@@ -83,7 +84,6 @@
             this.gbRestaurants.SuspendLayout();
             this.gbSitsCount.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSitsCount)).BeginInit();
-            this.gbRestaurantAdd.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelServers
@@ -196,12 +196,12 @@
             this.cTitle,
             this.cNews,
             this.cDate});
-            this.dgvInfo.Location = new System.Drawing.Point(3, 3);
+            this.dgvInfo.Location = new System.Drawing.Point(3, 31);
             this.dgvInfo.Name = "dgvInfo";
             this.dgvInfo.ReadOnly = true;
             this.dgvInfo.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvInfo.RowHeadersVisible = false;
-            this.dgvInfo.Size = new System.Drawing.Size(533, 323);
+            this.dgvInfo.Size = new System.Drawing.Size(533, 295);
             this.dgvInfo.TabIndex = 19;
             // 
             // cTitle
@@ -286,6 +286,29 @@
             this.panelNewNews.Size = new System.Drawing.Size(541, 331);
             this.panelNewNews.TabIndex = 19;
             this.panelNewNews.Visible = false;
+            // 
+            // gbRestaurantAdd
+            // 
+            this.gbRestaurantAdd.Controls.Add(this.cbRestaurantAdd);
+            this.gbRestaurantAdd.Font = new System.Drawing.Font("Century Gothic", 9.75F);
+            this.gbRestaurantAdd.ForeColor = System.Drawing.Color.White;
+            this.gbRestaurantAdd.Location = new System.Drawing.Point(272, 62);
+            this.gbRestaurantAdd.Name = "gbRestaurantAdd";
+            this.gbRestaurantAdd.Size = new System.Drawing.Size(262, 53);
+            this.gbRestaurantAdd.TabIndex = 19;
+            this.gbRestaurantAdd.TabStop = false;
+            this.gbRestaurantAdd.Text = "Restaurants";
+            // 
+            // cbRestaurantAdd
+            // 
+            this.cbRestaurantAdd.BackColor = System.Drawing.Color.White;
+            this.cbRestaurantAdd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRestaurantAdd.FormattingEnabled = true;
+            this.cbRestaurantAdd.Location = new System.Drawing.Point(6, 17);
+            this.cbRestaurantAdd.Name = "cbRestaurantAdd";
+            this.cbRestaurantAdd.Size = new System.Drawing.Size(250, 25);
+            this.cbRestaurantAdd.TabIndex = 3;
+            this.cbRestaurantAdd.DropDown += new System.EventHandler(this.cbRestaurantAdd_DropDown);
             // 
             // btAdd
             // 
@@ -460,14 +483,13 @@
             // 
             // btClearRestNews
             // 
-            this.btClearRestNews.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btClearRestNews.BackColor = System.Drawing.Color.White;
+            this.btClearRestNews.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.btClearRestNews.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btClearRestNews.Font = new System.Drawing.Font("Century Gothic", 8F);
-            this.btClearRestNews.ForeColor = System.Drawing.Color.Black;
-            this.btClearRestNews.Location = new System.Drawing.Point(702, 65);
+            this.btClearRestNews.Font = new System.Drawing.Font("Century Gothic", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.btClearRestNews.ForeColor = System.Drawing.Color.White;
+            this.btClearRestNews.Location = new System.Drawing.Point(571, 16);
             this.btClearRestNews.Name = "btClearRestNews";
-            this.btClearRestNews.Size = new System.Drawing.Size(80, 32);
+            this.btClearRestNews.Size = new System.Drawing.Size(146, 40);
             this.btClearRestNews.TabIndex = 22;
             this.btClearRestNews.Text = "Clear News";
             this.btClearRestNews.UseVisualStyleBackColor = false;
@@ -477,11 +499,12 @@
             // 
             this.dgvRestNews.AllowUserToAddRows = false;
             this.dgvRestNews.AllowUserToDeleteRows = false;
-            this.dgvRestNews.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvRestNews.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvRestNews.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvRestNews.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvRestNews.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dgvRestNews.BackgroundColor = System.Drawing.Color.White;
-            this.dgvRestNews.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRestNews.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.cRestaurantTitle,
             this.dataGridViewTextBoxColumn1,
@@ -493,6 +516,31 @@
             this.dgvRestNews.RowHeadersVisible = false;
             this.dgvRestNews.Size = new System.Drawing.Size(777, 323);
             this.dgvRestNews.TabIndex = 21;
+            // 
+            // cRestaurantTitle
+            // 
+            this.cRestaurantTitle.HeaderText = "Title";
+            this.cRestaurantTitle.Name = "cRestaurantTitle";
+            this.cRestaurantTitle.ReadOnly = true;
+            this.cRestaurantTitle.Width = 52;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dataGridViewTextBoxColumn1.FillWeight = 5000F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Restaurant news";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 112;
+            // 
+            // cRestaurantDate
+            // 
+            this.cRestaurantDate.HeaderText = "Date";
+            this.cRestaurantDate.Name = "cRestaurantDate";
+            this.cRestaurantDate.ReadOnly = true;
+            this.cRestaurantDate.Width = 55;
             // 
             // gbRestaurants
             // 
@@ -543,52 +591,6 @@
             this.nudSitsCount.Size = new System.Drawing.Size(188, 23);
             this.nudSitsCount.TabIndex = 0;
             // 
-            // gbRestaurantAdd
-            // 
-            this.gbRestaurantAdd.Controls.Add(this.cbRestaurantAdd);
-            this.gbRestaurantAdd.Font = new System.Drawing.Font("Century Gothic", 9.75F);
-            this.gbRestaurantAdd.ForeColor = System.Drawing.Color.White;
-            this.gbRestaurantAdd.Location = new System.Drawing.Point(272, 62);
-            this.gbRestaurantAdd.Name = "gbRestaurantAdd";
-            this.gbRestaurantAdd.Size = new System.Drawing.Size(262, 53);
-            this.gbRestaurantAdd.TabIndex = 19;
-            this.gbRestaurantAdd.TabStop = false;
-            this.gbRestaurantAdd.Text = "Restaurants";
-            // 
-            // cbRestaurantAdd
-            // 
-            this.cbRestaurantAdd.BackColor = System.Drawing.Color.White;
-            this.cbRestaurantAdd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbRestaurantAdd.FormattingEnabled = true;
-            this.cbRestaurantAdd.Location = new System.Drawing.Point(6, 22);
-            this.cbRestaurantAdd.Name = "cbRestaurantAdd";
-            this.cbRestaurantAdd.Size = new System.Drawing.Size(250, 25);
-            this.cbRestaurantAdd.TabIndex = 3;
-            this.cbRestaurantAdd.DropDown += new System.EventHandler(this.cbRestaurantAdd_DropDown);
-            // 
-            // cRestaurantTitle
-            // 
-            this.cRestaurantTitle.HeaderText = "Title";
-            this.cRestaurantTitle.Name = "cRestaurantTitle";
-            this.cRestaurantTitle.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle6;
-            this.dataGridViewTextBoxColumn1.FillWeight = 5000F;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Restaurant news";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 103;
-            // 
-            // cRestaurantDate
-            // 
-            this.cRestaurantDate.HeaderText = "Date";
-            this.cRestaurantDate.Name = "cRestaurantDate";
-            this.cRestaurantDate.ReadOnly = true;
-            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -604,6 +606,7 @@
             this.panelNews.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvInfo)).EndInit();
             this.panelNewNews.ResumeLayout(false);
+            this.gbRestaurantAdd.ResumeLayout(false);
             this.gbTextContent.ResumeLayout(false);
             this.gbTextContent.PerformLayout();
             this.gbTitle.ResumeLayout(false);
@@ -617,7 +620,6 @@
             this.gbRestaurants.ResumeLayout(false);
             this.gbSitsCount.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nudSitsCount)).EndInit();
-            this.gbRestaurantAdd.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

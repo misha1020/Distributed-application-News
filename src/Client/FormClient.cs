@@ -126,10 +126,10 @@ namespace Client
                 return;
             }
             //dgvInfo.Rows.Add(new object[] { value });
+            dgvInfo.Rows.Add();
             dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
             dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
             dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[2].Value = value.PublishedAt;
-            dgvInfo.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
         }
 
         public void AppendOnOffImg(string mqName, bool ping)
@@ -309,7 +309,7 @@ namespace Client
                 {
                     var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                         $"http://{wcfServerIp}/INewService");
-                    //NSC.Test();
+                    NSC.Test();
 
                     panelNews.Visible = !panelNews.Visible;
                     panelNewNews.Visible = !panelNewNews.Visible;
@@ -410,19 +410,18 @@ namespace Client
                 string restaurantName = cbRestaurants.Text;
                 var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                     $"http://{wcfServerIp}/INewService");
-
+                
                 restaurantNews = NSC.SelectNewsFromRestoran(restaurantName);
+                dgvRestNews.Rows.Clear();
                 foreach (var news in restaurantNews)
                 {
+                    dgvRestNews.Rows.Add();
                     dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[0].Value = news.Title;
                     dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[1].Value = news.TextContent;
                     dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[2].Value = news.ReleaseDate;
-                    //dgvRestNews.Rows.Add(new object[] { news.TextContent });
-                }
-
-                dgvRestNews.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
+                }  
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MessageBox.Show("Server with restaurants is not connected right now");
             }            
