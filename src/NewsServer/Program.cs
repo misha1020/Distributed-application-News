@@ -30,7 +30,7 @@ namespace NewsServer
             //try
             {
                 using (mq = new RabbitMQServer(msg.mqIP, msg.mqName, msg.login, msg.password))
-                using (INewsReader reader = new NewsAPIReader())
+                using (INewsReader reader = new WebhoseReader())
                 {
                     SocketServer.SocketSend(msg, dispatcherIp);
                     mq.MessageSend += Pr;

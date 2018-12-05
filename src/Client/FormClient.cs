@@ -22,6 +22,7 @@ namespace Client
         RabbitMQClient ourMQ;
         ImageList imgsSub = new ImageList();
         ImageList imgsOnOff = new ImageList();
+        System.Timers.Timer pingTimer;
 
         public FormClient()
         {
@@ -56,7 +57,7 @@ namespace Client
 
         private void Ping()
         {
-            System.Timers.Timer pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
+            pingTimer = new System.Timers.Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
             pingTimer.Elapsed += Ping;
             pingTimer.AutoReset = true;
             pingTimer.Start();
@@ -120,15 +121,23 @@ namespace Client
 
         public void AppendDataGridView(Article value)
         {
-            if (InvokeRequired)
+            try
             {
-                this.Invoke(new Action<Article>(AppendDataGridView), new object[] { value });
-                return;
+                if (InvokeRequired)
+                {
+                    this.Invoke(new Action<Article>(AppendDataGridView), new object[] { value });
+                    return;
+                }
+                dgvInfo.Rows.Add();
+                dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
+                dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
+                dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[2].Value = value.PublishedAt;
             }
-            dgvInfo.Rows.Add();
-            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[0].Value = value.Title;
-            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[1].Value = value.Content;
-            dgvInfo.Rows[dgvInfo.Rows.Count - 1].Cells[2].Value = value.PublishedAt;
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message + " in " +e.Source);
+                
+            }
         }
 
         public void AppendOnOffImg(string mqName, bool ping)
@@ -210,6 +219,8 @@ namespace Client
 
         private void FormClient_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (pingTimer != null)
+                pingTimer.Stop();
             List<SaveMq> mqSaveData = new List<SaveMq>();
             foreach (var mq in RMQS)
                 mqSaveData.Add(new SaveMq(mq.serv, mq.queueName));
