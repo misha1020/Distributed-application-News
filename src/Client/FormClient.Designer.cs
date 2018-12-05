@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClient));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelServers = new System.Windows.Forms.Panel();
             this.btSubscribe = new System.Windows.Forms.Button();
             this.lvServs = new System.Windows.Forms.ListView();
@@ -39,6 +39,9 @@
             this.panelNews = new System.Windows.Forms.Panel();
             this.btClear = new System.Windows.Forms.Button();
             this.dgvInfo = new System.Windows.Forms.DataGridView();
+            this.cTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cNews = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btOff = new System.Windows.Forms.Button();
             this.btHideShow = new System.Windows.Forms.Button();
             this.lbConnecting = new System.Windows.Forms.Label();
@@ -57,14 +60,15 @@
             this.btLoadNews = new System.Windows.Forms.Button();
             this.btClearRestNews = new System.Windows.Forms.Button();
             this.dgvRestNews = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbRestaurants = new System.Windows.Forms.GroupBox();
             this.cbRestaurants = new System.Windows.Forms.ComboBox();
             this.gbSitsCount = new System.Windows.Forms.GroupBox();
             this.nudSitsCount = new System.Windows.Forms.NumericUpDown();
-            this.cDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cNews = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gbRestaurantAdd = new System.Windows.Forms.GroupBox();
+            this.cbRestaurantAdd = new System.Windows.Forms.ComboBox();
+            this.cRestaurantTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cRestaurantDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelServers.SuspendLayout();
             this.panelNews.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInfo)).BeginInit();
@@ -79,6 +83,7 @@
             this.gbRestaurants.SuspendLayout();
             this.gbSitsCount.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSitsCount)).BeginInit();
+            this.gbRestaurantAdd.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelServers
@@ -199,6 +204,29 @@
             this.dgvInfo.Size = new System.Drawing.Size(533, 323);
             this.dgvInfo.TabIndex = 19;
             // 
+            // cTitle
+            // 
+            this.cTitle.HeaderText = "Title";
+            this.cTitle.Name = "cTitle";
+            this.cTitle.ReadOnly = true;
+            // 
+            // cNews
+            // 
+            this.cNews.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cNews.DefaultCellStyle = dataGridViewCellStyle5;
+            this.cNews.FillWeight = 5000F;
+            this.cNews.HeaderText = "News";
+            this.cNews.Name = "cNews";
+            this.cNews.ReadOnly = true;
+            this.cNews.Width = 59;
+            // 
+            // cDate
+            // 
+            this.cDate.HeaderText = "Date";
+            this.cDate.Name = "cDate";
+            this.cDate.ReadOnly = true;
+            // 
             // btOff
             // 
             this.btOff.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -248,13 +276,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelNewNews.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelNewNews.Controls.Add(this.gbRestaurantAdd);
             this.panelNewNews.Controls.Add(this.btAdd);
             this.panelNewNews.Controls.Add(this.gbTextContent);
             this.panelNewNews.Controls.Add(this.gbTitle);
             this.panelNewNews.Controls.Add(this.gbCategory);
-            this.panelNewNews.Location = new System.Drawing.Point(242, 204);
+            this.panelNewNews.Location = new System.Drawing.Point(242, 57);
             this.panelNewNews.Name = "panelNewNews";
-            this.panelNewNews.Size = new System.Drawing.Size(541, 184);
+            this.panelNewNews.Size = new System.Drawing.Size(541, 331);
             this.panelNewNews.TabIndex = 19;
             this.panelNewNews.Visible = false;
             // 
@@ -267,7 +296,7 @@
             this.btAdd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btAdd.Font = new System.Drawing.Font("Century Gothic", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btAdd.ForeColor = System.Drawing.Color.White;
-            this.btAdd.Location = new System.Drawing.Point(394, 10);
+            this.btAdd.Location = new System.Drawing.Point(394, 16);
             this.btAdd.Name = "btAdd";
             this.btAdd.Size = new System.Drawing.Size(140, 40);
             this.btAdd.TabIndex = 18;
@@ -285,7 +314,7 @@
             this.gbTextContent.ForeColor = System.Drawing.Color.White;
             this.gbTextContent.Location = new System.Drawing.Point(5, 121);
             this.gbTextContent.Name = "gbTextContent";
-            this.gbTextContent.Size = new System.Drawing.Size(529, 58);
+            this.gbTextContent.Size = new System.Drawing.Size(529, 205);
             this.gbTextContent.TabIndex = 17;
             this.gbTextContent.TabStop = false;
             this.gbTextContent.Text = "Text Content";
@@ -300,7 +329,7 @@
             this.tbTextContent.Multiline = true;
             this.tbTextContent.Name = "tbTextContent";
             this.tbTextContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbTextContent.Size = new System.Drawing.Size(517, 30);
+            this.tbTextContent.Size = new System.Drawing.Size(517, 177);
             this.tbTextContent.TabIndex = 0;
             this.tbTextContent.TextChanged += new System.EventHandler(this.tbTextContent_TextChanged);
             // 
@@ -311,7 +340,7 @@
             this.gbTitle.ForeColor = System.Drawing.Color.White;
             this.gbTitle.Location = new System.Drawing.Point(5, 62);
             this.gbTitle.Name = "gbTitle";
-            this.gbTitle.Size = new System.Drawing.Size(383, 53);
+            this.gbTitle.Size = new System.Drawing.Size(261, 53);
             this.gbTitle.TabIndex = 16;
             this.gbTitle.TabStop = false;
             this.gbTitle.Text = "Title";
@@ -323,7 +352,7 @@
             this.tbTitle.Multiline = true;
             this.tbTitle.Name = "tbTitle";
             this.tbTitle.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.tbTitle.Size = new System.Drawing.Size(371, 23);
+            this.tbTitle.Size = new System.Drawing.Size(249, 23);
             this.tbTitle.TabIndex = 0;
             this.tbTitle.TextChanged += new System.EventHandler(this.tbTitle_TextChanged);
             // 
@@ -334,7 +363,7 @@
             this.gbCategory.ForeColor = System.Drawing.Color.White;
             this.gbCategory.Location = new System.Drawing.Point(5, 3);
             this.gbCategory.Name = "gbCategory";
-            this.gbCategory.Size = new System.Drawing.Size(383, 53);
+            this.gbCategory.Size = new System.Drawing.Size(261, 53);
             this.gbCategory.TabIndex = 15;
             this.gbCategory.TabStop = false;
             this.gbCategory.Text = "Category";
@@ -345,7 +374,7 @@
             this.cbCategory.FormattingEnabled = true;
             this.cbCategory.Location = new System.Drawing.Point(6, 22);
             this.cbCategory.Name = "cbCategory";
-            this.cbCategory.Size = new System.Drawing.Size(371, 25);
+            this.cbCategory.Size = new System.Drawing.Size(249, 25);
             this.cbCategory.TabIndex = 0;
             this.cbCategory.DropDown += new System.EventHandler(this.cbCategory_DropDown);
             this.cbCategory.TextChanged += new System.EventHandler(this.cbCategory_TextChanged);
@@ -438,7 +467,7 @@
             this.btClearRestNews.ForeColor = System.Drawing.Color.Black;
             this.btClearRestNews.Location = new System.Drawing.Point(702, 65);
             this.btClearRestNews.Name = "btClearRestNews";
-            this.btClearRestNews.Size = new System.Drawing.Size(80, 20);
+            this.btClearRestNews.Size = new System.Drawing.Size(80, 32);
             this.btClearRestNews.TabIndex = 22;
             this.btClearRestNews.Text = "Clear News";
             this.btClearRestNews.UseVisualStyleBackColor = false;
@@ -454,7 +483,9 @@
             this.dgvRestNews.BackgroundColor = System.Drawing.Color.White;
             this.dgvRestNews.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRestNews.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1});
+            this.cRestaurantTitle,
+            this.dataGridViewTextBoxColumn1,
+            this.cRestaurantDate});
             this.dgvRestNews.Location = new System.Drawing.Point(7, 63);
             this.dgvRestNews.Name = "dgvRestNews";
             this.dgvRestNews.ReadOnly = true;
@@ -462,17 +493,6 @@
             this.dgvRestNews.RowHeadersVisible = false;
             this.dgvRestNews.Size = new System.Drawing.Size(777, 323);
             this.dgvRestNews.TabIndex = 21;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridViewTextBoxColumn1.FillWeight = 5000F;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Restaurant news";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 103;
             // 
             // gbRestaurants
             // 
@@ -523,28 +543,51 @@
             this.nudSitsCount.Size = new System.Drawing.Size(188, 23);
             this.nudSitsCount.TabIndex = 0;
             // 
-            // cDate
+            // gbRestaurantAdd
             // 
-            this.cDate.HeaderText = "Date";
-            this.cDate.Name = "cDate";
-            this.cDate.ReadOnly = true;
+            this.gbRestaurantAdd.Controls.Add(this.cbRestaurantAdd);
+            this.gbRestaurantAdd.Font = new System.Drawing.Font("Century Gothic", 9.75F);
+            this.gbRestaurantAdd.ForeColor = System.Drawing.Color.White;
+            this.gbRestaurantAdd.Location = new System.Drawing.Point(272, 62);
+            this.gbRestaurantAdd.Name = "gbRestaurantAdd";
+            this.gbRestaurantAdd.Size = new System.Drawing.Size(262, 53);
+            this.gbRestaurantAdd.TabIndex = 19;
+            this.gbRestaurantAdd.TabStop = false;
+            this.gbRestaurantAdd.Text = "Restaurants";
             // 
-            // cNews
+            // cbRestaurantAdd
             // 
-            this.cNews.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.cNews.DefaultCellStyle = dataGridViewCellStyle1;
-            this.cNews.FillWeight = 5000F;
-            this.cNews.HeaderText = "News";
-            this.cNews.Name = "cNews";
-            this.cNews.ReadOnly = true;
-            this.cNews.Width = 59;
+            this.cbRestaurantAdd.BackColor = System.Drawing.Color.White;
+            this.cbRestaurantAdd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRestaurantAdd.FormattingEnabled = true;
+            this.cbRestaurantAdd.Location = new System.Drawing.Point(6, 22);
+            this.cbRestaurantAdd.Name = "cbRestaurantAdd";
+            this.cbRestaurantAdd.Size = new System.Drawing.Size(250, 25);
+            this.cbRestaurantAdd.TabIndex = 3;
+            this.cbRestaurantAdd.DropDown += new System.EventHandler(this.cbRestaurantAdd_DropDown);
             // 
-            // cTitle
+            // cRestaurantTitle
             // 
-            this.cTitle.HeaderText = "Title";
-            this.cTitle.Name = "cTitle";
-            this.cTitle.ReadOnly = true;
+            this.cRestaurantTitle.HeaderText = "Title";
+            this.cRestaurantTitle.Name = "cRestaurantTitle";
+            this.cRestaurantTitle.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dataGridViewTextBoxColumn1.FillWeight = 5000F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Restaurant news";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 103;
+            // 
+            // cRestaurantDate
+            // 
+            this.cRestaurantDate.HeaderText = "Date";
+            this.cRestaurantDate.Name = "cRestaurantDate";
+            this.cRestaurantDate.ReadOnly = true;
             // 
             // FormClient
             // 
@@ -574,6 +617,7 @@
             this.gbRestaurants.ResumeLayout(false);
             this.gbSitsCount.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nudSitsCount)).EndInit();
+            this.gbRestaurantAdd.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -609,10 +653,14 @@
         private System.Windows.Forms.NumericUpDown nudSitsCount;
         private System.Windows.Forms.Button btOff2;
         private System.Windows.Forms.Button btLoadNews;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn cTitle;
         private System.Windows.Forms.DataGridViewTextBoxColumn cNews;
         private System.Windows.Forms.DataGridViewTextBoxColumn cDate;
+        private System.Windows.Forms.GroupBox gbRestaurantAdd;
+        private System.Windows.Forms.ComboBox cbRestaurantAdd;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cRestaurantTitle;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cRestaurantDate;
     }
 }
 

@@ -250,10 +250,10 @@ namespace Client.ServiceReference1 {
         System.Threading.Tasks.Task CreateNewWithCatAsync(Client.ServiceReference1.LibNews news, string[] categoryes);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/CreateNewWithCatAndRest", ReplyAction="http://tempuri.org/INewsService/CreateNewWithCatAndRestResponse")]
-        void CreateNewWithCatAndRest(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest);
+        void CreateNewWithCatAndRest(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest, string login);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/CreateNewWithCatAndRest", ReplyAction="http://tempuri.org/INewsService/CreateNewWithCatAndRestResponse")]
-        System.Threading.Tasks.Task CreateNewWithCatAndRestAsync(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest);
+        System.Threading.Tasks.Task CreateNewWithCatAndRestAsync(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest, string login);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectNewsFromRestoran", ReplyAction="http://tempuri.org/INewsService/SelectNewsFromRestoranResponse")]
         Client.ServiceReference1.LibNews[] SelectNewsFromRestoran(string nameRest);
@@ -266,6 +266,30 @@ namespace Client.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectRestorans", ReplyAction="http://tempuri.org/INewsService/SelectRestoransResponse")]
         System.Threading.Tasks.Task<string[]> SelectRestoransAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/UnicUser", ReplyAction="http://tempuri.org/INewsService/UnicUserResponse")]
+        bool UnicUser(string user);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/UnicUser", ReplyAction="http://tempuri.org/INewsService/UnicUserResponse")]
+        System.Threading.Tasks.Task<bool> UnicUserAsync(string user);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/CreateUser", ReplyAction="http://tempuri.org/INewsService/CreateUserResponse")]
+        void CreateUser(string login, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/CreateUser", ReplyAction="http://tempuri.org/INewsService/CreateUserResponse")]
+        System.Threading.Tasks.Task CreateUserAsync(string login, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SignIn", ReplyAction="http://tempuri.org/INewsService/SignInResponse")]
+        bool SignIn(string login, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SignIn", ReplyAction="http://tempuri.org/INewsService/SignInResponse")]
+        System.Threading.Tasks.Task<bool> SignInAsync(string login, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectRestWithCount", ReplyAction="http://tempuri.org/INewsService/SelectRestWithCountResponse")]
+        string[] SelectRestWithCount(int count);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/INewsService/SelectRestWithCount", ReplyAction="http://tempuri.org/INewsService/SelectRestWithCountResponse")]
+        System.Threading.Tasks.Task<string[]> SelectRestWithCountAsync(int count);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -399,12 +423,12 @@ namespace Client.ServiceReference1 {
             return base.Channel.CreateNewWithCatAsync(news, categoryes);
         }
         
-        public void CreateNewWithCatAndRest(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest) {
-            base.Channel.CreateNewWithCatAndRest(news, categoryes, nameRest);
+        public void CreateNewWithCatAndRest(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest, string login) {
+            base.Channel.CreateNewWithCatAndRest(news, categoryes, nameRest, login);
         }
         
-        public System.Threading.Tasks.Task CreateNewWithCatAndRestAsync(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest) {
-            return base.Channel.CreateNewWithCatAndRestAsync(news, categoryes, nameRest);
+        public System.Threading.Tasks.Task CreateNewWithCatAndRestAsync(Client.ServiceReference1.LibNews news, string[] categoryes, string nameRest, string login) {
+            return base.Channel.CreateNewWithCatAndRestAsync(news, categoryes, nameRest, login);
         }
         
         public Client.ServiceReference1.LibNews[] SelectNewsFromRestoran(string nameRest) {
@@ -421,6 +445,38 @@ namespace Client.ServiceReference1 {
         
         public System.Threading.Tasks.Task<string[]> SelectRestoransAsync() {
             return base.Channel.SelectRestoransAsync();
+        }
+        
+        public bool UnicUser(string user) {
+            return base.Channel.UnicUser(user);
+        }
+        
+        public System.Threading.Tasks.Task<bool> UnicUserAsync(string user) {
+            return base.Channel.UnicUserAsync(user);
+        }
+        
+        public void CreateUser(string login, string password) {
+            base.Channel.CreateUser(login, password);
+        }
+        
+        public System.Threading.Tasks.Task CreateUserAsync(string login, string password) {
+            return base.Channel.CreateUserAsync(login, password);
+        }
+        
+        public bool SignIn(string login, string password) {
+            return base.Channel.SignIn(login, password);
+        }
+        
+        public System.Threading.Tasks.Task<bool> SignInAsync(string login, string password) {
+            return base.Channel.SignInAsync(login, password);
+        }
+        
+        public string[] SelectRestWithCount(int count) {
+            return base.Channel.SelectRestWithCount(count);
+        }
+        
+        public System.Threading.Tasks.Task<string[]> SelectRestWithCountAsync(int count) {
+            return base.Channel.SelectRestWithCountAsync(count);
         }
     }
 }

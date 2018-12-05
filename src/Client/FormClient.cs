@@ -28,6 +28,7 @@ namespace Client
             InitializeComponent();
             InitializeOurMQ();
             dgvInfo.Columns[0].Width = 50;
+            dgvRestNews.Columns[0].Width = 50;
             lvServs.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             LoadImages();
             ReadSavedMQs();
@@ -340,11 +341,13 @@ namespace Client
                 addingNews.Title = tbTitle.Text;
                 addingNews.ReleaseDate = DateTime.Now;
                 addingNews.TextContent = tbTextContent.Text;
+                string restaurantName = cbRestaurantAdd.Text;
 
                 var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                     $"http://{wcfServerIp}/INewService");
-                NSC.CreateNewWithCat(addingNews, new string[] { cbCategory.Text });
+                NSC.CreateNewWithCatAndRest(addingNews, new string[] { cbCategory.Text }, restaurantName, null);
                 cbCategory.Text = "";
+                cbRestaurantAdd.Text = "";
                 tbTitle.Text = "";
                 tbTextContent.Text = "";
             }
@@ -358,29 +361,6 @@ namespace Client
             }
         }
 
-        private void cbCategory_TextChanged(object sender, EventArgs e)
-        {
-            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
-                btAdd.Enabled = true;
-            else
-                btAdd.Enabled = false;
-        }
-
-        private void tbTitle_TextChanged(object sender, EventArgs e)
-        {
-            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
-                btAdd.Enabled = true;
-            else
-                btAdd.Enabled = false;
-        }
-
-        private void tbTextContent_TextChanged(object sender, EventArgs e)
-        {
-            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
-                btAdd.Enabled = true;
-            else
-                btAdd.Enabled = false;
-        }
 
         private void cbCategory_DropDown(object sender, EventArgs e)
         {
@@ -426,14 +406,21 @@ namespace Client
         {
             try
             {
-                List<LibNews> restaurantNews = new List<LibNews>();
+                LibNews[] restaurantNews;
                 string restaurantName = cbRestaurants.Text;
                 var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                     $"http://{wcfServerIp}/INewService");
 
-                //addingNews = NSC.GETNEWSABOUTTHISRESTAURANT(restaurantName);
-                //foreach(var news in restaurantNews)
-                //    dgvRestNews.Rows.Add(new object[] { news.NOVOST });
+                restaurantNews = NSC.SelectNewsFromRestoran(restaurantName);
+                foreach (var news in restaurantNews)
+                {
+                    dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[0].Value = news.Title;
+                    dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[1].Value = news.TextContent;
+                    dgvRestNews.Rows[dgvRestNews.Rows.Count - 1].Cells[2].Value = news.ReleaseDate;
+                    //dgvRestNews.Rows.Add(new object[] { news.TextContent });
+                }
+
+                dgvRestNews.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
             }
             catch (Exception)
             {
@@ -448,10 +435,51 @@ namespace Client
                 var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                     $"http://{wcfServerIp}/INewService");
                 int sitsCount = Convert.ToInt32(nudSitsCount.Value);
-                //string[] restaurantsWithSitsCount = NSC.SELECTRESTORANI(sitsCount);
+                string[] restaurantsWithSitsCount = NSC.SelectRestWithCount(sitsCount);
                 cbRestaurants.Items.Clear();
-                //foreach (var restaurant in restaurantsWithSitsCount)
-                //    cbRestaurants.Items.Add(restaurant.Name);
+                foreach (var restaurant in restaurantsWithSitsCount)
+                    cbRestaurants.Items.Add(restaurant);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server with restaurants is not connected right now");
+            }
+        }
+
+        private void cbCategory_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void tbTitle_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void tbTextContent_TextChanged(object sender, EventArgs e)
+        {
+            if (cbCategory.Text != "" && tbTitle.Text != "" && tbTextContent.Text != "")
+                btAdd.Enabled = true;
+            else
+                btAdd.Enabled = false;
+        }
+
+        private void cbRestaurantAdd_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
+                    $"http://{wcfServerIp}/INewService");
+                string[] restaurants = NSC.SelectRestorans();
+                cbRestaurantAdd.Items.Clear();
+                foreach (var restaurant in restaurants)
+                    cbRestaurantAdd.Items.Add(restaurant);
             }
             catch (Exception)
             {
