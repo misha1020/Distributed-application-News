@@ -12,7 +12,7 @@ namespace NewsServiceLibrary
     using System;
     using System.Collections.Generic;
     
-    public partial class sysdiagrams
+    public partial class sysdiagrams1
     {
         public string name { get; set; }
         public int principal_id { get; set; }
