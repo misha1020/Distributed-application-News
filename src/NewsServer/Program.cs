@@ -29,7 +29,7 @@ namespace NewsServer
             MessageSendRecieve msg = new MessageSendRecieve(null, rabbitMqIp, rabbitMqName, username, password);
             try
             {
-                using (mq = new RabbitMQServer(""/*msg.mqIP*/, msg.mqName, msg.login, msg.password))
+                using (mq = new RabbitMQServer(msg.mqIP, msg.mqName, msg.login, msg.password))
                 using (WebhoseReader reader = new WebhoseReader())
                 {
                     SocketServer.SocketSend(msg, dispatcherIp);
