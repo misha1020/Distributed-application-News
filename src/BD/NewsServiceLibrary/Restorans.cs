@@ -21,15 +21,17 @@ namespace NewsServiceLibrary
         }
     
         public int Id { get; set; }
-        public decimal Latitude_WGS84 { get; set; }
+        public Nullable<double> Latitude_wgs84 { get; set; }
+        public Nullable<double> Longitude_wgs84 { get; set; }
         public string Name { get; set; }
+        public string Adress { get; set; }
         public string AdmArea { get; set; }
         public string District { get; set; }
-        public string Address { get; set; }
-        public int SeatsCount { get; set; }
-        public decimal Longitude_WGS84 { get; set; }
+        public Nullable<int> SeatsCount { get; set; }
+        public int IdPhone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<News> News { get; set; }
+        public virtual Phones Phones { get; set; }
     }
 }

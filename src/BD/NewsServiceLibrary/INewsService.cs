@@ -11,7 +11,6 @@ namespace NewsServiceLibrary
     [ServiceContract]
     public interface INewsService
     {
-
         [OperationContract]
         void CreateNews(LibNews news);
 
@@ -56,9 +55,6 @@ namespace NewsServiceLibrary
 
         [OperationContract]
         List<LibNews> SelectNewsFromRestoran(string nameRest);
-
-        [OperationContract]
-        List<string> SelectRestorans();
         //[OperationContract]
         //News GetDataUsingDataContract(News composite);
 

@@ -12,7 +12,7 @@ namespace ServerWCF
     class Program
     {
         static void Main(string[] args)
-        {            
+        {
             ServiceMetadataBehavior behavior = new ServiceMetadataBehavior
             {
                 HttpGetEnabled = true,

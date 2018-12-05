@@ -98,12 +98,6 @@
   <wsdl:message name="INewsService_SelectNewsFromRestoran_OutputMessage">
     <wsdl:part name="parameters" element="tns:SelectNewsFromRestoranResponse" />
   </wsdl:message>
-  <wsdl:message name="INewsService_SelectRestorans_InputMessage">
-    <wsdl:part name="parameters" element="tns:SelectRestorans" />
-  </wsdl:message>
-  <wsdl:message name="INewsService_SelectRestorans_OutputMessage">
-    <wsdl:part name="parameters" element="tns:SelectRestoransResponse" />
-  </wsdl:message>
   <wsdl:portType name="INewsService">
     <wsdl:operation name="CreateNews">
       <wsdl:input wsaw:Action="http://tempuri.org/INewsService/CreateNews" message="tns:INewsService_CreateNews_InputMessage" />
@@ -164,10 +158,6 @@
     <wsdl:operation name="SelectNewsFromRestoran">
       <wsdl:input wsaw:Action="http://tempuri.org/INewsService/SelectNewsFromRestoran" message="tns:INewsService_SelectNewsFromRestoran_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/INewsService/SelectNewsFromRestoranResponse" message="tns:INewsService_SelectNewsFromRestoran_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="SelectRestorans">
-      <wsdl:input wsaw:Action="http://tempuri.org/INewsService/SelectRestorans" message="tns:INewsService_SelectRestorans_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/INewsService/SelectRestoransResponse" message="tns:INewsService_SelectRestorans_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_INewsService" type="tns:INewsService">
@@ -300,15 +290,6 @@
     </wsdl:operation>
     <wsdl:operation name="SelectNewsFromRestoran">
       <soap:operation soapAction="http://tempuri.org/INewsService/SelectNewsFromRestoran" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SelectRestorans">
-      <soap:operation soapAction="http://tempuri.org/INewsService/SelectRestorans" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
