@@ -430,6 +430,32 @@ namespace NewsServiceLibrary
             return list;
         }
 
+        public List<string> SelectRestWithCount(int count)
+        {
+            var list = new List<string>();
+            using (var ctx = new NewsEntities())
+            {
+                var restorans = ctx.Restorans.Where(c => c.SeatsCount >= count).ToList();
+                if (restorans.Count != 0)
+                {
+                    //создание массива класса категории                   
+                    foreach (var restoran in restorans)
+                    {
+                        if (list.Where(c => c == restoran.Name).ToList().Count == 0)
+                        {
+                            list.Add(restoran.Name);
+                        }
+                        //вывод в класс                        
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ресторанов с таким колличеством мест не существует");
+                }
+            }
+            return list;
+        }
+
         public bool SignIn(string login, string password)
         {
             bool sign = false;

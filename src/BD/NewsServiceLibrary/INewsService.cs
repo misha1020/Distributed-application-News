@@ -68,6 +68,9 @@ namespace NewsServiceLibrary
 
         [OperationContract]
         bool SignIn(string login, string password);
+
+        [OperationContract]
+        List<string> SelectRestWithCount(int count);
         //[OperationContract]
         //News GetDataUsingDataContract(News composite);
 
