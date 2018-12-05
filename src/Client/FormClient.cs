@@ -345,6 +345,7 @@ namespace Client
                 var NSC = new NewsServiceClient("BasicHttpBinding_INewsService",
                     $"http://{wcfServerIp}/INewService");
                 NSC.CreateNewWithCatAndRest(addingNews, new string[] { cbCategory.Text }, restaurantName, null);
+                cbRestaurantAdd.Text = "";
                 cbCategory.Text = "";
                 tbTitle.Text = "";
                 tbTextContent.Text = "";
