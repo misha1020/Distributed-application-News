@@ -104,7 +104,7 @@
     <Compile Include="sp_helpdiagrams_Result.cs">
       <DependentUpon>NewsModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="sysdiagrams.cs">
+    <Compile Include="sysdiagrams1.cs">
       <DependentUpon>NewsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Users.cs">

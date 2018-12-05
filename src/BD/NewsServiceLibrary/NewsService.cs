@@ -338,6 +338,7 @@ namespace NewsServiceLibrary
                         Console.WriteLine("Ресторана не существует");
                     }
 
+                    
                     News newNews = new News
                     {
                         Title = news.Title,
@@ -350,6 +351,22 @@ namespace NewsServiceLibrary
                     ctx.News.Add(newNews);
                     ctx.SaveChanges();
                     Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
+                    using (var ptx = new NewsEntities())
+                    {
+                        SelectAllNews();
+                        Console.WriteLine("Передана дата " + news.ReleaseDate.Date + " заголовок " + news.Title);
+                        var idNew = ptx.News.Where(c => c.Date == news.ReleaseDate.Date && c.Title == news.Title).First().Id_news;
+                        int idCateg = -1;
+                        foreach (var category in categoryes)
+                        {
+                            var check = ctx.Category.Where(c => c.CatName == category).ToList();
+                            if (check.Count == 0)
+                                ;
+                            CreateCategory(category);
+                            idCateg = ptx.Category.Where(c => c.CatName == category).FirstOrDefault().IdCategories;
+                            CreateCategoryForNews(idCateg, idNew);
+                        }
+                    }
 
                 }
             }
