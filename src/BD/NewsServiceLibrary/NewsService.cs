@@ -66,7 +66,7 @@ namespace NewsServiceLibrary
             }
         }
 
-        public void CreateNewWithCat(LibNews news, string[] categoryes, string login)
+        public void CreateNewWithCat(LibNews news, string[] categoryes)
         {
             using (var ctx = new NewsEntities())
             {
@@ -77,8 +77,7 @@ namespace NewsServiceLibrary
                     {
                         Title = news.Title,
                         Date = news.ReleaseDate,
-                        TextContent = news.TextContent,
-                        User = (login != null) ? login : null
+                        TextContent = news.TextContent                        
                     };
                     ctx.News.Add(newNews);
                     //ctx.SaveChanges();
@@ -321,7 +320,7 @@ namespace NewsServiceLibrary
             var a = 1;
         }
 
-        public void CreateNewWithCatAndRest(LibNews news, string[] categoryes, string nameRest)
+        public void CreateNewWithCatAndRest(LibNews news, string[] categoryes, string nameRest, string login)
         {
             using (var ctx = new NewsEntities())
             {
@@ -343,7 +342,8 @@ namespace NewsServiceLibrary
                     {
                         Title = news.Title,
                         Date = news.ReleaseDate,
-                        TextContent = news.TextContent
+                        TextContent = news.TextContent,
+                        User = (login != null) ? login : null
                     };
                     if (idRest != -1)
                         newNews.RefIdRest = idRest;

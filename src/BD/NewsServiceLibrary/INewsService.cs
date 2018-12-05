@@ -52,7 +52,7 @@ namespace NewsServiceLibrary
         void CreateNewWithCat(LibNews news, string[] categoryes);
 
         [OperationContract]
-        void CreateNewWithCatAndRest(LibNews news, string[] categoryes,string nameRest);
+        void CreateNewWithCatAndRest(LibNews news, string[] categoryes,string nameRest, string login);
 
         [OperationContract]
         List<LibNews> SelectNewsFromRestoran(string nameRest);
