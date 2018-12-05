@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using MessageSendServe;
 
 namespace NewsServiceLibrary
 {
@@ -81,7 +82,7 @@ namespace NewsServiceLibrary
                     };
                     ctx.News.Add(newNews);
                     //ctx.SaveChanges();
-                    mq.Send(newNews.TextContent);
+                    //mq.Send(newNews.TextContent);
                     Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
                     //using (var ptx = new NewsEntities())
                     //{
@@ -350,7 +351,9 @@ namespace NewsServiceLibrary
                         newNews.RefIdRest = idRest;
                     ctx.News.Add(newNews);
                     ctx.SaveChanges();
-                    mq.Send(newNews.TextContent);
+                    Article rabit = new Article { Content=newNews.TextContent, Title=newNews.Title, PublishedAt = newNews.Date.Date.ToString()};
+                   
+                    mq.Send(rabit);
                     Console.WriteLine("Новая новость '" + news.Title + "' добавлена");
                     using (var ptx = new NewsEntities())
                     {
