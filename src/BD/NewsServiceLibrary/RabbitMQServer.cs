@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
+using MessageSendServe;
 
 namespace NewsServiceLibrary
 {
@@ -33,9 +34,9 @@ namespace NewsServiceLibrary
             channel.ExchangeDeclare(exchange: this.mqName, type: "fanout");
         }
 
-        public void Send(string message)
+        public void Send(Article message)
         {
-            var body = BinFormatter.ToBytes<string>(message);
+            var body = BinFormatter.ToBytes<Article>(message);
             channel.BasicPublish(exchange: mqName,
                                  routingKey: "",
                                  basicProperties: null,
